@@ -50,8 +50,6 @@ void Game::MainLoop()
             LogicSwitchboard();
 
             Audio::Logic();
-
-            Mouse::mouseAxesAltered = false;
         }
 
         if(redraw && al_is_event_queue_empty(Event::eventQueue))
@@ -89,7 +87,6 @@ bool Game::Initialize(char **argv)
     Scene::Initialize();
     Camera::Initialize();
 
-    // *Might* not want to initialize everything, later.
     Title::Initialize();
     Worldview::Initialize();
     Settings::Initialize();
@@ -97,11 +94,15 @@ bool Game::Initialize(char **argv)
 
     Settings::LoadFromConfig();
 
+    Area::Initialize(STARTING_AREA);
+
     return true;
 }
 
 void Game::Uninitialize()
 {
+    Area::Uninitialize();
+
     Worldview::Uninitialize();
 
     Camera::Uninitialize();
@@ -120,7 +121,6 @@ void Game::Uninitialize()
     Display::Uninitialize();
 
     al_uninstall_system();
-
 }
 
 
@@ -147,6 +147,8 @@ void Game::InputSwitchboard()
         Settings::Input();
         break;
     }
+
+    Mouse::mouseAxesAltered = false;
 }
 
 void Game::LogicSwitchboard()
@@ -176,6 +178,7 @@ void Game::LogicSwitchboard()
 void Game::DrawingSwitchboard()
 {
     Game::redraw = false;
+    al_set_target_bitmap(Display::scaleBuffer);
     al_clear_to_color(COLKEY_BACKGROUND);
 
     switch(Scene::scene)
@@ -196,6 +199,15 @@ void Game::DrawingSwitchboard()
         break;
 
     }
+
+    al_set_target_backbuffer(Display::display);
+    al_clear_to_color(COLKEY_BACKGROUND); // Might be unnecessary
+    al_draw_scaled_bitmap(Display::scaleBuffer,
+                          0, 0,
+                          Display::NATIVE_WIDTH, Display::NATIVE_HEIGHT,
+                          0, 0,
+                          Display::width, Display::height,
+                          0);
 
     al_flip_display();
 }

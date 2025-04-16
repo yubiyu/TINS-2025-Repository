@@ -1,9 +1,8 @@
-#ifndef MOUSE_H_INCLUDED
-#define MOUSE_H_INCLUDED
+#pragma once
 
-#include "event.h"
+#include "../core/event.h"
 
-#include "display.h"
+#include "../core/display.h"
 
 struct Mouse
 {
@@ -42,5 +41,3 @@ struct Mouse
 
     static void InputMouseButtonHold();
 };
-
-#endif // MOUSE_H_INCLUDED

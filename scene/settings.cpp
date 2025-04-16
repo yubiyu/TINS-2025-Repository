@@ -5,9 +5,9 @@ std::unordered_map<int, std::string> Settings::optionValues;
 int Settings::targetedOption;
 
 bool Settings::fullscreenOption;
-int Settings::resolutionScalingOption;
-std::string Settings::resolutionWidthText;
-std::string Settings::resolutionHeightText;
+int Settings::windowScaleOption;
+std::string Settings::windowWidthText;
+std::string Settings::windowHeightText;
 int Settings::vsyncOption;
 int Settings::fpsOption;
 int Settings::paletteOption;
@@ -59,7 +59,7 @@ void Settings::Input()
             SetFullscreenOption(false);
             break;
         case OPTION_RESOLUTION:
-            SetResolutionScalingOption(resolutionScalingOption - 1);
+            SetWindowScaleOption(windowScaleOption - 1);
             break;
         case OPTION_VSYNC:
             SetVsyncOption(vsyncOption - 1);
@@ -87,7 +87,7 @@ void Settings::Input()
             SetFullscreenOption(true);
             break;
         case OPTION_RESOLUTION:
-            SetResolutionScalingOption(resolutionScalingOption + 1);
+            SetWindowScaleOption(windowScaleOption + 1);
             break;
         case OPTION_VSYNC:
             SetVsyncOption(vsyncOption + 1);
@@ -192,6 +192,14 @@ void Settings::SetTargetedOption(int whichOption)
     targetedOption = whichOption;
 }
 
+void Settings::UpdateWindowScaleText()
+{
+    windowWidthText = std::to_string( Display::width);
+    windowHeightText = std::to_string( Display::height );
+
+    optionValues[OPTION_RESOLUTION] = windowWidthText+"x"+windowHeightText;
+}
+
 void Settings::SetFullscreenOption(bool is_fullscreen)
 {
     fullscreenOption = is_fullscreen;
@@ -202,22 +210,24 @@ void Settings::SetFullscreenOption(bool is_fullscreen)
     else
         optionValues[OPTION_FULLSCREEN] = "Windowed";
 
+    UpdateWindowScaleText();
+
 }
 
-void Settings::SetResolutionScalingOption(int scale)
+void Settings::SetWindowScaleOption(int scale)
 {
-    resolutionScalingOption = scale;
-    if(resolutionScalingOption < RESOLUTION_SCALE_MIN)
-        resolutionScalingOption = RESOLUTION_SCALE_MIN;
-    else if(resolutionScalingOption > RESOLUTION_SCALE_MAX)
-        resolutionScalingOption = RESOLUTION_SCALE_MAX;
+    if(!fullscreenOption)
+    {
+        windowScaleOption = scale;
+        if(windowScaleOption < WINDOW_SCALE_MIN)
+            windowScaleOption = WINDOW_SCALE_MIN;
+        else if(windowScaleOption > WINDOW_SCALE_MAX)
+            windowScaleOption = WINDOW_SCALE_MAX;
 
-    Display::SetResolutionScaling(resolutionScalingOption);
+        Display::SetWindowScale(windowScaleOption);
 
-    resolutionWidthText = std::to_string( Display::width);
-    resolutionHeightText = std::to_string( Display::height );
-
-    optionValues[OPTION_RESOLUTION] = resolutionWidthText+"x"+resolutionHeightText;
+        UpdateWindowScaleText();
+    }
 }
 
 void Settings::SetVsyncOption(int vsync_mode)
@@ -291,7 +301,7 @@ void Settings::SetSfxBarsOption(int bars)
 void Settings::SaveToConfig()
 {
     Configuration::SetKey(Configuration::settingsCfg, "display", "fullscreen window", fullscreenOption);
-    Configuration::SetKey(Configuration::settingsCfg, "display", "resolution scaling", resolutionScalingOption);
+    Configuration::SetKey(Configuration::settingsCfg, "display", "window scale", windowScaleOption);
     Configuration::SetKey(Configuration::settingsCfg, "display", "vsync", vsyncOption);
     Configuration::SetKey(Configuration::settingsCfg, "display", "fps", fpsOption);
     Configuration::SetKey(Configuration::settingsCfg, "display", "palette", paletteOption);
@@ -308,7 +318,7 @@ void Settings::SaveToConfig()
 void Settings::LoadFromConfig()
 {
     SetFullscreenOption( Configuration::GetInt(Configuration::settingsCfg, "display", "fullscreen window") );
-    SetResolutionScalingOption( Configuration::GetInt(Configuration::settingsCfg, "display", "resolution scaling") );
+    SetWindowScaleOption( Configuration::GetInt(Configuration::settingsCfg, "display", "window scale") );
     SetVsyncOption( Configuration::GetInt(Configuration::settingsCfg, "display", "vsync") );
     SetFPSOption( Configuration::GetInt(Configuration::settingsCfg, "display", "fps") );
     SetPaletteOption( Configuration::GetInt(Configuration::settingsCfg, "display", "palette") );

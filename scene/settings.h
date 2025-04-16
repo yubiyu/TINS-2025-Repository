@@ -1,24 +1,23 @@
 #pragma once
 
-#include "menu.h"
+#include "core/display.h"
+#include "core/util.h"
 
-#include "configuration.h"
+#include "input/keyboard.h"
 
-#include "display.h"
-#include "keyboard.h"
+#include "resource/image.h"
+#include "resource/text.h"
+#include "resource/audio.h"
+#include "resource/palette.h"
 
-#include "image.h"
-#include "text.h"
-#include "audio.h"
-
-#include "scene.h"
-
-#include "palette.h"
-#include "util.h"
+#include "scene/scene.h"
+#include "scene/menu.h"
 
 #include <unordered_map>
 #include <string>
 #include <iostream>
+
+#include "config/configuration.h"
 
 struct Settings
 {
@@ -68,11 +67,11 @@ struct Settings
 
 /// Graphics settings
     static bool fullscreenOption;
-    static int resolutionScalingOption;
-    static const int RESOLUTION_SCALE_MIN = 1;
-    static const int RESOLUTION_SCALE_MAX = 10;
-    static std::string resolutionWidthText;
-    static std::string resolutionHeightText;
+    static int windowScaleOption;
+    static const int WINDOW_SCALE_MIN = 1;
+    static const int WINDOW_SCALE_MAX = 10;
+    static std::string windowWidthText;
+    static std::string windowHeightText;
     static int vsyncOption;
     static int fpsOption;
     static int paletteOption;
@@ -98,8 +97,10 @@ struct Settings
     static void AdjustTargetedOptionDown();
     static void SetTargetedOption(int whichOption);
 
+    static void UpdateWindowScaleText();
+
     static void SetFullscreenOption(bool is_fullscreen);
-    static void SetResolutionScalingOption(int scale);
+    static void SetWindowScaleOption(int scale);
     static void SetVsyncOption(int vsync_mode);
     static void SetFPSOption(int set_fps);
     static void SetPaletteOption(int set_pal);

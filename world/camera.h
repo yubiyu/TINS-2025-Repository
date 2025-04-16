@@ -5,8 +5,8 @@
 #include <cmath> // abs
 #include <iostream>
 
-#include "tile.h"
-#include "display.h"
+#include "core/display.h"
+#include "core/tile.h"
 
 // Note: The camera should try to follow tiles, not follow actors
 struct Camera

@@ -1,15 +1,14 @@
-#ifndef ARCHIVE_H_INCLUDED
-#define ARCHIVE_H_INCLUDED
+#pragma once
 
-#include "display.h"
-#include "keyboard.h"
+#include "core/display.h"
+#include "core/util.h"
 
-#include "text.h"
+#include "input/keyboard.h"
 
-#include "scene.h"
+#include "resource/text.h"
+#include "resource/palette.h"
 
-#include "palette.h"
-#include "util.h"
+#include "scene/scene.h"
 
 #include <allegro5/allegro_primitives.h>
 
@@ -50,5 +49,3 @@ struct Archive
     static void Input();
     static void Drawing();
 };
-
-#endif // ARCHIVE_H_INCLUDED

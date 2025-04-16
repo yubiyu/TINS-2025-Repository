@@ -14,8 +14,9 @@
 #define COLKEY_TEXT_VALUE_HIGHLIGHTED                       Palette::COL_GB[Palette::palettePreset][3]
 #define COLKEY_TEXT_DESCRIPTION                             Palette::COL_GB[Palette::palettePreset][2]
 
-#include "util.h"
+#include "core/util.h"
 
+#include <cmath>
 #include <string>
 #include <unordered_map>
 #include <iostream>
@@ -45,6 +46,7 @@ struct Palette
         {COL_GB_YELLOW,  "Yellow"}
     };
 
+    static ALLEGRO_COLOR COL_GB_BASE[COL_GB_NUM_COLOURS];
     static ALLEGRO_COLOR COL_GB[COL_GB_NUM_SWAPS][COL_GB_NUM_COLOURS];
 
     static int palettePreset;
@@ -53,12 +55,32 @@ struct Palette
 
     static inline void InitializeGB()
     {
+        COL_GB_BASE[0] = al_map_rgb(  8,  24,  32);
+        //std::cout << "Debug [base col]: r=" << COL_GB_BASE[0].r << " g=" << COL_GB_BASE[0].g << " b=" << COL_GB_BASE[0].b << std::endl;
+        COL_GB_BASE[1] = al_map_rgb( 52, 104,  86);
+        COL_GB_BASE[2] = al_map_rgb(136, 192, 112);
+        COL_GB_BASE[3] = al_map_rgb(224, 248, 208);
+        std::cout << std::endl;
+
         for(size_t preset = 0; preset < COL_GB_NUM_SWAPS; preset++)
         {
-            COL_GB[preset][0] = al_color_hsl( (200 + 60*preset)%360, 0.60f, 0.07f);
-            COL_GB[preset][1] = al_color_hsl( (159 + 60*preset)%360, 0.33f, 0.30f);
-            COL_GB[preset][2] = al_color_hsl( (102 + 60*preset)%360, 0.38f, 0.59f);
-            COL_GB[preset][3] = al_color_hsl( ( 96 + 60*preset)%360, 0.74f, 0.89f);
+            for(size_t i = 0; i < COL_GB_NUM_COLOURS; i++)
+            {
+                float r, g, b;
+                al_unmap_rgb_f(COL_GB_BASE[i], &r, &g, &b);
+                //std::cout << "Debug [unmapped col]: r=" << r << " g=" << g << " b=" << b << std::endl;
+
+                float targetHue, targetSaturation, targetLightness;
+                al_color_rgb_to_hsl(r, g, b, &targetHue, &targetSaturation, &targetLightness);
+
+                COL_GB[preset][i] = al_color_hsl( std::fmod(targetHue+60.0f*(float)preset, 360.0f), targetSaturation, targetLightness);
+                COL_GB[preset][i] = al_map_rgb( (char)(255.0f * COL_GB[preset][i].r + 0.5f / 255.0f),
+                                                (char)(255.0f * COL_GB[preset][i].g + 0.5f / 255.0f),
+                                                (char)(255.0f * COL_GB[preset][i].b + 0.5f / 255.0f));
+
+                //std::cout << "Debug [hsl'ed col]: r=" << COL_GB[preset][i].r << " g=" << COL_GB[preset][i].g << " b=" << COL_GB[preset][i].b << std::endl;
+            }
+            //std::cout << std::endl;
         }
 
         palettePreset = COL_GB_FIRST;

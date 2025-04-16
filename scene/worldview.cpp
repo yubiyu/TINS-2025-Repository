@@ -85,16 +85,13 @@ void Worldview::Drawing()
     al_translate_transform(&Camera::zoomTransform,Camera::zoomTranslateX,Camera::zoomTranslateY);
     al_use_transform(&Camera::zoomTransform);
 
-    DrawGridUnderlay();
+    //DrawGridUnderlay();
 
     al_use_transform(&Camera::identityTransform);
 
-    //al_draw_text(Text::publicPixel8, COLKEY_TEXT, 640, 480, ALLEGRO_ALIGN_CENTER, "Test text output");
+    Area::Drawing();
 
-    DrawGridText(Mouse::displayXPosition, Mouse::displayYPosition);
-
-    al_set_target_bitmap(al_get_backbuffer(Display::display));
-
+    al_set_target_bitmap(Display::scaleBuffer);
     al_clear_to_color(COLKEY_BACKGROUND);
     al_draw_bitmap(Camera::cameraBuffer, 0, 0, 0);
 }
@@ -140,12 +137,6 @@ void Worldview::DrawGridUnderlay()
 
 void Worldview::DrawGridText(float mouseTransformedX, float mouseTransformedY)
 {
-    //int cameraCrosshairXPosition = Camera::xPosition+Display::NATIVE_WIDTH/2;
-    //int cameraCrosshairYPosition = Camera::yPosition+Display::NATIVE_HEIGHT/2;
-
-    //int cameraCrosshairXPositionCell = cameraCrosshairXPosition/Tile::WIDTH;
-    //int cameraCrosshairYPositionCell = cameraCrosshairYPosition/Tile::HEIGHT;
-
     int mouseCrosshairXPosition = Camera::xPosition+mouseTransformedX;
     int mouseCrosshairYPosition = Camera::yPosition+mouseTransformedY;
 
@@ -154,18 +145,9 @@ void Worldview::DrawGridText(float mouseTransformedX, float mouseTransformedY)
 
     int zoomPercentage = Camera::zoomScale*100;
 
-    /*
-    std::string cameraCrosshairPositionString = "CAMERA: (" + std::to_string(cameraCrosshairXPosition) + ", " + std::to_string(cameraCrosshairYPosition) + ") : ("
-            + std::to_string(cameraCrosshairXPositionCell) + ", " + std::to_string(cameraCrosshairYPositionCell) + ") "
-            + std::to_string(zoomPercentage) + "%";
-            */
-
     std::string mouseCrosshairPositionString = "(" + std::to_string(mouseCrosshairXPosition) + ", " + std::to_string(mouseCrosshairYPosition) + ") : ("
             + std::to_string(mouseCrosshairXPositionCell) + ", " + std::to_string(mouseCrosshairYPositionCell) + ") "
             + std::to_string(zoomPercentage) + "%";
-
-
-    //Util::string_al_draw_text(Text::builtin8,COLKEY_TEXT_VALUE,0,0,ALLEGRO_ALIGN_LEFT,cameraCrosshairPositionString);
 
     Util::string_al_draw_text(Text::builtin8,COLKEY_TEXT_VALUE_HIGHLIGHTED,0,0,ALLEGRO_ALIGN_LEFT,mouseCrosshairPositionString);
 

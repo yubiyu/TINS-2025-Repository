@@ -1,6 +1,6 @@
 #pragma once
 
-#include "tile.h"
+#include "core/tile.h"
 
 // Constants shared between Title, Settings, Archive, etc.
 struct Menu

@@ -10,13 +10,14 @@ struct Display
 
     static ALLEGRO_DISPLAY *display;
 
+    static ALLEGRO_BITMAP *scaleBuffer;
+
     static const int NATIVE_WIDTH = 160;
     static const int NATIVE_HEIGHT = 144;
 
+    static int windowScale;
     static int width;
     static int height;
-    static float widthScaling;
-    static float heightScaling;
 
     enum enumVsyncMode
     {
@@ -36,8 +37,9 @@ struct Display
     static void Initialize();
     static void Uninitialize();
 
+    static void Resize();
     static void SetFullscreen(bool is_fullscreen);
-    static void SetResolutionScaling(int scale);
+    static void SetWindowScale(int scale);
     static void SetVsync(int vsync_mode);
     static void SetFPS(int fps_new);
 };

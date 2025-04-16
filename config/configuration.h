@@ -9,6 +9,8 @@ struct Configuration
 {
     static ALLEGRO_CONFIG* settingsCfg;
 
+    static ALLEGRO_CONFIG* areasCfg;
+
     static void LoadConfigurations();
     static void UnloadConfigurations();
 

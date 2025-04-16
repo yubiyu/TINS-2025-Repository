@@ -1,7 +1,6 @@
-#ifndef KEYBOARD_H_INCLUDED
-#define KEYBOARD_H_INCLUDED
+#pragma once
 
-#include "event.h"
+#include "../core/event.h"
 
 struct Keyboard
 {
@@ -46,5 +45,3 @@ struct Keyboard
     static void InputKeyHold();
 
 };
-
-#endif // KEYBOARD_H_INCLUDED

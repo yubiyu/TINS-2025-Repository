@@ -2,6 +2,8 @@
 
 ALLEGRO_CONFIG* Configuration::settingsCfg;
 
+ALLEGRO_CONFIG* Configuration::areasCfg;
+
 void Configuration::LoadConfigurations()
 {
     settingsCfg = al_load_config_file("config/settings.cfg");
@@ -9,11 +11,19 @@ void Configuration::LoadConfigurations()
         std::cout << "Error - Configuration: config/settings.cfg not loaded." << std::endl;
     else
         std::cout << "Configuration: config/settings.cfg successfully loaded." << std::endl;
+
+    areasCfg = al_load_config_file("config/areas.cfg");
+    if(!areasCfg)
+        std::cout << "Error - Configuration: config/areas.cfg not loaded." << std::endl;
+    else
+        std::cout << "Configuration: config/areas.cfg successfully loaded." << std::endl;
 }
 
 void Configuration::UnloadConfigurations()
 {
     al_destroy_config(settingsCfg);
+
+    al_destroy_config(areasCfg);
 }
 
 
