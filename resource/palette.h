@@ -53,48 +53,6 @@ struct Palette
 
     static ALLEGRO_COLOR transparentColour;
 
-    static inline void InitializeGB()
-    {
-        COL_GB_BASE[0] = al_map_rgb(  8,  24,  32);
-        //std::cout << "Debug [base col]: r=" << COL_GB_BASE[0].r << " g=" << COL_GB_BASE[0].g << " b=" << COL_GB_BASE[0].b << std::endl;
-        COL_GB_BASE[1] = al_map_rgb( 52, 104,  86);
-        COL_GB_BASE[2] = al_map_rgb(136, 192, 112);
-        COL_GB_BASE[3] = al_map_rgb(224, 248, 208);
-        std::cout << std::endl;
-
-        for(size_t preset = 0; preset < COL_GB_NUM_SWAPS; preset++)
-        {
-            for(size_t i = 0; i < COL_GB_NUM_COLOURS; i++)
-            {
-                float r, g, b;
-                al_unmap_rgb_f(COL_GB_BASE[i], &r, &g, &b);
-                //std::cout << "Debug [unmapped col]: r=" << r << " g=" << g << " b=" << b << std::endl;
-
-                float targetHue, targetSaturation, targetLightness;
-                al_color_rgb_to_hsl(r, g, b, &targetHue, &targetSaturation, &targetLightness);
-
-                COL_GB[preset][i] = al_color_hsl( std::fmod(targetHue+60.0f*(float)preset, 360.0f), targetSaturation, targetLightness);
-                COL_GB[preset][i] = al_map_rgb( (char)(255.0f * COL_GB[preset][i].r + 0.5f / 255.0f),
-                                                (char)(255.0f * COL_GB[preset][i].g + 0.5f / 255.0f),
-                                                (char)(255.0f * COL_GB[preset][i].b + 0.5f / 255.0f));
-
-                //std::cout << "Debug [hsl'ed col]: r=" << COL_GB[preset][i].r << " g=" << COL_GB[preset][i].g << " b=" << COL_GB[preset][i].b << std::endl;
-            }
-            //std::cout << std::endl;
-        }
-
-        palettePreset = COL_GB_FIRST;
-
-        transparentColour = al_map_rgba(0, 0, 0, 0);
-    }
-
-    static inline void SwapPalette(int palette_swap)
-    {
-        palettePreset = palette_swap;
-
-        if(palettePreset < COL_GB_FIRST)
-            palettePreset = COL_GB_FIRST;
-        else if(palettePreset > COL_GB_LAST)
-            palettePreset = COL_GB_LAST;
-    }
+    static void InitializeGB();
+    static void SwapPalette(int palette_swap);
 };

@@ -94,13 +94,17 @@ bool Game::Initialize(char **argv)
 
     Settings::LoadFromConfig();
 
-    Area::Initialize(STARTING_AREA);
+    Area::Initialize(Area::STARTING_AREA);
+
+    PC::pc = new PC();
 
     return true;
 }
 
 void Game::Uninitialize()
 {
+    delete PC::pc;
+
     Area::Uninitialize();
 
     Worldview::Uninitialize();

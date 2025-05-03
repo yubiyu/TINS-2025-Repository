@@ -29,9 +29,11 @@ struct Keyboard
 
         KEY_ESC = 54
     };
-    static const unsigned NUM_INPUT_KEYS = 55;
-    static const unsigned KEY_MARKER_FIRST = KEY_A;
-    static const unsigned KEY_MARKER_LAST = KEY_ESC;
+    static const size_t KEY_MARKER_FIRST = KEY_A;
+    static const size_t KEY_MARKER_LAST = KEY_ESC;
+    static const size_t NUM_INPUT_KEYS = KEY_MARKER_LAST+1;
+
+    static const int INPUT_TAP_TICKS = 4;
 
     static bool keyInput[NUM_INPUT_KEYS];
     static int keyHoldTicks[NUM_INPUT_KEYS];

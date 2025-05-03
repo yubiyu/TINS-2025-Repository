@@ -3,7 +3,7 @@
 
 void Worldview::Initialize()
 {
-    //Palette::currentClearColour = ;
+
 }
 
 void Worldview::Uninitialize()
@@ -14,65 +14,20 @@ void Worldview::Uninitialize()
 
 void Worldview::Logic()
 {
-    ProgressWorld();
-    UpdateUI();
+    PC::pc->Logic();
+
     Camera::Logic();
 }
 
 void Worldview::Input()
 {
-    if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_UP])
-    {
-        if(Camera::zoomScale < Camera::SCALE_MAX)
-        {
-            Camera::zoomScale += 0.1;
-
-            Camera::zoomTranslateX -= Display::NATIVE_WIDTH*0.05; // Ten 0.05s = 0.5
-            Camera::zoomTranslateY -= Display::NATIVE_HEIGHT*0.05;
-
-            //std::cout << "zoom scale " << Camera::zoomScale << " (" << Camera::zoomScale*100 << "%)" << std::endl;
-        }
-
-        al_set_mouse_z(0);
-    }
-    else if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_DOWN])
-    {
-        if(Camera::zoomScale > Camera::SCALE_MIN)
-        {
-            Camera::zoomScale -= 0.1;
-
-            Camera::zoomTranslateX += Display::NATIVE_WIDTH*0.05; // Ten 0.05s = 0.5
-            Camera::zoomTranslateY += Display::NATIVE_HEIGHT*0.05;
-
-            //std::cout << "zoom scale " << Camera::zoomScale << " (" << Camera::zoomScale*100 << "%)" << std::endl;
-        }
-
-        al_set_mouse_z(0);
-    }
-    else if(Mouse::mouseInput[Mouse::MOUSE_MIDDLE])
-    {
-        Camera::zoomScale = 1;
-        Camera::zoomTranslateX = 0;
-        Camera::zoomTranslateY = 0;
-    }
-
-    if(Mouse::mouseButtonHoldTicks[Mouse::MOUSE_LEFT] == 1)
-    {
-
-    }
-
     if(Keyboard::keyHoldTicks[Keyboard::KEY_ESC] == 1)
-    {
         Scene::ChangeScene(Scene::SCENE_TITLE);
-    }
 
-    /// Camera panning
+    PC::pc->Input();
 
+    Camera::Input();
 
-    if(Keyboard::keyHoldTicks[Keyboard::KEY_SPACE] == 1)
-    {
-
-    }
 }
 
 void Worldview::Drawing()
@@ -90,20 +45,11 @@ void Worldview::Drawing()
     al_use_transform(&Camera::identityTransform);
 
     Area::Drawing();
+    PC::pc->Drawing();
 
     al_set_target_bitmap(Display::scaleBuffer);
     al_clear_to_color(COLKEY_BACKGROUND);
     al_draw_bitmap(Camera::cameraBuffer, 0, 0, 0);
-}
-
-void Worldview::ProgressWorld()
-{
-
-}
-
-void Worldview::UpdateUI()
-{
-
 }
 
 void Worldview::DrawGridUnderlay()

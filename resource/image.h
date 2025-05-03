@@ -6,6 +6,7 @@
 
 #include "core/tile.h"
 #include "world/cellindex.h"
+#include "world/actorindex.h"
 
 struct Image
 {
@@ -20,6 +21,10 @@ struct Image
 
     static ALLEGRO_BITMAP *areaCellsPng;
     static ALLEGRO_BITMAP *areaCellsSub[CellIndex::NUM_CELL_TYPES];
+
+    static ALLEGRO_BITMAP *actorPng;
+    static ALLEGRO_BITMAP *actorWalkSub[ActorIndex::NUM_FACING_DIRS * ActorIndex::NUM_WALK_FRAMES];
+    static ALLEGRO_BITMAP *actorStandSub[ActorIndex::NUM_FACING_DIRS * ActorIndex::NUM_STAND_FRAMES];
 
     static void Initialize();
     static void Uninitialize();

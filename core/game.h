@@ -22,12 +22,13 @@
 
 #include "config/configuration.h"
 
+
 #include "world/area.h"
+#include "world/actor.h"
+#include "world/pc.h"
 
 struct Game
 {
-    static constexpr const char* STARTING_AREA = "0";
-
     static bool exit;
     static bool redraw;
 

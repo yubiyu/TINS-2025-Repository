@@ -15,15 +15,15 @@
 #include "resource/text.h"
 #include "resource/palette.h"
 
-#include "world/camera.h"
-#include "world/area.h"
-
 #include "scene/scene.h"
 
+#include "world/camera.h"
+#include "world/area.h"
+#include "world/actor.h"
+#include "world/pc.h"
 
 struct Worldview
 {
-
     static void Initialize();
     static void Uninitialize();
 
@@ -31,12 +31,8 @@ struct Worldview
     static void Input();
     static void Drawing();
 
-    static void ProgressWorld();
-    static void UpdateUI();
-
     static void DrawGridUnderlay();
     static void DrawGridCameraCrosshair();
     static void DrawGridText(float mouseTransformedX, float mouseTransformedY);
-
 
 };

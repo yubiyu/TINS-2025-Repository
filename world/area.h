@@ -14,6 +14,8 @@
 
 struct Area
 {
+    static constexpr const char* STARTING_AREA = "0";
+
     enum enumDomains
     {
         DOMAIN_SULWON = 0,

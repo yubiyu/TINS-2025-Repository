@@ -36,7 +36,7 @@ void Camera::Initialize()
     zoomTranslateY = 0;
 
     Camera::SetCell(0, 0);
-    Camera::WarpToDestination();
+    Camera::WarpToXYDestination();
 
 }
 
@@ -85,6 +85,50 @@ void Camera::Logic()
     }
 }
 
+void Camera::Input()
+{
+    if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_UP])
+    {
+        if(zoomScale < SCALE_MAX)
+        {
+            zoomScale += 0.1;
+
+            zoomTranslateX -= Display::NATIVE_WIDTH*0.05; // Ten 0.05s = 0.5
+            zoomTranslateY -= Display::NATIVE_HEIGHT*0.05;
+
+            //std::cout << "zoom scale " << zoomScale << " (" << zoomScale*100 << "%)" << std::endl;
+        }
+
+        al_set_mouse_z(0);
+    }
+    else if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_DOWN])
+    {
+        if(zoomScale > SCALE_MIN)
+        {
+            zoomScale -= 0.1;
+
+            zoomTranslateX += Display::NATIVE_WIDTH*0.05; // Ten 0.05s = 0.5
+            zoomTranslateY += Display::NATIVE_HEIGHT*0.05;
+
+            //std::cout << "zoom scale " << zoomScale << " (" << zoomScale*100 << "%)" << std::endl;
+        }
+
+        al_set_mouse_z(0);
+    }
+    else if(Mouse::mouseInput[Mouse::MOUSE_MIDDLE])
+    {
+        zoomScale = 1;
+        zoomTranslateX = 0;
+        zoomTranslateY = 0;
+    }
+
+    if(Mouse::mouseButtonHoldTicks[Mouse::MOUSE_LEFT] == 1)
+    {
+
+    }
+
+}
+
 void Camera::ApproachDestinationLinear(float change)
 {
     if(!atDestination)
@@ -100,7 +144,7 @@ void Camera::ApproachDestinationLinear(float change)
             yPosition -= change;
 
         if(std::abs(xDestination - xPosition) <= 2.0 && std::abs(yDestination - yPosition) <= 2.0)
-            WarpToDestination();
+            WarpToXYDestination();
     }
 }
 
@@ -115,11 +159,11 @@ void Camera::ApproachDestinationFractional(float change)
             yPosition += (yDestination - yPosition)*change;
 
         if(std::abs(xDestination - xPosition) <= 2.0 && std::abs(yDestination - yPosition) <= 2.0)
-            WarpToDestination();
+            WarpToXYDestination();
     }
 }
 
-void Camera::WarpToDestination()
+void Camera::WarpToXYDestination()
 {
     atDestination = true;
     approachingDestination = false;

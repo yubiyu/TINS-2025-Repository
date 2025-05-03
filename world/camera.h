@@ -8,6 +8,8 @@
 #include "core/display.h"
 #include "core/tile.h"
 
+#include "input/mouse.h"
+
 // Note: The camera should try to follow tiles, not follow actors
 struct Camera
 {
@@ -47,8 +49,9 @@ struct Camera
     static void SetDestinationCell(int x, int y);
 
     static void Logic();
+    static void Input();
 
     static void ApproachDestinationLinear(float change);
     static void ApproachDestinationFractional(float change);
-    static void WarpToDestination();
+    static void WarpToXYDestination();
 };

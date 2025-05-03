@@ -39,10 +39,18 @@ struct Util
         return y;
     }
 
+    static inline void al_round_rgb(ALLEGRO_COLOR* color)
+    {
+        int ri = static_cast<int>(color->r * 255.0f + 0.5f);
+        int gi = static_cast<int>(color->g * 255.0f + 0.5f);
+        int bi = static_cast<int>(color->b * 255.0f + 0.5f);
+
+        *color = al_map_rgb(ri, gi, bi);
+    }
+
     static inline void DrawPlaceholder32(float x, float y)
     {
         al_draw_filled_rectangle(x, y, x+32, y+32, al_map_rgb(100,100,100));
-
     }
 
     static inline int string_al_get_text_width(const ALLEGRO_FONT *f, std::string str)
