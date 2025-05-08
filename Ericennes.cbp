@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="Ericennes" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin/Debug/Ericennes" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Debug/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-g" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin/Release/Ericennes" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj/Release/" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add option="-Wall" />
+			<Add option="-std=gnu++17" />
+			<Add option="`pkg-config --cflags allegro-5 allegro_image-5 allegro_color-5 allegro_font-5 allegro_ttf-5 allegro_audio-5 allegro_acodec-5 allegro_dialog-5 allegro_primitives-5 allegro_physfs-5 physfs`" />
+			<Add directory="/home/yubi/Development/Projects/Ericennes-Repository/" />
+		</Compiler>
+		<Linker>
+			<Add option="`pkg-config --libs allegro-5 allegro_image-5 allegro_color-5 allegro_font-5 allegro_ttf-5 allegro_audio-5 allegro_acodec-5 allegro_dialog-5 allegro_primitives-5 allegro_physfs-5 physfs`" />
+		</Linker>
+		<Unit filename="config/areas.cfg" />
+		<Unit filename="config/configuration.cpp" />
+		<Unit filename="config/configuration.h" />
+		<Unit filename="config/settings.cfg" />
+		<Unit filename="core/display.cpp" />
+		<Unit filename="core/display.h" />
+		<Unit filename="core/event.cpp" />
+		<Unit filename="core/event.h" />
+		<Unit filename="core/filesystem.h" />
+		<Unit filename="core/game.cpp" />
+		<Unit filename="core/game.h" />
+		<Unit filename="core/main.cpp" />
+		<Unit filename="core/tile.h" />
+		<Unit filename="core/timer.cpp" />
+		<Unit filename="core/timer.h" />
+		<Unit filename="core/util.h" />
+		<Unit filename="input/keyboard.cpp" />
+		<Unit filename="input/keyboard.h" />
+		<Unit filename="input/mouse.cpp" />
+		<Unit filename="input/mouse.h" />
+		<Unit filename="resource/audio.cpp" />
+		<Unit filename="resource/audio.h" />
+		<Unit filename="resource/image.cpp" />
+		<Unit filename="resource/image.h" />
+		<Unit filename="resource/palette.cpp" />
+		<Unit filename="resource/palette.h" />
+		<Unit filename="resource/text.cpp" />
+		<Unit filename="resource/text.h" />
+		<Unit filename="scene/archive.cpp" />
+		<Unit filename="scene/archive.h" />
+		<Unit filename="scene/menu.h" />
+		<Unit filename="scene/scene.cpp" />
+		<Unit filename="scene/scene.h" />
+		<Unit filename="scene/settings.cpp" />
+		<Unit filename="scene/settings.h" />
+		<Unit filename="scene/title.cpp" />
+		<Unit filename="scene/title.h" />
+		<Unit filename="scene/worldview.cpp" />
+		<Unit filename="scene/worldview.h" />
+		<Unit filename="world/actor.cpp" />
+		<Unit filename="world/actor.h" />
+		<Unit filename="world/actorindex.h" />
+		<Unit filename="world/area.cpp" />
+		<Unit filename="world/area.h" />
+		<Unit filename="world/camera.cpp" />
+		<Unit filename="world/camera.h" />
+		<Unit filename="world/cellindex.h" />
+		<Unit filename="world/pc.cpp" />
+		<Unit filename="world/pc.h" />
+		<Extensions />
+	</Project>
+</CodeBlocks_project_file>

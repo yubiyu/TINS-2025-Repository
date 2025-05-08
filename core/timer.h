@@ -1,5 +1,4 @@
-#ifndef TIMER_H_INCLUDED
-#define TIMER_H_INCLUDED
+#pragma once
 
 #include <allegro5/allegro5.h>
 
@@ -13,5 +12,3 @@ struct Timer
     static void Uninitialize();
 
 };
-
-#endif // TIMER_H_INCLUDED

@@ -22,10 +22,11 @@
 
 #include "config/configuration.h"
 
-
 #include "world/area.h"
 #include "world/actor.h"
 #include "world/pc.h"
+
+#include <iostream>
 
 struct Game
 {

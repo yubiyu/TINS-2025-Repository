@@ -67,6 +67,13 @@ bool Game::Initialize(char **argv)
     srand(time(NULL));
 
     al_install_system(ALLEGRO_VERSION_INT, NULL);
+    uint32_t allegroVersion = al_get_allegro_version();
+    int versionMajor = allegroVersion >> 24;
+    int versionMinor = (allegroVersion >> 16) & 255;
+    int versionRevision = (allegroVersion >> 8) & 255;
+    int versionRelease = allegroVersion & 255;
+    std::cout << "Game: Allegro version " << versionMajor << "." << versionMinor << "." << versionRevision << " " << versionRelease << std::endl;
+
     Display::Initialize();
     Keyboard::Initialize();
     Mouse::Initialize();
