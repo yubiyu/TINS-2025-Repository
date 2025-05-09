@@ -1,5 +1,7 @@
 #pragma once
 
+#include "resource/audio.h"
+
 struct Scene
 {
     enum enumScene

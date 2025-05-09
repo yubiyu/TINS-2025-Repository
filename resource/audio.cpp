@@ -3,6 +3,8 @@
 ALLEGRO_SAMPLE_INSTANCE* Audio::activeBgmInstance;
 std::vector<ALLEGRO_SAMPLE_INSTANCE*> Audio::activeSfxInstances;
 
+ALLEGRO_SAMPLE* Audio::titleBgm;
+
 float Audio::bgmGain;
 float Audio::sfxGain;
 
@@ -36,10 +38,14 @@ void Audio::Uninitialize()
 void Audio::LoadResources()
 {
     al_reserve_samples(16);
+
+    titleBgm = al_load_sample("title.wav");
 }
 
 void Audio::UnloadResources()
 {
+    al_destroy_sample(titleBgm);
+
 }
 
 void Audio::SetBgmGain(float gain)

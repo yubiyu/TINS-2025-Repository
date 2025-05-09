@@ -16,6 +16,7 @@ void Scene::ChangeScene(int whichScene)
     {
     case SCENE_TITLE:
         ChangeInputContext(INPUT_CONTEXT_TITLE);
+        Audio::SetActiveBgm(Audio::titleBgm, 0);
         break;
 
     case SCENE_WORLDVIEW:

@@ -8,11 +8,12 @@ ALLEGRO_BITMAP* Image::settingsVolumeBarFullPng;
 ALLEGRO_BITMAP* Image::settingsVolumeBarEmptyPng;
 
 ALLEGRO_BITMAP* Image::areaCellsPng;
-ALLEGRO_BITMAP* Image::areaCellsSub[CellIndex::NUM_CELL_TYPES];
+std::vector<ALLEGRO_BITMAP*> Image::areaCellsSub;
 
 ALLEGRO_BITMAP* Image::actorPng;
-ALLEGRO_BITMAP* Image::actorWalkSub[ActorIndex::NUM_FACING_DIRS * ActorIndex::NUM_WALK_FRAMES];
-ALLEGRO_BITMAP* Image::actorStandSub[ActorIndex::NUM_FACING_DIRS * ActorIndex::NUM_STAND_FRAMES];
+std::vector<ALLEGRO_BITMAP*> Image::actorWalkSub;
+std::vector<ALLEGRO_BITMAP*> Image::actorStandSub;
+
 
 void Image::Initialize()
 {
@@ -32,6 +33,8 @@ void Image::Uninitialize()
 
 void Image::LoadResources()
 {
+    std::cout << "Image: Loading resources." << std::endl;
+
     menuOptionMarkerPng = al_load_bitmap("menuOptionMarker.png");
 
     titleImagePng = al_load_bitmap("titleImage.png");
@@ -41,21 +44,21 @@ void Image::LoadResources()
 
     areaCellsPng = al_load_bitmap("areaCells.png");
     for(size_t i = 0; i < CellIndex::NUM_CELL_TYPES; i++)
-        areaCellsSub[i] = al_create_sub_bitmap(areaCellsPng, Tile::WIDTH*i, Tile::HALF_HEIGHT*0, Tile::WIDTH, Tile::HEIGHT);
+        areaCellsSub.push_back( al_create_sub_bitmap(areaCellsPng, Tile::WIDTH*i, Tile::HALF_HEIGHT*0, Tile::WIDTH, Tile::HEIGHT) );
 
-    actorPng = al_load_bitmap("actorWalk.png");
-    for(size_t i = 0; i < ActorIndex::NUM_STAND_FRAMES * ActorIndex::NUM_FACING_DIRS; i++)
-        actorStandSub[i] = al_create_sub_bitmap(actorPng,
-                                           i*ActorIndex::NUM_WALK_FRAMES*Tile::WIDTH + ActorIndex::WALK_STAND_FRAME_INDEX*Tile::WIDTH,
-                                           0,
-                                           Tile::WIDTH, Tile::HEIGHT);
-    for(size_t i = 0; i < ActorIndex::NUM_WALK_FRAMES * ActorIndex::NUM_FACING_DIRS; i++)
-        actorWalkSub[i] = al_create_sub_bitmap(actorPng,
-                                               i*Tile::WIDTH,
-                                               0,
-                                               Tile::WIDTH, Tile::HEIGHT);
+    actorPng = al_load_bitmap("actorAtlas.png");
 
+    for(size_t y = 0; y < ActorIndex::NUM_SPRITE_IDS; y++)
+    {
+        for(size_t x = 0; x < ActorIndex::NUM_FACING_DIRS*ActorIndex::NUM_WALK_FRAMES; x++)
+        {
+            actorWalkSub.push_back( al_create_sub_bitmap(actorPng, x*Tile::WIDTH, y*Tile::HEIGHT, Tile::WIDTH, Tile::HEIGHT) );
 
+            if(x % (ActorIndex::NUM_WALK_FRAMES + ActorIndex::WALK_STAND_FRAME_INDEX) == 0)
+                actorStandSub.push_back( al_create_sub_bitmap(actorPng, x*Tile::WIDTH, y*Tile::HEIGHT, Tile::WIDTH, Tile::HEIGHT) );
+
+        }
+    }
 }
 
 void Image::UnloadResources()
@@ -67,14 +70,16 @@ void Image::UnloadResources()
     al_destroy_bitmap(settingsVolumeBarFullPng);
     al_destroy_bitmap(settingsVolumeBarEmptyPng);
 
-    for(size_t i = 0; i < CellIndex::NUM_CELL_TYPES; i++)
+    for(size_t i = 0; i < areaCellsSub.size(); i++)
         al_destroy_bitmap(areaCellsSub[i]);
+    areaCellsSub.clear();
     al_destroy_bitmap(areaCellsPng);
 
-    for(size_t i = 0; i < ActorIndex::NUM_FACING_DIRS; i++)
+    for(size_t i = 0; i < actorStandSub.size(); i++)
         al_destroy_bitmap(actorStandSub[i]);
-    for(size_t i = 0; i < ActorIndex::NUM_WALK_FRAMES * ActorIndex::NUM_FACING_DIRS; i++)
+    actorStandSub.clear();
+    for(size_t i = 0; i < actorWalkSub.size(); i++)
         al_destroy_bitmap(actorWalkSub[i]);
+    actorWalkSub.clear();
     al_destroy_bitmap(actorPng);
 }
-

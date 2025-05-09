@@ -10,6 +10,8 @@ struct Audio
     static ALLEGRO_SAMPLE_INSTANCE*activeBgmInstance;
     static std::vector<ALLEGRO_SAMPLE_INSTANCE*>activeSfxInstances;
 
+    static ALLEGRO_SAMPLE*titleBgm;
+
     static float bgmGain;
     static float sfxGain;
 

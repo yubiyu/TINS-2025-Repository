@@ -38,10 +38,10 @@
 	"../core/event.h"
 	"../core/display.h"
 
-1746543902 source:/home/yubi/Development/Projects/Ericennes-Repository/resource/audio.cpp
+1746759191 source:/home/yubi/Development/Projects/Ericennes-Repository/resource/audio.cpp
 	"audio.h"
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository/resource/audio.h
+1746758476 /home/yubi/Development/Projects/Ericennes-Repository/resource/audio.h
 	<allegro5/allegro_audio.h>
 	<allegro5/allegro_acodec.h>
 	<vector>
@@ -104,26 +104,28 @@
 	"../core/event.h"
 	"../core/display.h"
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository//resource/image.h
+1746767167 /home/yubi/Development/Projects/Ericennes-Repository//resource/image.h
 	<allegro5/allegro5.h>
 	<allegro5/allegro_image.h>
 	<allegro5/allegro_primitives.h>
 	"core/tile.h"
 	"world/cellindex.h"
 	"world/actorindex.h"
+	<vector>
+	<iostream>
 
 1746543902 /home/yubi/Development/Projects/Ericennes-Repository//core/tile.h
 
 1746543902 /home/yubi/Development/Projects/Ericennes-Repository//world/cellindex.h
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository//world/actorindex.h
+1746766682 /home/yubi/Development/Projects/Ericennes-Repository//world/actorindex.h
 
 1746543902 /home/yubi/Development/Projects/Ericennes-Repository//resource/text.h
 	<allegro5/allegro_font.h>
 	<allegro5/allegro_ttf.h>
 	"core/tile.h"
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository//resource/audio.h
+1746758476 /home/yubi/Development/Projects/Ericennes-Repository//resource/audio.h
 	<allegro5/allegro_audio.h>
 	<allegro5/allegro_acodec.h>
 	<vector>
@@ -137,7 +139,8 @@
 	<unordered_map>
 	<iostream>
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository//scene/scene.h
+1746759119 /home/yubi/Development/Projects/Ericennes-Repository//scene/scene.h
+	"resource/audio.h"
 
 1746543902 /home/yubi/Development/Projects/Ericennes-Repository//scene/title.h
 	"core/display.h"
@@ -235,16 +238,18 @@
 1746543902 source:/home/yubi/Development/Projects/Ericennes-Repository/core/main.cpp
 	"game.h"
 
-1746543902 source:/home/yubi/Development/Projects/Ericennes-Repository/resource/image.cpp
+1746767226 source:/home/yubi/Development/Projects/Ericennes-Repository/resource/image.cpp
 	"image.h"
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository/resource/image.h
+1746767167 /home/yubi/Development/Projects/Ericennes-Repository/resource/image.h
 	<allegro5/allegro5.h>
 	<allegro5/allegro_image.h>
 	<allegro5/allegro_primitives.h>
 	"core/tile.h"
 	"world/cellindex.h"
 	"world/actorindex.h"
+	<vector>
+	<iostream>
 
 1746543902 source:/home/yubi/Development/Projects/Ericennes-Repository/resource/palette.cpp
 	"palette.h"
@@ -283,10 +288,11 @@
 	<string>
 	<cmath>
 
-1746543902 source:/home/yubi/Development/Projects/Ericennes-Repository/scene/scene.cpp
+1746759159 source:/home/yubi/Development/Projects/Ericennes-Repository/scene/scene.cpp
 	"scene.h"
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository/scene/scene.h
+1746759119 /home/yubi/Development/Projects/Ericennes-Repository/scene/scene.h
+	"resource/audio.h"
 
 1746543902 source:/home/yubi/Development/Projects/Ericennes-Repository/scene/settings.cpp
 	"settings.h"

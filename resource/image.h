@@ -8,6 +8,9 @@
 #include "world/cellindex.h"
 #include "world/actorindex.h"
 
+#include <vector>
+#include <iostream>
+
 struct Image
 {
     static ALLEGRO_BITMAP *scalingBuffer;
@@ -20,11 +23,11 @@ struct Image
     static ALLEGRO_BITMAP *settingsVolumeBarEmptyPng;
 
     static ALLEGRO_BITMAP *areaCellsPng;
-    static ALLEGRO_BITMAP *areaCellsSub[CellIndex::NUM_CELL_TYPES];
+    static std::vector<ALLEGRO_BITMAP*>areaCellsSub;
 
     static ALLEGRO_BITMAP *actorPng;
-    static ALLEGRO_BITMAP *actorWalkSub[ActorIndex::NUM_FACING_DIRS * ActorIndex::NUM_WALK_FRAMES];
-    static ALLEGRO_BITMAP *actorStandSub[ActorIndex::NUM_FACING_DIRS * ActorIndex::NUM_STAND_FRAMES];
+    static std::vector<ALLEGRO_BITMAP*>actorWalkSub;
+    static std::vector<ALLEGRO_BITMAP*>actorStandSub;
 
     static void Initialize();
     static void Uninitialize();
