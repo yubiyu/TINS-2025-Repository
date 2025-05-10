@@ -118,7 +118,7 @@
 
 1746543902 /home/yubi/Development/Projects/Ericennes-Repository//world/cellindex.h
 
-1746766682 /home/yubi/Development/Projects/Ericennes-Repository//world/actorindex.h
+1746910283 /home/yubi/Development/Projects/Ericennes-Repository//world/actorindex.h
 
 1746543902 /home/yubi/Development/Projects/Ericennes-Repository//resource/text.h
 	<allegro5/allegro_font.h>
@@ -198,12 +198,12 @@
 	<iostream>
 	<sstream>
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository//world/actor.h
+1746901620 /home/yubi/Development/Projects/Ericennes-Repository//world/actor.h
 	"core/tile.h"
 	"world/actorindex.h"
 	<iostream>
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository//world/pc.h
+1746910649 /home/yubi/Development/Projects/Ericennes-Repository//world/pc.h
 	"input/keyboard.h"
 	"resource/image.h"
 	"world/actorindex.h"
@@ -349,10 +349,10 @@
 	"world/actor.h"
 	"world/pc.h"
 
-1746543902 source:/home/yubi/Development/Projects/Ericennes-Repository/world/actor.cpp
+1746901630 source:/home/yubi/Development/Projects/Ericennes-Repository/world/actor.cpp
 	"actor.h"
 
-1746543902 /home/yubi/Development/Projects/Ericennes-Repository/world/actor.h
+1746901620 /home/yubi/Development/Projects/Ericennes-Repository/world/actor.h
 	"core/tile.h"
 	"world/actorindex.h"
 	<iostream>

@@ -23,6 +23,8 @@ class Actor
 
     int action{};
 
+    int spriteID{};
+
     bool hasAnimations{};
     int currentFrame{}, numFrames{};
     int currentFrameDelay{}, maxFrameDelay{};
@@ -112,6 +114,9 @@ public:
 
     int GetAction()const{return action;}
     void SetAction(int which_action);
+
+    int GetSpriteID()const{return spriteID;}
+    void SetSpriteID(int id){spriteID = id;}
 
     bool GetHasAnimations()const{return hasAnimations;}
     void SetHasAnimations(bool b){hasAnimations = b;}

@@ -8,7 +8,8 @@ Actor::Actor()
 
     facing = ActorIndex::FACING_DIR_DOWN;
     moveSpeed = ActorIndex::MOVE_SPEED_BASE;
-    action = ActorIndex::ACTION_STAND;
+
+    SetAction(ActorIndex::ACTION_STAND);
 }
 
 Actor::~Actor()
