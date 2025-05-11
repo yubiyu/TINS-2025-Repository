@@ -28,6 +28,12 @@ void Worldview::Input()
 
     Camera::Input();
 
+    if(Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
+        Dialog::Activate("Hi! This is a test.");
+
+    else if(Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
+        Dialog::Deactivate();
+
 }
 
 void Worldview::Drawing()
@@ -46,6 +52,8 @@ void Worldview::Drawing()
 
     Area::Drawing();
     PC::pc->Drawing();
+
+    Dialog::Drawing();
 
     al_set_target_bitmap(Display::scaleBuffer);
     al_clear_to_color(COLKEY_BACKGROUND);

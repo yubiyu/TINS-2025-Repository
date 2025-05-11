@@ -66,7 +66,7 @@ void Title::Drawing()
 {
     al_draw_bitmap(Image::titleImagePng, TITLE_IMAGE_X, TITLE_IMAGE_Y, 0);
 
-    al_draw_text(Text::publicPixel16, COLKEY_TEXT_TITLE, TITLE_TEXT_X, TITLE_TEXT_Y, 0, TITLE_TEXT);
+    al_draw_text(FONTDEF_TITLE, COLKEY_TEXT_TITLE, TITLE_TEXT_X, TITLE_TEXT_Y, 0, TITLE_TEXT);
 
     al_draw_bitmap(Image::menuOptionMarkerPng,
                    optionTextX[Title::targetedOption] - Menu::OPTION_MARKER_SPRITE_X_SPACING,

@@ -21,6 +21,7 @@
 #include "area.h"
 #include "actor.h"
 #include "pc.h"
+#include "dialog.h"
 
 struct Worldview
 {
