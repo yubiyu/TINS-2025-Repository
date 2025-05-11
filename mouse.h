@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../core/event.h"
+#include "event.h"
 
-#include "../core/display.h"
+#include "display.h"
 
 struct Mouse
 {

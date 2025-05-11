@@ -1,6 +1,6 @@
 #pragma once
 
-#include "resource/audio.h"
+#include "audio.h"
 
 struct Scene
 {

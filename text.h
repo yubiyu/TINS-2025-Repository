@@ -3,7 +3,7 @@
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
 
-#include "core/tile.h"
+#include "tile.h"
 
 #define FONTDEF_MENU_OPTION                 Text::publicPixel8
 

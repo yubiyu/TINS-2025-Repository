@@ -1,14 +1,14 @@
 #pragma once
 
-#include "core/display.h"
-#include "core/util.h"
+#include "display.h"
+#include "util.h"
 
-#include "input/keyboard.h"
+#include "keyboard.h"
 
-#include "resource/text.h"
-#include "resource/palette.h"
+#include "text.h"
+#include "palette.h"
 
-#include "scene/scene.h"
+#include "scene.h"
 
 #include <allegro5/allegro_primitives.h>
 

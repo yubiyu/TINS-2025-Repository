@@ -14,7 +14,7 @@
 #define COLKEY_TEXT_VALUE_HIGHLIGHTED                       Palette::COL_GB[Palette::palettePreset][3]
 #define COLKEY_TEXT_DESCRIPTION                             Palette::COL_GB[Palette::palettePreset][2]
 
-#include "core/util.h"
+#include "util.h"
 
 #include <cmath>
 #include <string>

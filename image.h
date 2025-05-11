@@ -4,9 +4,9 @@
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_primitives.h>
 
-#include "core/tile.h"
-#include "world/cellindex.h"
-#include "world/actorindex.h"
+#include "tile.h"
+#include "cellindex.h"
+#include "actorindex.h"
 
 #include <vector>
 #include <iostream>

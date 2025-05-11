@@ -4,23 +4,23 @@
 #include <string>
 #include <iostream>
 
-#include "core/tile.h"
-#include "core/util.h"
+#include "tile.h"
+#include "util.h"
 
-#include "input/keyboard.h"
-#include "input/mouse.h"
+#include "keyboard.h"
+#include "mouse.h"
 
-#include "resource/image.h"
-#include "resource/audio.h"
-#include "resource/text.h"
-#include "resource/palette.h"
+#include "image.h"
+#include "audio.h"
+#include "text.h"
+#include "palette.h"
 
-#include "scene/scene.h"
+#include "scene.h"
 
-#include "world/camera.h"
-#include "world/area.h"
-#include "world/actor.h"
-#include "world/pc.h"
+#include "camera.h"
+#include "area.h"
+#include "actor.h"
+#include "pc.h"
 
 struct Worldview
 {

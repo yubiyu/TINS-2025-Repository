@@ -1,11 +1,11 @@
 #pragma once
 
-#include "input/keyboard.h"
+#include "keyboard.h"
 
-#include "resource/image.h"
+#include "image.h"
 
-#include "world/actorindex.h"
-#include "world/actor.h"
+#include "actorindex.h"
+#include "actor.h"
 
 
 class PC : public Actor

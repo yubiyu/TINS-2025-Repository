@@ -1,6 +1,6 @@
 #pragma once
 
-#include <resource/image.h>
+#include "image.h"
 
 #include <string>
 

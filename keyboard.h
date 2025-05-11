@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../core/event.h"
+#include "event.h"
 
 struct Keyboard
 {

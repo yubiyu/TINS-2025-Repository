@@ -1,10 +1,10 @@
 #pragma once
 
-#include "config/configuration.h"
+#include "configuration.h"
 
-#include "resource/image.h"
+#include "image.h"
 
-#include "world/cellindex.h"
+#include "cellindex.h"
 
 #include <string>
 #include <sstream>

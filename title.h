@@ -1,16 +1,16 @@
 #pragma once
 
-#include "core/display.h"
-#include "core/util.h"
+#include "display.h"
+#include "util.h"
 
-#include "input/keyboard.h"
+#include "keyboard.h"
 
-#include "resource/image.h"
-#include "resource/text.h"
-#include "resource/palette.h"
+#include "image.h"
+#include "text.h"
+#include "palette.h"
 
-#include "scene/scene.h"
-#include "scene/menu.h"
+#include "scene.h"
+#include "menu.h"
 
 #include <string>
 #include <unordered_map>

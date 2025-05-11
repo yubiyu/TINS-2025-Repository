@@ -1,4 +1,4 @@
-#include "world/pc.h"
+#include "pc.h"
 
 PC* PC::pc;
 

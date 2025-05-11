@@ -1,8 +1,8 @@
 #pragma once
 
-#include "core/tile.h"
+#include "tile.h"
 
-#include "world/actorindex.h"
+#include "actorindex.h"
 
 #include <iostream>
 

@@ -1,0 +1,19 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build cpp project",
+      "type": "shell",
+      "command": "sh",
+      "args": [
+        "-c",
+        "g++ -g *.cpp $(pkg-config --cflags --libs allegro-5 allegro_image-5 allegro_color-5 allegro_font-5 allegro_ttf-5 allegro_audio-5 allegro_acodec-5 allegro_dialog-5 allegro_primitives-5 allegro_physfs-5 physfs) -o Ericennes.exe"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "problemMatcher": ["$gcc"]
+    }
+  ]
+}
