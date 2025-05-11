@@ -58,12 +58,13 @@ void Dialog::Activate(std::string text_content)
     std::cout << "Dialog: Debug: Activate dialog num lines = " << textFieldBufferLines << std::endl;
     textFieldBuffer = al_create_bitmap(TEXT_FIELD_WIDTH, textFieldBufferLines * TEXT_LINE_HEIGHT);
 
-    ALLEGRO_BITMAP *targetBitmap = al_get_target_bitmap();
+    ALLEGRO_BITMAP *previousTargetBitmap = al_get_target_bitmap();
     al_set_target_bitmap(textFieldBuffer);
     Util::string_al_draw_multiline_text(FONTDEF_DIALOG, COLKEY_DIALOG_TEXT,
-                                        textXPosition, textYPosition, TEXT_FIELD_WIDTH, TEXT_LINE_HEIGHT, ALLEGRO_ALIGN_LEFT,
+                                        0, 0, TEXT_FIELD_WIDTH, TEXT_LINE_HEIGHT, ALLEGRO_ALIGN_LEFT,
                                         text);
-    al_set_target_bitmap(targetBitmap); // Return to previous target.
+    al_set_target_bitmap(previousTargetBitmap);
+    al_draw_bitmap(textFieldBuffer, TEXT_FIELD_X, TEXT_FIELD_Y, 0);
 }
 
 void Dialog::Deactivate()

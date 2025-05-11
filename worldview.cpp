@@ -29,7 +29,7 @@ void Worldview::Input()
     Camera::Input();
 
     if(Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
-        Dialog::Activate("Hi! This is a test.");
+        Dialog::Activate("Hi! Do you like WAFFLES? Do you like PANCAKES? This is a test!");
 
     else if(Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
         Dialog::Deactivate();
