@@ -5,7 +5,7 @@ PC* PC::pc;
 PC::PC()
 {
     SetHasAnimations(true);
-    SetSpriteID(ActorIndex::SPRITE_GNAW);
+    SetSpriteID(ActorIndex::SPRITE_OWL);
 }
 
 PC::~PC()
@@ -31,8 +31,7 @@ void PC::Drawing()
 
     case ActorIndex::ACTION_STAND:
         drawIndex = GetSpriteID()*ActorIndex::STAND_SUB_BITMAPS_COLS +
-                    GetFacing()*ActorIndex::NUM_STAND_FRAMES +
-                    GetCurrentFrame();
+                    GetFacing()*ActorIndex::NUM_STAND_FRAMES;
         al_draw_bitmap(Image::actorStandSub[drawIndex], GetXPosition(), GetYPosition(), 0);
         break;
     }

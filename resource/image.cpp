@@ -54,11 +54,12 @@ void Image::LoadResources()
         {
             actorWalkSub.push_back( al_create_sub_bitmap(actorPng, x*Tile::WIDTH, y*Tile::HEIGHT, Tile::WIDTH, Tile::HEIGHT) );
 
-            if(x % (ActorIndex::NUM_WALK_FRAMES + ActorIndex::WALK_STAND_FRAME_INDEX) == 0)
+            if(x%ActorIndex::NUM_WALK_FRAMES == ActorIndex::WALK_STAND_FRAME_INDEX)
                 actorStandSub.push_back( al_create_sub_bitmap(actorPng, x*Tile::WIDTH, y*Tile::HEIGHT, Tile::WIDTH, Tile::HEIGHT) );
-
         }
     }
+
+    dialogFramePng = al_load_bitmap("dialogFrame.png");
 }
 
 void Image::UnloadResources()
@@ -82,4 +83,6 @@ void Image::UnloadResources()
         al_destroy_bitmap(actorWalkSub[i]);
     actorWalkSub.clear();
     al_destroy_bitmap(actorPng);
+
+    al_destroy_bitmap(dialogFramePng);
 }

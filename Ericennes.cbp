@@ -41,6 +41,7 @@
 		<Unit filename="config/configuration.cpp" />
 		<Unit filename="config/configuration.h" />
 		<Unit filename="config/settings.cfg" />
+		<Unit filename="core/dialog.h" />
 		<Unit filename="core/display.cpp" />
 		<Unit filename="core/display.h" />
 		<Unit filename="core/event.cpp" />

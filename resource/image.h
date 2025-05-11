@@ -29,6 +29,8 @@ struct Image
     static std::vector<ALLEGRO_BITMAP*>actorWalkSub;
     static std::vector<ALLEGRO_BITMAP*>actorStandSub;
 
+    static ALLEGRO_BITMAP *dialogFramePng;
+
     static void Initialize();
     static void Uninitialize();
 
