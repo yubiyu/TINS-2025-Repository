@@ -77,12 +77,12 @@ void Title::Drawing()
     {
         if(targetedOption == i)
         {
-            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_TEXT_VALUE_HIGHLIGHTED,
+            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_MENU_TEXT_HIGHLIGHTED,
                                  Title::optionTextX[i], Title::optionTextY[i],
                                  ALLEGRO_ALIGN_LEFT, Title::optionStrings.at(i));
         }
         else
-            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_TEXT_VALUE,
+            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_MENU_TEXT,
                                  Title::optionTextX[i], Title::optionTextY[i],
                                  ALLEGRO_ALIGN_LEFT, Title::optionStrings.at(i));
     }

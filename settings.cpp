@@ -134,21 +134,21 @@ void Settings::Drawing()
     {
         if(targetedOption == i)
         {
-            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_TEXT_VALUE_HIGHLIGHTED,
+            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_MENU_TEXT_HIGHLIGHTED,
                                       OPTION_LABELS_X, optionTextY[i],
                                       ALLEGRO_ALIGN_LEFT | ALLEGRO_ALIGN_INTEGER, optionLabels.at(i));
 
-            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_TEXT_VALUE_HIGHLIGHTED,
+            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_MENU_TEXT_HIGHLIGHTED,
                                       OPTION_VALUES_X, optionTextY[i],
                                       ALLEGRO_ALIGN_LEFT | ALLEGRO_ALIGN_INTEGER, optionValues.at(i));
         }
         else
         {
-            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_TEXT_VALUE,
+            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_MENU_TEXT,
                                       OPTION_LABELS_X, optionTextY[i],
                                       ALLEGRO_ALIGN_LEFT | ALLEGRO_ALIGN_INTEGER, optionLabels.at(i));
 
-            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_TEXT_VALUE,
+            Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_MENU_TEXT,
                                       OPTION_VALUES_X, optionTextY[i],
                                       ALLEGRO_ALIGN_LEFT | ALLEGRO_ALIGN_INTEGER, optionValues.at(i));
         }

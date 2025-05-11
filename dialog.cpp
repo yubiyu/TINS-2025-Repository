@@ -2,7 +2,7 @@
 
 bool Dialog::isActive;
 
-ALLEGRO_BITMAP *Dialog::textBuffer;
+ALLEGRO_BITMAP *Dialog::textFieldBuffer;
 
 int Dialog::textXPosition, Dialog::textYPosition;
 
@@ -15,14 +15,14 @@ void Dialog::Initialize()
     textXPosition = 0;
     textYPosition = 0;
 
-    textBuffer = nullptr;
+    textFieldBuffer = nullptr;
 }
 
 void Dialog::Uninitialize()
 {
-    if (textBuffer != nullptr)
+    if (textFieldBuffer != nullptr)
     {
-        al_destroy_bitmap(textBuffer);
+        al_destroy_bitmap(textFieldBuffer);
     }
 }
 
@@ -35,7 +35,7 @@ void Dialog::Drawing()
     if (isActive)
     {
         al_draw_bitmap(Image::dialogFramePng, FRAME_X, FRAME_Y, 0);
-        al_draw_bitmap(textBuffer, textXPosition, textYPosition, 0);
+        al_draw_bitmap(textFieldBuffer, textXPosition, textYPosition, 0);
     }
 }
 
@@ -45,7 +45,7 @@ void Dialog::Input()
 
 void Dialog::Activate(std::string text_content)
 {
-    if (isActive || textBuffer != nullptr)
+    if (isActive || textFieldBuffer != nullptr)
         Deactivate();
 
     isActive = true;
@@ -54,15 +54,15 @@ void Dialog::Activate(std::string text_content)
     textXPosition = TEXT_FIELD_X;
     textYPosition = TEXT_FIELD_Y;
 
-    textBuffer = al_create_bitmap(TEXT_FIELD_WIDTH,
-                                  Util::count_num_lines_will_render(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text) * TEXT_LINE_HEIGHT);
+    int textFieldBufferLines = Util::count_num_lines_will_render(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text);
+    std::cout << "Dialog: Debug: Activate dialog num lines = " << textFieldBufferLines << std::endl;
+    textFieldBuffer = al_create_bitmap(TEXT_FIELD_WIDTH, textFieldBufferLines * TEXT_LINE_HEIGHT);
 
     ALLEGRO_BITMAP *targetBitmap = al_get_target_bitmap();
-    al_set_target_bitmap(textBuffer);
-    Util::string_al_draw_multiline_text(FONTDEF_DIALOG, COLKEY_TEXT_VALUE,
+    al_set_target_bitmap(textFieldBuffer);
+    Util::string_al_draw_multiline_text(FONTDEF_DIALOG, COLKEY_DIALOG_TEXT,
                                         textXPosition, textYPosition, TEXT_FIELD_WIDTH, TEXT_LINE_HEIGHT, ALLEGRO_ALIGN_LEFT,
                                         text);
-
     al_set_target_bitmap(targetBitmap); // Return to previous target.
 }
 
@@ -70,8 +70,8 @@ void Dialog::Deactivate()
 {
     isActive = false;
 
-    if (textBuffer != nullptr)
-        al_destroy_bitmap(textBuffer);
+    if (textFieldBuffer != nullptr)
+        al_destroy_bitmap(textFieldBuffer);
 
-    textBuffer = nullptr;
+    textFieldBuffer = nullptr;
 }

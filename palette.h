@@ -8,11 +8,15 @@
 #define COLKEY_DEBUG_GRID_UNDERLAY                          Palette::COL_GB[Palette::palettePreset][1]
 
 #define COLKEY_TEXT_TITLE                                   Palette::COL_GB[Palette::palettePreset][2]
-//#define COLKEY_TEXT_HEADER                                Palette::COL_GB[Palette::palettePreset][2]
-//#define COLKEY_TEXT_LABEL                                 Palette::COL_GB[Palette::palettePreset][2]
-#define COLKEY_TEXT_VALUE                                   Palette::COL_GB[Palette::palettePreset][1]
-#define COLKEY_TEXT_VALUE_HIGHLIGHTED                       Palette::COL_GB[Palette::palettePreset][3]
-#define COLKEY_TEXT_DESCRIPTION                             Palette::COL_GB[Palette::palettePreset][2]
+
+#define COLKEY_MENU_TEXT                                    Palette::COL_GB[Palette::palettePreset][1]
+#define COLKEY_MENU_TEXT_HIGHLIGHTED                        Palette::COL_GB[Palette::palettePreset][3]
+
+#define COLKEY_DIALOG_TEXT                                  Palette::COL_GB[Palette::palettePreset][1]
+#define COLKEY_DIALOG_TEXT_HIGHLIGHTED                      Palette::COL_GB[Palette::palettePreset][1]
+
+#define COLKEY_DEBUG_TEXT                                   Palette::COL_GB[Palette::palettePreset][1]
+#define COLKEY_DEBUG_TEXT_HIGHLIGHTED                       Palette::COL_GB[Palette::palettePreset][3]
 
 #include "util.h"
 

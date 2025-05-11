@@ -103,6 +103,6 @@ void Worldview::DrawGridText(float mouseTransformedX, float mouseTransformedY)
             + std::to_string(mouseCrosshairXPositionCell) + ", " + std::to_string(mouseCrosshairYPositionCell) + ") "
             + std::to_string(zoomPercentage) + "%";
 
-    Util::string_al_draw_text(Text::builtin8,COLKEY_TEXT_VALUE_HIGHLIGHTED,0,0,ALLEGRO_ALIGN_LEFT,mouseCrosshairPositionString);
+    Util::string_al_draw_text(Text::builtin8,COLKEY_DEBUG_TEXT_HIGHLIGHTED,0,0,ALLEGRO_ALIGN_LEFT,mouseCrosshairPositionString);
 
 }

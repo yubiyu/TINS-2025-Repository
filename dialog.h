@@ -19,8 +19,8 @@ struct Dialog
     static constexpr float FRAME_WIDTH = Tile::WIDTH * 10;
     static constexpr float FRAME_HEIGHT = Tile::HEIGHT * 3;
 
-    static constexpr float TEXT_FIELD_X = Tile::WIDTH * 0.5;  // Relative to FRAME_X
-    static constexpr float TEXT_FIELD_Y = Tile::HEIGHT * 0.5; // Relative to FRAME_Y
+    static constexpr float TEXT_FIELD_X = FRAME_X + Tile::WIDTH * 0.5;
+    static constexpr float TEXT_FIELD_Y = FRAME_Y + Tile::HEIGHT * 0.5;
     static constexpr float TEXT_FIELD_WIDTH = Tile::WIDTH * 9;
     static constexpr float TEXT_FIELD_HEIGHT = Tile::HEIGHT * 3;
 
@@ -29,7 +29,7 @@ struct Dialog
     static int textXPosition, textYPosition;
     static std::string text;
 
-    static ALLEGRO_BITMAP *textBuffer;
+    static ALLEGRO_BITMAP *textFieldBuffer;
     /*
     Entire text pre-drawn to buffer.
     Content to be revealed by way of two masks:
