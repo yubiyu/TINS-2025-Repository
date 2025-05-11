@@ -14,6 +14,8 @@ ALLEGRO_BITMAP* Image::actorPng;
 std::vector<ALLEGRO_BITMAP*> Image::actorWalkSub;
 std::vector<ALLEGRO_BITMAP*> Image::actorStandSub;
 
+ALLEGRO_BITMAP* Image::dialogFramePng;
+
 
 void Image::Initialize()
 {

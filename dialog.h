@@ -6,8 +6,8 @@
 
 struct Dialog
 {
-    static float frameXPosition{}, frameYPosition{};
-    static int textXPosition{}, textYPosition{};
+    static float frameXPosition, frameYPosition;
+    static int textXPosition, textYPosition;
 
     static std::string text;
 
@@ -22,7 +22,7 @@ struct Dialog
 
     static void Drawing()
     {
-        al_draw_bitmap(Image::DialogFramePng, xPosition, yPosition, 0);
+        al_draw_bitmap(Image::dialogFramePng, frameXPosition, frameYPosition, 0);
     }
 
 
@@ -32,4 +32,4 @@ struct Dialog
     }
 
 
-}
+};
