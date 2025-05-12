@@ -30,6 +30,8 @@ struct Image
     static std::vector<ALLEGRO_BITMAP*>actorStandSub;
 
     static ALLEGRO_BITMAP *dialogFramePng;
+    static ALLEGRO_BITMAP *dialogCaretPng;
+    static ALLEGRO_BITMAP *dialogCaretSub[2];
 
     static void Initialize();
     static void Uninitialize();

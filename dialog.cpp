@@ -1,16 +1,19 @@
 #include "dialog.h"
 
-bool Dialog::isActive;
+bool Dialog::isActive {};
 
-ALLEGRO_BITMAP *Dialog::textFieldBuffer;
+ALLEGRO_BITMAP *Dialog::textFieldBuffer {};
 
-int Dialog::textXPosition, Dialog::textYPosition;
+int Dialog::textXPosition {}, Dialog::textYPosition {};
 
-std::string Dialog::text;
+std::string Dialog::text {};
 
-int Dialog::frameTextRow;
-int Dialog::frameTextCol;
-int Dialog::frameScrollingTick;
+int Dialog::currentTextRow {};
+int Dialog::currentTextCol {};
+int Dialog::textNumRows {};
+int Dialog::frameScrollingTick {};
+
+int Dialog::caretFrame {};
 
 void Dialog::Initialize()
 {
@@ -33,17 +36,21 @@ void Dialog::Logic()
         if(frameScrollingTick >= FRAME_SCROLLING_TICKS_NEEDED)
         {
             frameScrollingTick = 0;
-            frameTextCol++;
-            if(frameTextCol > FRAME_TEXT_COLS)
+            currentTextCol++;
+            if(currentTextCol >= TEXT_FIELD_COLS)
             {
-                frameTextCol = 0;
-                frameTextRow++;
-                if(frameTextRow > FRAME_TEXT_ROWS)
+                currentTextCol = 0;
+                currentTextRow++;
+                if(currentTextRow >= TEXT_FIELD_ROWS)
                 {
                     /// Todo
                 }
 
             }
+
+            caretFrame++;
+            if(caretFrame > 1)
+                caretFrame = 0;
         }
     }
 }
@@ -54,6 +61,8 @@ void Dialog::Drawing()
     {
         al_draw_bitmap(Image::dialogFramePng, FRAME_X, FRAME_Y, 0);
         al_draw_bitmap(textFieldBuffer, textXPosition, textYPosition, 0);
+
+        al_draw_bitmap(Image::dialogCaretSub[caretFrame], TEXT_FIELD_X + currentTextCol*Tile::HALF_WIDTH, TEXT_FIELD_Y, 0);
     }
 }
 
@@ -68,13 +77,13 @@ void Dialog::Activate(std::string text_content)
 
     isActive = true;
 
-    text = text_content;
     textXPosition = TEXT_FIELD_X;
     textYPosition = TEXT_FIELD_Y;
+    text = text_content;
+    textNumRows = Util::count_num_lines_will_render(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text);
 
-    int textFieldBufferLines = Util::count_num_lines_will_render(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text);
-    std::cout << "Dialog: Debug: Activate dialog num lines = " << textFieldBufferLines << std::endl;
-    textFieldBuffer = al_create_bitmap(TEXT_FIELD_WIDTH, textFieldBufferLines * TEXT_FIELD_ROW_HEIGHT);
+    std::cout << "Deubg - Dialog: textNumRows = " << textNumRows << std::endl;
+    textFieldBuffer = al_create_bitmap(TEXT_FIELD_WIDTH, textNumRows * TEXT_FIELD_ROW_HEIGHT);
 
     ALLEGRO_BITMAP *previousTargetBitmap = al_get_target_bitmap();
     al_set_target_bitmap(textFieldBuffer);
@@ -83,6 +92,13 @@ void Dialog::Activate(std::string text_content)
                                         text);
     al_set_target_bitmap(previousTargetBitmap);
     al_draw_bitmap(textFieldBuffer, TEXT_FIELD_X, TEXT_FIELD_Y, 0);
+
+    currentTextCol = 0;
+    currentTextRow = textNumRows;
+    if(currentTextRow > TEXT_FIELD_ROWS)
+        currentTextRow = TEXT_FIELD_COLS; // Make currentTextRow the bottom row of the text field.
+
+    frameScrollingTick = 0;
 }
 
 void Dialog::Deactivate()
@@ -93,10 +109,5 @@ void Dialog::Deactivate()
         al_destroy_bitmap(textFieldBuffer);
 
     textFieldBuffer = nullptr;
-
-    frameTextCol = 0;
-    frameTextRow = 0;
-
-    frameScrollingTick = 0;
 
 }

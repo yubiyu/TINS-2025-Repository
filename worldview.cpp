@@ -17,6 +17,8 @@ void Worldview::Logic()
     PC::pc->Logic();
 
     Camera::Logic();
+
+    Dialog::Logic();
 }
 
 void Worldview::Input()

@@ -15,7 +15,8 @@ std::vector<ALLEGRO_BITMAP*> Image::actorWalkSub;
 std::vector<ALLEGRO_BITMAP*> Image::actorStandSub;
 
 ALLEGRO_BITMAP* Image::dialogFramePng;
-
+ALLEGRO_BITMAP* Image::dialogCaretPng;
+ALLEGRO_BITMAP* Image::dialogCaretSub[2];
 
 void Image::Initialize()
 {
@@ -62,6 +63,9 @@ void Image::LoadResources()
     }
 
     dialogFramePng = al_load_bitmap("dialogFrame.png");
+    dialogCaretPng = al_load_bitmap("dialogCaret.png");
+    dialogCaretSub[0] = al_create_sub_bitmap(dialogCaretPng,                0, 0, Tile::HALF_WIDTH, Tile::HALF_HEIGHT);
+    dialogCaretSub[1] = al_create_sub_bitmap(dialogCaretPng, Tile::HALF_WIDTH, 0, Tile::HALF_WIDTH, Tile::HALF_HEIGHT);
 }
 
 void Image::UnloadResources()
@@ -87,4 +91,7 @@ void Image::UnloadResources()
     al_destroy_bitmap(actorPng);
 
     al_destroy_bitmap(dialogFramePng);
+    al_destroy_bitmap(dialogCaretSub[0]);
+    al_destroy_bitmap(dialogCaretSub[1]);
+    al_destroy_bitmap(dialogCaretPng);
 }
