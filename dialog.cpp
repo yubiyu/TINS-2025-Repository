@@ -8,14 +8,13 @@ int Dialog::textXPosition, Dialog::textYPosition;
 
 std::string Dialog::text;
 
+int Dialog::frameTextRow;
+int Dialog::frameTextCol;
+int Dialog::frameScrollingTick;
+
 void Dialog::Initialize()
 {
-    isActive = false;
-
-    textXPosition = 0;
-    textYPosition = 0;
-
-    textFieldBuffer = nullptr;
+    Deactivate();
 }
 
 void Dialog::Uninitialize()
@@ -28,6 +27,25 @@ void Dialog::Uninitialize()
 
 void Dialog::Logic()
 {
+    if(isActive)
+    {
+        frameScrollingTick++;
+        if(frameScrollingTick >= FRAME_SCROLLING_TICKS_NEEDED)
+        {
+            frameScrollingTick = 0;
+            frameTextCol++;
+            if(frameTextCol > FRAME_TEXT_COLS)
+            {
+                frameTextCol = 0;
+                frameTextRow++;
+                if(frameTextRow > FRAME_TEXT_ROWS)
+                {
+                    /// Todo
+                }
+
+            }
+        }
+    }
 }
 
 void Dialog::Drawing()
@@ -56,12 +74,12 @@ void Dialog::Activate(std::string text_content)
 
     int textFieldBufferLines = Util::count_num_lines_will_render(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text);
     std::cout << "Dialog: Debug: Activate dialog num lines = " << textFieldBufferLines << std::endl;
-    textFieldBuffer = al_create_bitmap(TEXT_FIELD_WIDTH, textFieldBufferLines * TEXT_LINE_HEIGHT);
+    textFieldBuffer = al_create_bitmap(TEXT_FIELD_WIDTH, textFieldBufferLines * TEXT_FIELD_ROW_HEIGHT);
 
     ALLEGRO_BITMAP *previousTargetBitmap = al_get_target_bitmap();
     al_set_target_bitmap(textFieldBuffer);
     Util::string_al_draw_multiline_text(FONTDEF_DIALOG, COLKEY_DIALOG_TEXT,
-                                        0, 0, TEXT_FIELD_WIDTH, TEXT_LINE_HEIGHT, ALLEGRO_ALIGN_LEFT,
+                                        0, 0, TEXT_FIELD_WIDTH, TEXT_FIELD_ROW_HEIGHT, ALLEGRO_ALIGN_LEFT,
                                         text);
     al_set_target_bitmap(previousTargetBitmap);
     al_draw_bitmap(textFieldBuffer, TEXT_FIELD_X, TEXT_FIELD_Y, 0);
@@ -75,4 +93,10 @@ void Dialog::Deactivate()
         al_destroy_bitmap(textFieldBuffer);
 
     textFieldBuffer = nullptr;
+
+    frameTextCol = 0;
+    frameTextRow = 0;
+
+    frameScrollingTick = 0;
+
 }

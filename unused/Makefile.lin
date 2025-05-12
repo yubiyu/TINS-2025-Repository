@@ -1,0 +1,16 @@
+LDLIBS=`pkg-config --libs     \
+	allegro_acodec-5      \
+	allegro_font-5        \
+	allegro_dialog-5      \
+	allegro_main-5        \
+	allegro_image-5       \
+	allegro-5             \
+	allegro_primitives-5  \
+	allegro_physfs-5      \
+	allegro_audio-5       \
+	allegro_memfile-5     \
+	allegro_ttf-5         \
+	allegro_color-5`      \
+CXXFLAGS=-DLINUX -O2 -Isrc
+Ericennes.bin : main
+main: 

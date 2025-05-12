@@ -24,7 +24,7 @@ struct Dialog
     static constexpr float TEXT_FIELD_WIDTH = Tile::WIDTH * 9;
     static constexpr float TEXT_FIELD_HEIGHT = Tile::HEIGHT * 3;
 
-    static constexpr float TEXT_LINE_HEIGHT = Text::HEIGHT_8 * 1.5;
+    static constexpr float TEXT_FIELD_ROW_HEIGHT = Text::HEIGHT_8 * 1.5;
 
     static int textXPosition, textYPosition;
     static std::string text;
@@ -37,6 +37,15 @@ struct Dialog
     -Line-by-line scrolling.
     */
 
+    static const int FRAME_TEXT_ROWS = 3;  // 3 rows for 3 lines.
+    static const int FRAME_TEXT_COLS = 18; // 18 cols for 18 characters.
+
+    static int frameTextRow; // The bottom-most row revealed.
+    static int frameTextCol; // The right-most character revealed on the current row.
+
+    static int frameScrollingTick;
+    static const int FRAME_SCROLLING_TICKS_NEEDED = 10;
+
     static void Initialize();
     static void Uninitialize();
 
@@ -46,4 +55,5 @@ struct Dialog
 
     static void Activate(std::string text_content);
     static void Deactivate();
+
 };
