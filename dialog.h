@@ -21,20 +21,9 @@ struct Dialog
     Text area  = The entire text, to be drawn as a rectangular area. Can easily extend far below the text field - and above, as scrolling proceeds. 
     */
 
-    static constexpr float FRAME_X = 0;
-    static constexpr float FRAME_Y = Display::NATIVE_HEIGHT - Tile::HEIGHT * 3;
-    static constexpr float FRAME_WIDTH = Tile::WIDTH * 10;
-
-    static constexpr float TEXT_FIELD_X = FRAME_X + Tile::WIDTH * 0.5;
-    static constexpr float TEXT_FIELD_Y = FRAME_Y + Tile::HEIGHT * 0.5;
-    static constexpr float TEXT_FIELD_WIDTH = FRAME_WIDTH - Tile::WIDTH;
-
-    static constexpr float TEXT_FIELD_ROW_HEIGHT = Text::HEIGHT_8 * 1.5;
-
-    static int textXPosition, textYPosition;
     static std::string text;
-
-    static ALLEGRO_BITMAP *textFieldBuffer;
+    static ALLEGRO_BITMAP *textBuffer;
+    static int textBufferXPosition, textBufferYPosition; // sx/sy for al_draw_bitmap_region
     /*
     Entire text pre-drawn to buffer.
     Content to be revealed by way of two masks:
@@ -42,15 +31,32 @@ struct Dialog
     -Line-by-line scrolling.
     */
 
+    static constexpr float FRAME_X = 0;
+    static constexpr float FRAME_Y = Display::NATIVE_HEIGHT - Tile::HEIGHT * 3;
+    static constexpr float FRAME_WIDTH = Tile::WIDTH * 10;
+    static constexpr float FRAME_HEIGHT = Tile::HEIGHT * 3;
+
+    static constexpr float TEXT_FIELD_X = FRAME_X + Tile::HALF_WIDTH;
+    static constexpr float TEXT_FIELD_Y = FRAME_Y + Tile::HALF_HEIGHT;
+    static constexpr float TEXT_FIELD_WIDTH = FRAME_WIDTH - Tile::WIDTH;
+    static constexpr float TEXT_FIELD_HEIGHT = FRAME_HEIGHT - Tile::HALF_HEIGHT;
+
     static const int TEXT_FIELD_ROWS = 3;  // 3 rows for 3 lines.
     static const int TEXT_FIELD_COLS = 18; // 18 cols for 18 characters.
 
-    static int currentTextRow; // The bottom-most row revealed.
-    static int currentTextCol; // The right-most character revealed on the current row.
+    static constexpr float TEXT_FIELD_ROW_HEIGHT = Text::HEIGHT_8 * 1.5;
+
+    static const int TEXT_ADVANCE_ROWS = 1;
+
+    static int textRow; // The bottom-most row within text field.
+    static int textCol; // The right-most character on the current row.
     static int textNumRows;
 
+    static int revealedRow;
+    static int revealedCol; // Only applies to current line and the lines below. 
+
+    static const int FRAME_SCROLLING_TICKS_NEEDED = 2;
     static int frameScrollingTick; // Delay for text-scrolling
-    static const int FRAME_SCROLLING_TICKS_NEEDED = 3;
     static int caretFrame; // Text scrolling caret alternates between "0 = black" and "1 = white."
 
     static void Initialize();
@@ -62,5 +68,6 @@ struct Dialog
 
     static void Activate(std::string text_content);
     static void Deactivate();
+    static void Advance();
 
 };

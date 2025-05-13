@@ -1,6 +1,5 @@
 #include "worldview.h"
 
-
 void Worldview::Initialize()
 {
 
@@ -24,17 +23,24 @@ void Worldview::Logic()
 void Worldview::Input()
 {
     if(Keyboard::keyHoldTicks[Keyboard::KEY_ESC] == 1)
-        Scene::ChangeScene(Scene::SCENE_TITLE);
+    Scene::ChangeScene(Scene::SCENE_TITLE);
 
-    PC::pc->Input();
+    if(Dialog::isActive)
+    {
+        if(Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
+            Dialog::Advance();
+        else if(Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
+            Dialog::Deactivate();
+    }
+    else
+    {
+        PC::pc->Input();
+
+        if(Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
+            Dialog::Activate("All this long eve, so balmy and serene,\nhave I been gazing on the western sky,\nAnd its peculiar tint of yellow green:\nAnd still I gaze- and with how blank an eye!");
+    }
 
     Camera::Input();
-
-    if(Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
-        Dialog::Activate("All this long eve, so balmy and serene,\nhave I been gazing on the western sky,\nAnd its peculiar tint of yellow green:\nAnd still I gaze- and with how blank an eye!");
-
-    else if(Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
-        Dialog::Deactivate();
 }
 
 void Worldview::Drawing()
