@@ -13,6 +13,7 @@
 struct Dialog
 {
     static bool isActive;
+    static bool isScrolling;
 
     /*
         Some distinctions:
@@ -46,13 +47,13 @@ struct Dialog
 
     static constexpr float TEXT_FIELD_ROW_HEIGHT = Text::HEIGHT_8 * 1.5;
 
-    static const int TEXT_ADVANCE_ROWS = 1;
+    static const int TEXT_ADVANCE_ROWS = 3;
 
     static int textRow; // The bottom-most row within text field.
     static int textCol; // The right-most character on the current row.
     static int textNumRows;
 
-    static int revealedRow;
+    static int revealedRow; // Previously known as "caretRow" or "scrollingRow".
     static int revealedCol; // Only applies to current line and the lines below. 
 
     static const int FRAME_SCROLLING_TICKS_NEEDED = 2;

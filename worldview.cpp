@@ -37,7 +37,7 @@ void Worldview::Input()
         PC::pc->Input();
 
         if(Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
-            Dialog::Activate("All this long eve, so balmy and serene,\nhave I been gazing on the western sky,\nAnd its peculiar tint of yellow green:\nAnd still I gaze- and with how blank an eye!");
+            Dialog::Activate("All this long eve, so balmy and serene,\nhave I been gazing on the western sky,\nAnd its peculiar tint of yellow green:\nAnd still I gaze- and with how blank an eye!\nAnd those thin clouds above, in flakes and bars,\nThat give away their motion to the stars;\nThose stars, that glide behind them or between,\nNow sparkling, now bedimmed, but always seen:");
     }
 
     Camera::Input();
