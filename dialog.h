@@ -40,7 +40,7 @@ struct Dialog
     static constexpr float TEXT_FIELD_X = FRAME_X + Tile::HALF_WIDTH;
     static constexpr float TEXT_FIELD_Y = FRAME_Y + Tile::HALF_HEIGHT;
     static constexpr float TEXT_FIELD_WIDTH = FRAME_WIDTH - Tile::WIDTH;
-    static constexpr float TEXT_FIELD_HEIGHT = FRAME_HEIGHT - Tile::HALF_HEIGHT;
+    static constexpr float TEXT_FIELD_HEIGHT = FRAME_HEIGHT - Tile::HEIGHT;
 
     static const int TEXT_FIELD_ROWS = 3;  // 3 rows for 3 lines.
     static const int TEXT_FIELD_COLS = 18; // 18 cols for 18 characters.
@@ -49,9 +49,8 @@ struct Dialog
 
     static const int TEXT_ADVANCE_ROWS = 3;
 
-    static int textRow; // The bottom-most row within text field.
-    static int textCol; // The right-most character on the current row.
-    static int textNumRows;
+    static int textFieldRow; // The top-most row within text field.
+    static int textBufferNumRows;
 
     static int revealedRow; // Previously known as "caretRow" or "scrollingRow".
     static int revealedCol; // Only applies to current line and the lines below. 

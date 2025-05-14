@@ -12,6 +12,7 @@
 #define COLKEY_MENU_TEXT                                    Palette::COL_GB[Palette::palettePreset][1]
 #define COLKEY_MENU_TEXT_HIGHLIGHTED                        Palette::COL_GB[Palette::palettePreset][3]
 
+#define COLKEY_DIALOG_TEXTFIELD                             Palette::COL_GB[Palette::palettePreset][3] 
 #define COLKEY_DIALOG_TEXT                                  Palette::COL_GB[Palette::palettePreset][1]
 #define COLKEY_DIALOG_TEXT_HIGHLIGHTED                      Palette::COL_GB[Palette::palettePreset][1]
 
