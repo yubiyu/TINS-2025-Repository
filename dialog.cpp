@@ -39,8 +39,6 @@ void Dialog::Logic()
             frameScrollingTick++;
             if (frameScrollingTick >= FRAME_SCROLLING_TICKS_NEEDED)
             {
-                // std::cout << revealedRow << std::endl;
-
                 frameScrollingTick = 0;
                 revealedCol++;
                 if (revealedCol >= TEXT_FIELD_COLS)
@@ -88,7 +86,6 @@ void Dialog::Drawing()
             al_draw_bitmap(Image::dialogCaretSub[caretFrame],
                            TEXT_FIELD_X + revealedCol * Tile::HALF_WIDTH,
                            TEXT_FIELD_Y + revealedRow * TEXT_FIELD_ROW_HEIGHT, 0);
-                           
         }
     }
 }
@@ -108,9 +105,8 @@ void Dialog::Activate(std::string text_content)
     textBufferXPosition = 0;
     textBufferYPosition = 0;
     text = text_content;
-    textBufferNumRows = Util::count_num_lines_will_render(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text);
+    textBufferNumRows = Util::count_multiline_rows(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text);
 
-    std::cout << "Deubg - Dialog: textNumRows = " << textBufferNumRows << std::endl;
     textBuffer = al_create_bitmap(TEXT_FIELD_WIDTH, textBufferNumRows * TEXT_FIELD_ROW_HEIGHT);
 
     ALLEGRO_BITMAP *previousTargetBitmap = al_get_target_bitmap();

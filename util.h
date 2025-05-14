@@ -71,20 +71,43 @@ struct Util
         al_draw_multiline_text(font, color, x, y, max_width, line_height, flags, c);
     }
 
-    static inline bool multiline_text_draw_callback(int line_num, const char* line, int size, void* user_data)
+    /// Function borrowed from Mark Oates
+    static inline bool do_multiline_text_line_num_callback(int line_num, const char* line, int size, void* extra)
     {
-        *((int*)user_data) = line_num;
+        *((int*)extra) = line_num;
         return true;
     }
 
-    static inline int count_num_lines_will_render(ALLEGRO_FONT* font, float max_width, std::string text)
+    /// Function borrowed from Mark Oates
+    static inline int count_multiline_rows(ALLEGRO_FONT* font, float max_width, std::string text)
     {
-        if (text.empty()) return 0;
+        if(text.empty())
+            return 0;
 
-        int multiline_text_line_number = 0;
-        al_do_multiline_text(font, max_width, text.c_str(), multiline_text_draw_callback, &multiline_text_line_number);
-
-        // multiline_text_line_number is now modified, and should now be set to the number of lines drawn
-        return multiline_text_line_number + 1;
+        int multiline_rows= 0;
+        al_do_multiline_text(font, max_width, text.c_str(), do_multiline_text_line_num_callback, &multiline_rows); // Actually calls the callback function once for each line. Could be many times.
+    
+        // multiline_rows is now modified, and should now be set to the number of lines drawn
+        return multiline_rows + 1;
     }
+
+
+    /*
+    static inline void do_multiline_text_width_callback(int line_num, const char *line, void *extra)
+    {
+        ALLEGRO_FONT *font = (ALLEGRO_FONT *)extra;
+        int multiline_text_length = al_get_text_width(font, line);
+    }
+
+    static inline int get_multiline_widths(ALLEGRO_FONT *font, float max_width, std::string text)
+    {
+        if(text.empty())
+            return 0;
+
+        int multiline_width = 0;
+        al_do_multiline_text(font, max_width, text.c_str(), do_multiline_text_width_callback, &multiline_width); // Actually calls the callback function once for each line. Could be many times.
+
+        return multiline_width;
+    }
+    */
 };

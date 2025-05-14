@@ -49,11 +49,11 @@ struct Dialog
 
     static const int TEXT_ADVANCE_ROWS = 3;
 
-    static int textFieldRow; // The top-most row within text field.
+    static int textFieldRow; // The top-most row within the text field.
     static int textBufferNumRows;
 
     static int revealedRow; // Previously known as "caretRow" or "scrollingRow".
-    static int revealedCol; // Only applies to current line and the lines below. 
+    static int revealedCol; // Only applies to current line.
 
     static const int FRAME_SCROLLING_TICKS_NEEDED = 2;
     static int frameScrollingTick; // Delay for text-scrolling
