@@ -9,6 +9,7 @@ int Dialog::textBufferXPosition{}, Dialog::textBufferYPosition{};
 
 int Dialog::textFieldRow{};
 int Dialog::textBufferNumRows{};
+std::vector<int> Dialog::textBufferRowWidths{};
 
 int Dialog::revealedRow{};
 int Dialog::revealedCol{};
@@ -41,7 +42,7 @@ void Dialog::Logic()
             {
                 frameScrollingTick = 0;
                 revealedCol++;
-                if (revealedCol >= TEXT_FIELD_COLS)
+                if (revealedCol >= TEXT_FIELD_COLS || revealedCol >= textBufferRowWidths[textFieldRow + revealedRow] / 8)
                 {
                     revealedCol = 0;
                     revealedRow++;
@@ -80,6 +81,7 @@ void Dialog::Drawing()
                     al_draw_filled_rectangle(TEXT_FIELD_X + revealedCol * Tile::HALF_WIDTH, TEXT_FIELD_Y + revealedRow * TEXT_FIELD_ROW_HEIGHT,
                                              TEXT_FIELD_X + TEXT_FIELD_WIDTH, TEXT_FIELD_Y + TEXT_FIELD_HEIGHT,
                                              COLKEY_DIALOG_TEXTFIELD);
+
             }
 
             
@@ -106,6 +108,7 @@ void Dialog::Activate(std::string text_content)
     textBufferYPosition = 0;
     text = text_content;
     textBufferNumRows = Util::count_multiline_rows(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text);
+    textBufferRowWidths = Util::collect_multiline_widths(FONTDEF_DIALOG, TEXT_FIELD_WIDTH, text);
 
     textBuffer = al_create_bitmap(TEXT_FIELD_WIDTH, textBufferNumRows * TEXT_FIELD_ROW_HEIGHT);
 

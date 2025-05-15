@@ -51,6 +51,7 @@ struct Dialog
 
     static int textFieldRow; // The top-most row within the text field.
     static int textBufferNumRows;
+    static std::vector<int>textBufferRowWidths;
 
     static int revealedRow; // Previously known as "caretRow" or "scrollingRow".
     static int revealedCol; // Only applies to current line.
