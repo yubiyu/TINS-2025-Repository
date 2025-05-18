@@ -100,9 +100,9 @@ struct Util
 
     static inline bool collect_multiline_widths_callback(int line_num, const char *line, int size, void *extra)
     {
-        MultilineWidthCollectorContext*context = static_cast<MultilineWidthCollectorContext*>(extra);
+        MultilineWidthCollectorContext*ctx = static_cast<MultilineWidthCollectorContext*>(extra);
         std::string lineString(line, size);
-        context->lineWidths->push_back( al_get_text_width(context->font, lineString.c_str()));
+        ctx->lineWidths->push_back( al_get_text_width(ctx->font, lineString.c_str()));
 
         return true;
     }
@@ -114,9 +114,9 @@ struct Util
         if (text.empty())
             return lineWidths;
 
-        MultilineWidthCollectorContext context{font, &lineWidths};
+        MultilineWidthCollectorContext ctx{font, &lineWidths};
 
-        al_do_multiline_text(font, max_width, text.c_str(), collect_multiline_widths_callback, &context);
+        al_do_multiline_text(font, max_width, text.c_str(), collect_multiline_widths_callback, &ctx);
 
         /*
         std::cout << "Debug: Util: Multiline widths: ";

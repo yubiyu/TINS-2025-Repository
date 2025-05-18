@@ -42,13 +42,13 @@ void Dialog::Logic()
             {
                 frameScrollingTick = 0;
                 revealedCol++;
-                if (revealedCol >= TEXT_FIELD_COLS || revealedCol >= textBufferRowWidths[textFieldRow + revealedRow] / 8)
+                if (revealedCol >= TEXT_FIELD_COLS || (revealedCol >= textBufferRowWidths[textFieldRow + revealedRow] / TEXT_CHAR_WIDTH))
                 {
                     revealedCol = 0;
                     revealedRow++;
                 }
 
-                if (revealedRow > TEXT_FIELD_ROWS - 1)
+                if (revealedRow >= TEXT_FIELD_ROWS)
                     isScrolling = false;
 
                 caretFrame++;
@@ -71,13 +71,13 @@ void Dialog::Drawing()
 
         if (isScrolling)
         {
-            if (revealedRow <= TEXT_FIELD_ROWS - 1)
+            if (revealedRow < TEXT_FIELD_ROWS)
             {
                 al_draw_filled_rectangle(TEXT_FIELD_X, TEXT_FIELD_Y + (revealedRow + 1) * TEXT_FIELD_ROW_HEIGHT,
                                          TEXT_FIELD_X + TEXT_FIELD_WIDTH, TEXT_FIELD_Y + TEXT_FIELD_HEIGHT,
                                          COLKEY_DIALOG_TEXTFIELD);
 
-                if (revealedCol <= TEXT_FIELD_COLS - 1)
+                if (revealedCol < TEXT_FIELD_COLS)
                     al_draw_filled_rectangle(TEXT_FIELD_X + revealedCol * Tile::HALF_WIDTH, TEXT_FIELD_Y + revealedRow * TEXT_FIELD_ROW_HEIGHT,
                                              TEXT_FIELD_X + TEXT_FIELD_WIDTH, TEXT_FIELD_Y + TEXT_FIELD_HEIGHT,
                                              COLKEY_DIALOG_TEXTFIELD);
@@ -141,23 +141,23 @@ void Dialog::Deactivate()
 void Dialog::Advance()
 {
     if (!isScrolling && 
-        textFieldRow + TEXT_FIELD_ROWS - 1 >= textBufferNumRows - 1)
+        textFieldRow + TEXT_FIELD_ROWS >= textBufferNumRows)
     {
         Deactivate();
         return;
     }
-    else if(revealedRow < TEXT_FIELD_ROWS - 1)
+    else if(revealedRow < TEXT_FIELD_ROWS - 1) // Advance to the end of the current textbuffer region. Stop scrolling.
     {
         revealedRow = TEXT_FIELD_ROWS;
         revealedCol = TEXT_FIELD_COLS;
         isScrolling = false;
     }
-    else
+    else // Advance to the *next* textbuffer region. Begin scrolling again.
     {
         isScrolling = true;
 
-        textFieldRow += TEXT_ADVANCE_ROWS;
-        textBufferYPosition += TEXT_FIELD_ROW_HEIGHT * TEXT_ADVANCE_ROWS;
+        textFieldRow += TEXT_BUFFER_ADVANCE_ROWS;
+        textBufferYPosition += TEXT_FIELD_ROW_HEIGHT * TEXT_BUFFER_ADVANCE_ROWS;
 
         revealedRow = 0;
         revealedCol = 0;

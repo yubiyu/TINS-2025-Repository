@@ -46,18 +46,20 @@ struct Dialog
     static const int TEXT_FIELD_COLS = 18; // 18 cols for 18 characters.
 
     static constexpr float TEXT_FIELD_ROW_HEIGHT = Text::HEIGHT_8 * 1.5;
-
-    static const int TEXT_ADVANCE_ROWS = 3;
+    static const int TEXT_CHAR_WIDTH = 8; // Assumes monospace, for now.
 
     static int textFieldRow; // The top-most row within the text field.
     static int textBufferNumRows;
     static std::vector<int>textBufferRowWidths;
 
     static int revealedRow; // Previously known as "caretRow" or "scrollingRow".
-    static int revealedCol; // Only applies to current line.
+    static int revealedCol; // Only applies to current row.
 
-    static const int FRAME_SCROLLING_TICKS_NEEDED = 2;
-    static int frameScrollingTick; // Delay for text-scrolling
+    static const int FRAME_SCROLLING_TICKS_NEEDED = 3;
+    static int frameScrollingTick; // Delay for text-scrolling.
+
+    static const int TEXT_BUFFER_ADVANCE_ROWS = 3;
+
     static int caretFrame; // Text scrolling caret alternates between "0 = black" and "1 = white."
 
     static void Initialize();
