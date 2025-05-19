@@ -2,6 +2,8 @@
 
 int main(int argc, char **argv) // Apparently the main function must have this signature for cross-platform compatibility
 {
+    (void) argc;
+
     if(!Game::Initialize(argv))
         assert("Initialization error!");
 

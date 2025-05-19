@@ -14,7 +14,7 @@ void Worldview::Uninitialize()
 void Worldview::Logic()
 {
     PC::pc->Logic();
-    StatsFrame::Logic();
+    StatusFrame::Logic();
 
     Camera::Logic();
 
@@ -67,7 +67,7 @@ void Worldview::Drawing()
     al_clear_to_color(COLKEY_BACKGROUND);
     al_draw_bitmap(Camera::cameraBuffer, 0, 0, 0);
 
-    StatsFrame::Drawing();
+    StatusFrame::Drawing();
     Dialog::Drawing();
 }
 

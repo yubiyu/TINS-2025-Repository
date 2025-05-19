@@ -21,7 +21,7 @@
 #include "area.h"
 #include "actor.h"
 #include "pc.h"
-#include "statsframe.h"
+#include "statusframe.h"
 #include "dialog.h"
 
 struct Worldview

@@ -14,7 +14,7 @@ ALLEGRO_BITMAP* Image::actorPng;
 std::vector<ALLEGRO_BITMAP*> Image::actorWalkSub;
 std::vector<ALLEGRO_BITMAP*> Image::actorStandSub;
 
-ALLEGRO_BITMAP* Image::pcStatsFramePng;
+ALLEGRO_BITMAP* Image::statusFramePng;
 
 ALLEGRO_BITMAP* Image::dialogFramePng;
 ALLEGRO_BITMAP* Image::dialogCaretPng;
@@ -64,7 +64,7 @@ void Image::LoadResources()
         }
     }
 
-    pcStatsFramePng = al_load_bitmap("pcStatsFrame.png");
+    statusFramePng = al_load_bitmap("statusFrame.png");
 
     dialogFramePng = al_load_bitmap("dialogFrame.png");
     dialogCaretPng = al_load_bitmap("dialogCaret.png");
@@ -95,7 +95,7 @@ void Image::UnloadResources()
     actorWalkSub.clear();
     al_destroy_bitmap(actorPng);
 
-    al_destroy_bitmap(pcStatsFramePng);
+    al_destroy_bitmap(statusFramePng);
 
     al_destroy_bitmap(dialogFramePng);
     al_destroy_bitmap(dialogCaretSub[0]);

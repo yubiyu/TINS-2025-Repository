@@ -76,6 +76,9 @@ struct Util
     /// Function borrowed from Mark Oates
     static inline bool do_multiline_text_line_num_callback(int line_num, const char *line, int size, void *extra)
     {
+        (void) line;
+        (void) size;
+
         *((int *)extra) = line_num;
         return true;
     }
@@ -100,6 +103,8 @@ struct Util
 
     static inline bool collect_multiline_widths_callback(int line_num, const char *line, int size, void *extra)
     {
+        (void) line_num;
+
         MultilineWidthCollectorContext*ctx = static_cast<MultilineWidthCollectorContext*>(extra);
         std::string lineString(line, size);
         ctx->lineWidths->push_back( al_get_text_width(ctx->font, lineString.c_str()));

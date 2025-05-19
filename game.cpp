@@ -106,14 +106,14 @@ bool Game::Initialize(char **argv)
     PC::pc = new PC();
 
     Dialog::Initialize();
-    StatsFrame::Initialize();
+    StatusFrame::Initialize();
 
     return true;
 }
 
 void Game::Uninitialize()
 {
-    StatsFrame::Uninitialize();
+    StatusFrame::Uninitialize();
     Dialog::Uninitialize();
 
     delete PC::pc;
