@@ -22,7 +22,7 @@ struct ActorIndex
     static const int MARKER_FACING_DIR_END = FACING_DIR_RIGHT;
     static const int NUM_FACING_DIRS = MARKER_FACING_DIR_END + 1;
 
-    static constexpr float MOVE_SPEED_BASE = 0.8;
+    static constexpr float MOVE_SPEED_BASE = 1.0;
 
     enum enumActions
     {

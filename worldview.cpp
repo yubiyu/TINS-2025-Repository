@@ -14,6 +14,7 @@ void Worldview::Uninitialize()
 void Worldview::Logic()
 {
     PC::pc->Logic();
+    StatsFrame::Logic();
 
     Camera::Logic();
 
@@ -62,11 +63,12 @@ void Worldview::Drawing()
     Area::Drawing();
     PC::pc->Drawing();
 
-    Dialog::Drawing();
-
     al_set_target_bitmap(Display::scaleBuffer);
     al_clear_to_color(COLKEY_BACKGROUND);
     al_draw_bitmap(Camera::cameraBuffer, 0, 0, 0);
+
+    StatsFrame::Drawing();
+    Dialog::Drawing();
 }
 
 void Worldview::DrawGridUnderlay()

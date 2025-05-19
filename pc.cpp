@@ -1,6 +1,6 @@
 #include "pc.h"
 
-PC* PC::pc;
+PC* PC::pc = nullptr;
 
 PC::PC()
 {
