@@ -48,6 +48,10 @@ void Area::LoadRoomBlueprint(const char* room)
         x = 0;
         std::cout << std::endl;
     }
+
+
+    defaultSpawnCol = Configuration::GetInt(Configuration::areasCfg, room, "spawnX");
+    defaultSpawnRow = Configuration::GetInt(Configuration::areasCfg, room, "spawnY");
 }
 
 void Area::ParseToRoomBlueprint(int x, int y, int data)
@@ -58,22 +62,17 @@ void Area::ParseToRoomBlueprint(int x, int y, int data)
     }
     else if(data >= CellIndex::MARKER_BLUEPRINT_CELL_PLATFORM_BEGIN && data <= CellIndex::MARKER_BLUEPRINT_CELL_PLATFORM_END)
     {
-        roomBlueprint[y*COLS+x] = CellIndex::BLUEPRINT_CELL_PLATFORM_GENERIC;
-        if(data == CellIndex::BLUEPRINT_CELL_PLATFORM_DEFAULT_SPAWN)
-        {
-            roomBlueprint[y*COLS+x] = CellIndex::BLUEPRINT_CELL_PLATFORM_DEFAULT_SPAWN;
-            defaultSpawnCol = x;
-            defaultSpawnRow = y;
-        }
-        else if(data >= CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT && data <= CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT + 15)
+        roomBlueprint[y*COLS+x] = data;
+        
+        if(data >= CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT && data <= CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT + 15)
         {
             roomBlueprint[y*COLS+x] = CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT;
-            /// Todo: Add pair to same-level teleport map
+            /// Todo: Add pair to same-level teleport destination
         }
         else if(data >= CellIndex::BLUEPRINT_CELL_PLATFORM_OTHER_ROOM_TELEPORT && data <= CellIndex::BLUEPRINT_CELL_PLATFORM_OTHER_ROOM_TELEPORT + 15)
         {
             roomBlueprint[y*COLS+x] = CellIndex::BLUEPRINT_CELL_PLATFORM_OTHER_ROOM_TELEPORT;
-            /// Todo: Add pair to other-level teleport map
+            /// Todo: Add pair to other-level teleport destination
         }
     }
     /*
@@ -121,21 +120,25 @@ void Area::ConstructRoom()
                    y > 0 && room[(y-1)*COLS+x] == CellIndex::CELL_VOID_RIGHT_EDGE)
                     room[y*COLS+x] = CellIndex::CELL_VOID_LOWER_RIGHT_CORNER;
             }
-            else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_GENERIC)
-            {
-                room[y*COLS+x] = CellIndex::CELL_PLATFORM;
-            }
-            else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_DEFAULT_SPAWN)
-            {
-                room[y*COLS+x] = CellIndex::CELL_PLATFORM_DEFAULT_SPAWN;
-            }
+
+            else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_BLANK)
+                room[y*COLS+x] = CellIndex::CELL_PLATFORM_BLANK;
+
+            else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT_RECEIVER_HINT)
+                room[y*COLS+x] = CellIndex::CELL_PLATFORM_SAME_ROOM_TELEPORT_RECEIVER_HINT;
+
+            else if (roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_OTHER_ROOM_TELEPORT_RECEIVER_HINT)
+                room[y*COLS+x] = CellIndex::CELL_PLATFORM_OTHER_ROOM_TELEPORT_RECEIVER_HINT;
+            
             else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT)
             {
                 room[y*COLS+x] = CellIndex::CELL_PLATFORM_SAME_ROOM_TELEPORT;
+                // Todo: pair teleport destination
             }
             else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_OTHER_ROOM_TELEPORT)
             {
                 room[y*COLS+x] = CellIndex::CELL_PLATFORM_OTHER_ROOM_TELEPORT;
+                // Todo: pair teleport destination
             }
             std::cout << std::setw(2) << room[y*COLS+x];
 

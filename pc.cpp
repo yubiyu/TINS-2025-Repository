@@ -45,7 +45,7 @@ void PC::Input()
         {
             if(Keyboard::keyHoldTicks[Keyboard::KEY_UP] == 1)
                 Face(ActorIndex::FACING_DIR_UP);
-            else if(Keyboard::keyHoldTicks[Keyboard::KEY_UP] > Keyboard::INPUT_TAP_TICKS)
+            else if(Keyboard::keyHoldTicks[Keyboard::KEY_UP] > Keyboard::INPUT_TAP_TICKS_THRESHOLD)
                 Walk(ActorIndex::FACING_DIR_UP);
         }
     }
@@ -56,7 +56,7 @@ void PC::Input()
         {
             if(Keyboard::keyHoldTicks[Keyboard::KEY_DOWN] == 1)
                 Face(ActorIndex::FACING_DIR_DOWN);
-            else if(Keyboard::keyHoldTicks[Keyboard::KEY_DOWN] > Keyboard::INPUT_TAP_TICKS)
+            else if(Keyboard::keyHoldTicks[Keyboard::KEY_DOWN] > Keyboard::INPUT_TAP_TICKS_THRESHOLD)
                 Walk(ActorIndex::FACING_DIR_DOWN);
         }
     }
@@ -67,7 +67,7 @@ void PC::Input()
         {
             if(Keyboard::keyHoldTicks[Keyboard::KEY_LEFT] == 1)
                 Face(ActorIndex::FACING_DIR_LEFT);
-            else if(Keyboard::keyHoldTicks[Keyboard::KEY_LEFT] > Keyboard::INPUT_TAP_TICKS)
+            else if(Keyboard::keyHoldTicks[Keyboard::KEY_LEFT] > Keyboard::INPUT_TAP_TICKS_THRESHOLD)
                 Walk(ActorIndex::FACING_DIR_LEFT);
         }
     }
@@ -78,7 +78,7 @@ void PC::Input()
         {
             if(Keyboard::keyHoldTicks[Keyboard::KEY_RIGHT] == 1)
                 Face(ActorIndex::FACING_DIR_RIGHT);
-            else if(Keyboard::keyHoldTicks[Keyboard::KEY_RIGHT] > Keyboard::INPUT_TAP_TICKS)
+            else if(Keyboard::keyHoldTicks[Keyboard::KEY_RIGHT] > Keyboard::INPUT_TAP_TICKS_THRESHOLD)
                 Walk(ActorIndex::FACING_DIR_RIGHT);
         }
     }

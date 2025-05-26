@@ -1,5 +1,6 @@
 #pragma once
 
+#include "timer.h"
 #include "event.h"
 
 struct Keyboard
@@ -33,7 +34,7 @@ struct Keyboard
     static const size_t KEY_MARKER_LAST = KEY_ESC;
     static const size_t NUM_INPUT_KEYS = KEY_MARKER_LAST+1;
 
-    static const int INPUT_TAP_TICKS = 4;
+    static const int INPUT_TAP_TICKS_THRESHOLD = Timer::FPS/10; //6 ticks;
 
     static bool keyInput[NUM_INPUT_KEYS];
     static int keyHoldTicks[NUM_INPUT_KEYS];

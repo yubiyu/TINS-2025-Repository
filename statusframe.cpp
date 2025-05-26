@@ -20,7 +20,8 @@ void StatusFrame::Logic()
 
 void StatusFrame::Drawing()
 {
-    al_draw_bitmap(Image::statusFramePng, X_POSITION, Y_POSITION, 0);
+    al_draw_bitmap(Image::statusFramePng, FRAME_X_POSITION, FRAME_Y_POSITION, 0);
+    
 }
 
 void StatusFrame::Input()
