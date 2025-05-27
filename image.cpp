@@ -55,7 +55,7 @@ void Image::LoadResources()
 
     for(size_t y = 0; y < ActorIndex::NUM_SPRITE_IDS; y++)
     {
-        for(size_t x = 0; x < ActorIndex::NUM_FACING_DIRS*ActorIndex::NUM_WALK_FRAMES; x++)
+        for(size_t x = 0; x < Direction::NUM_DIRECTIONS*ActorIndex::NUM_WALK_FRAMES; x++)
         {
             actorWalkSub.push_back( al_create_sub_bitmap(actorPng, x*Tile::WIDTH, y*Tile::HEIGHT, Tile::WIDTH, Tile::HEIGHT) );
 

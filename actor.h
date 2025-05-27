@@ -4,6 +4,8 @@
 
 #include "actorindex.h"
 
+#include "area.h"
+
 #include <iostream>
 
 class Actor

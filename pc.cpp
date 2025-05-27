@@ -44,9 +44,9 @@ void PC::Input()
         if(!Keyboard::keyInput[Keyboard::KEY_DOWN] && !Keyboard::keyInput[Keyboard::KEY_LEFT] && !Keyboard::keyInput[Keyboard::KEY_RIGHT] )
         {
             if(Keyboard::keyHoldTicks[Keyboard::KEY_UP] == 1)
-                Face(ActorIndex::FACING_DIR_UP);
+                Face(Direction::UP);
             else if(Keyboard::keyHoldTicks[Keyboard::KEY_UP] > Keyboard::INPUT_TAP_TICKS_THRESHOLD)
-                Walk(ActorIndex::FACING_DIR_UP);
+                Walk(Direction::UP);
         }
     }
 
@@ -55,9 +55,9 @@ void PC::Input()
         if(!Keyboard::keyInput[Keyboard::KEY_UP] && !Keyboard::keyInput[Keyboard::KEY_LEFT] && !Keyboard::keyInput[Keyboard::KEY_RIGHT] )
         {
             if(Keyboard::keyHoldTicks[Keyboard::KEY_DOWN] == 1)
-                Face(ActorIndex::FACING_DIR_DOWN);
+                Face(Direction::DOWN);
             else if(Keyboard::keyHoldTicks[Keyboard::KEY_DOWN] > Keyboard::INPUT_TAP_TICKS_THRESHOLD)
-                Walk(ActorIndex::FACING_DIR_DOWN);
+                Walk(Direction::DOWN);
         }
     }
 
@@ -66,9 +66,9 @@ void PC::Input()
         if(!Keyboard::keyInput[Keyboard::KEY_UP] && !Keyboard::keyInput[Keyboard::KEY_DOWN] && !Keyboard::keyInput[Keyboard::KEY_RIGHT] )
         {
             if(Keyboard::keyHoldTicks[Keyboard::KEY_LEFT] == 1)
-                Face(ActorIndex::FACING_DIR_LEFT);
+                Face(Direction::LEFT);
             else if(Keyboard::keyHoldTicks[Keyboard::KEY_LEFT] > Keyboard::INPUT_TAP_TICKS_THRESHOLD)
-                Walk(ActorIndex::FACING_DIR_LEFT);
+                Walk(Direction::LEFT);
         }
     }
 
@@ -77,9 +77,9 @@ void PC::Input()
         if(!Keyboard::keyInput[Keyboard::KEY_UP] && !Keyboard::keyInput[Keyboard::KEY_DOWN] && !Keyboard::keyInput[Keyboard::KEY_LEFT] )
         {
             if(Keyboard::keyHoldTicks[Keyboard::KEY_RIGHT] == 1)
-                Face(ActorIndex::FACING_DIR_RIGHT);
+                Face(Direction::RIGHT);
             else if(Keyboard::keyHoldTicks[Keyboard::KEY_RIGHT] > Keyboard::INPUT_TAP_TICKS_THRESHOLD)
-                Walk(ActorIndex::FACING_DIR_RIGHT);
+                Walk(Direction::RIGHT);
         }
     }
     else

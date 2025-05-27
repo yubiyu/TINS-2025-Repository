@@ -6,7 +6,7 @@ Actor::Actor()
 
     atDestination = true;
 
-    facing = ActorIndex::FACING_DIR_DOWN;
+    facing = Direction::DOWN;
     moveSpeed = ActorIndex::MOVE_SPEED_BASE;
 
     SetAction(ActorIndex::ACTION_STAND);
@@ -57,17 +57,32 @@ void Actor::Walk(int in_dir)
 
         switch(facing)
         {
-        case ActorIndex::FACING_DIR_UP:
-            SetYCell(yCell-1, false);
+        case Direction::UP:
+            if(yCell > 0)
+                SetYCell(yCell-1, false);
+            else if(Area::adjacentRooms[facing] != "")
+                Area::ChangeRoom(Area::adjacentRooms[facing]);
             break;
-        case ActorIndex::FACING_DIR_DOWN:
-            SetYCell(yCell+1, false);
+
+        case Direction::DOWN:
+            if(yCell < Area::ROWS-1)
+                SetYCell(yCell+1, false);
+            else if(Area::adjacentRooms[facing] != "")
+                Area::ChangeRoom(Area::adjacentRooms[facing]);
             break;
-        case ActorIndex::FACING_DIR_LEFT:
-            SetXCell(xCell-1, false);
+
+        case Direction::LEFT:
+            if(xCell > 0)
+                SetXCell(xCell-1, false);
+            else if(Area::adjacentRooms[facing] != "")
+                Area::ChangeRoom(Area::adjacentRooms[facing]);
             break;
-        case ActorIndex::FACING_DIR_RIGHT:
-            SetXCell(xCell+1, false);
+
+        case Direction::RIGHT:
+            if(xCell < Area::COLS-1)
+                SetXCell(xCell+1, false);
+            else if(Area::adjacentRooms[facing] != "")
+                Area::ChangeRoom(Area::adjacentRooms[facing]);
             break;
         }
     }

@@ -31,13 +31,9 @@ std::string Configuration::GetString(const ALLEGRO_CONFIG* config, const char* s
 {
     const char* configValue = al_get_config_value(config, section, key);
     if(configValue != NULL)
-    {
         return configValue;
-    }
     else
-    {
-        return 0;
-    }
+        return "";
 }
 
 int Configuration::GetInt(const ALLEGRO_CONFIG* config, const char* section, const char* key)
@@ -54,9 +50,7 @@ int Configuration::GetInt(const ALLEGRO_CONFIG* config, const char* section, con
         return intValue;
     }
     else
-    {
         return 0;
-    }
 }
 
 void Configuration::SetKey(ALLEGRO_CONFIG* config, const char* section, const char* key, const char* value)

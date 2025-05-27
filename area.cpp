@@ -1,12 +1,21 @@
 #include "area.h"
 
 int Area::roomBlueprint[COLS*ROWS];
-int Area::room[COLS*ROWS];
+int Area::currentRoom[COLS*ROWS];
+int Area::previousRoom[COLS*ROWS];
 
 int Area::defaultSpawnCol, Area::defaultSpawnRow;
 
+std::string Area::adjacentRooms[Direction::NUM_DIRECTIONS];
+
+bool Area::inRoomTransition;
+int Area::roomTransitionEffect;
+
 void Area::Initialize(const char* room)
 {
+    std::fill(std::begin(currentRoom), std::end(currentRoom), CellIndex::CELL_VOID);
+    std::fill(std::begin(previousRoom), std::end(previousRoom), CellIndex::CELL_VOID);
+
     LoadRoomBlueprint(room);
     ConstructRoom();
 }
@@ -20,8 +29,7 @@ void Area::LoadRoomBlueprint(const char* room)
 {
     std::cout << "Area: Loading room blueprint " << room << " from config/areas: " << std::endl;
 
-    for(size_t i = 0; i < ROWS*COLS; i++)
-        roomBlueprint[i] = CellIndex::CELL_VOID;
+    std::fill(std::begin(roomBlueprint), std::end(roomBlueprint), CellIndex::BLUEPRINT_CELL_VOID_GENERIC);
 
     size_t x = 0;
     for(size_t y = 0; y < ROWS; y++)
@@ -49,6 +57,17 @@ void Area::LoadRoomBlueprint(const char* room)
         std::cout << std::endl;
     }
 
+    if(al_get_config_value(Configuration::areasCfg, room, "roomToNorth") != NULL)
+        adjacentRooms[Direction::NORTH] = Configuration::GetString(Configuration::areasCfg, room, "roomToNorth");
+    
+    if(al_get_config_value(Configuration::areasCfg, room, "roomToSouth") != NULL)
+        adjacentRooms[Direction::SOUTH] = Configuration::GetString(Configuration::areasCfg, room, "roomToSouth");
+    
+    if(al_get_config_value(Configuration::areasCfg, room, "roomToWest") != NULL)
+        adjacentRooms[Direction::WEST] = Configuration::GetString(Configuration::areasCfg, room, "roomToWest");
+    
+    if(al_get_config_value(Configuration::areasCfg, room, "roomToEast") != NULL)
+        adjacentRooms[Direction::EAST] = Configuration::GetString(Configuration::areasCfg, room, "roomToEast");
 
     defaultSpawnCol = Configuration::GetInt(Configuration::areasCfg, room, "spawnX");
     defaultSpawnRow = Configuration::GetInt(Configuration::areasCfg, room, "spawnY");
@@ -92,7 +111,7 @@ void Area::ConstructRoom()
     std::cout << "Area: Constructing room from blueprint: " << std::endl;
 
     for(size_t i = 0; i < COLS*ROWS; i++)
-        room[i] = CellIndex::CELL_VOID;
+        currentRoom[i] = CellIndex::CELL_VOID;
 
     for(size_t y = 0; y < ROWS; y++)
     {
@@ -100,47 +119,47 @@ void Area::ConstructRoom()
         {
             if(roomBlueprint[y*COLS+x] == CellIndex::CELL_VOID)
             {
-                room[y*COLS+x] = CellIndex::CELL_VOID;
+                currentRoom[y*COLS+x] = CellIndex::CELL_VOID;
 
                 // Decoration: Lower border.
                 if(y > 0 && roomBlueprint[(y-1)*COLS+x] > CellIndex::MARKER_BLUEPRINT_CELL_VOID_END)
                 {
-                    room[y*COLS+x] = CellIndex::CELL_VOID_LOWER_EDGE;
+                    currentRoom[y*COLS+x] = CellIndex::CELL_VOID_LOWER_EDGE;
                     // Decoration: Upper-right corner. A combination of "lower border" and "right border".
                     if(x > 0 && roomBlueprint[y*COLS+(x-1)] > CellIndex::MARKER_BLUEPRINT_CELL_VOID_END)
-                        room[y*COLS+x] = CellIndex::CELL_VOID_UPPER_RIGHT_CORNER;
+                        currentRoom[y*COLS+x] = CellIndex::CELL_VOID_UPPER_RIGHT_CORNER;
 
                 }
                 // Decoration: Right border.
                 else if(x > 0 && roomBlueprint[y*COLS+(x-1)] > CellIndex::MARKER_BLUEPRINT_CELL_VOID_END)
-                    room[y*COLS+x] = CellIndex::CELL_VOID_RIGHT_EDGE;
+                    currentRoom[y*COLS+x] = CellIndex::CELL_VOID_RIGHT_EDGE;
 
                 // Decoration: Lower-right corner. Note that we're looking at room here, not blueprint.
-                if(x > 0 && room[y*COLS+(x-1)] == CellIndex::CELL_VOID_LOWER_EDGE &&
-                   y > 0 && room[(y-1)*COLS+x] == CellIndex::CELL_VOID_RIGHT_EDGE)
-                    room[y*COLS+x] = CellIndex::CELL_VOID_LOWER_RIGHT_CORNER;
+                if(x > 0 && currentRoom[y*COLS+(x-1)] == CellIndex::CELL_VOID_LOWER_EDGE &&
+                   y > 0 && currentRoom[(y-1)*COLS+x] == CellIndex::CELL_VOID_RIGHT_EDGE)
+                    currentRoom[y*COLS+x] = CellIndex::CELL_VOID_LOWER_RIGHT_CORNER;
             }
 
             else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_BLANK)
-                room[y*COLS+x] = CellIndex::CELL_PLATFORM_BLANK;
+                currentRoom[y*COLS+x] = CellIndex::CELL_PLATFORM_BLANK;
 
             else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT_RECEIVER_HINT)
-                room[y*COLS+x] = CellIndex::CELL_PLATFORM_SAME_ROOM_TELEPORT_RECEIVER_HINT;
+                currentRoom[y*COLS+x] = CellIndex::CELL_PLATFORM_SAME_ROOM_TELEPORT_RECEIVER_HINT;
 
             else if (roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_OTHER_ROOM_TELEPORT_RECEIVER_HINT)
-                room[y*COLS+x] = CellIndex::CELL_PLATFORM_OTHER_ROOM_TELEPORT_RECEIVER_HINT;
+                currentRoom[y*COLS+x] = CellIndex::CELL_PLATFORM_OTHER_ROOM_TELEPORT_RECEIVER_HINT;
             
             else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_SAME_ROOM_TELEPORT)
             {
-                room[y*COLS+x] = CellIndex::CELL_PLATFORM_SAME_ROOM_TELEPORT;
+                currentRoom[y*COLS+x] = CellIndex::CELL_PLATFORM_SAME_ROOM_TELEPORT;
                 // Todo: pair teleport destination
             }
             else if(roomBlueprint[y*COLS+x] == CellIndex::BLUEPRINT_CELL_PLATFORM_OTHER_ROOM_TELEPORT)
             {
-                room[y*COLS+x] = CellIndex::CELL_PLATFORM_OTHER_ROOM_TELEPORT;
+                currentRoom[y*COLS+x] = CellIndex::CELL_PLATFORM_OTHER_ROOM_TELEPORT;
                 // Todo: pair teleport destination
             }
-            std::cout << std::setw(2) << room[y*COLS+x];
+            std::cout << std::setw(2) << currentRoom[y*COLS+x];
 
         }
         std::cout << std::endl;
@@ -149,15 +168,44 @@ void Area::ConstructRoom()
 
 }
 
+void Area::Logic()
+{
+    if(inRoomTransition)
+    {
+        // todo...
+        inRoomTransition = false;
+    }
+}
+
 void Area::Drawing()
 {
     for(size_t y = 0; y < ROWS; y++)
     {
         for(size_t x = 0; x < COLS; x++)
         {
-            al_draw_bitmap(Image::areaCellsSub[ room[y*COLS+x] ],
+            al_draw_bitmap(Image::areaCellsSub[ currentRoom[y*COLS+x] ],
                            x*Tile::WIDTH, y*Tile::HEIGHT,
                            0);
         }
     }
+}
+
+
+void Area::ChangeRoom(std::string destination)
+{
+    inRoomTransition = true;
+
+    roomTransitionEffect = ROOM_TRANSITION_TELEPORT_INSTANT; 
+    for(size_t i = 0; i < Direction::NUM_DIRECTIONS; i++)
+    {
+        if(adjacentRooms[i] == destination)
+        {
+            roomTransitionEffect = ROOM_TRANSITION_TRANSLATION;
+            break;
+        }
+    }
+
+    std::copy(std::begin(currentRoom), std::end(currentRoom), std::begin(previousRoom));
+    LoadRoomBlueprint(destination.c_str());
+    ConstructRoom();
 }

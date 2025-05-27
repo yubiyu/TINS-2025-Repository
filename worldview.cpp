@@ -13,6 +13,7 @@ void Worldview::Uninitialize()
 
 void Worldview::Logic()
 {
+    Area::Logic();
     PC::pc->Logic();
     StatusFrame::Logic();
 
