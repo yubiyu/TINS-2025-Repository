@@ -61,28 +61,40 @@ void Actor::Walk(int in_dir)
             if(yCell > 0)
                 SetYCell(yCell-1, false);
             else if(Area::adjacentRooms[facing] != "")
+            {
                 Area::ChangeRoom(Area::adjacentRooms[facing]);
+                SetYCell(Area::ROWS-1, true);
+            }
             break;
 
         case Direction::DOWN:
             if(yCell < Area::ROWS-1)
                 SetYCell(yCell+1, false);
             else if(Area::adjacentRooms[facing] != "")
+            {
                 Area::ChangeRoom(Area::adjacentRooms[facing]);
+                SetYCell(0, true);
+            }
             break;
 
         case Direction::LEFT:
             if(xCell > 0)
                 SetXCell(xCell-1, false);
             else if(Area::adjacentRooms[facing] != "")
+            {
                 Area::ChangeRoom(Area::adjacentRooms[facing]);
+                SetXCell(Area::COLS-1, true);
+            }
             break;
 
         case Direction::RIGHT:
             if(xCell < Area::COLS-1)
                 SetXCell(xCell+1, false);
             else if(Area::adjacentRooms[facing] != "")
+            {
                 Area::ChangeRoom(Area::adjacentRooms[facing]);
+                SetXCell(0, true);
+            }
             break;
         }
     }

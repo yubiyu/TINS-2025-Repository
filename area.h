@@ -18,7 +18,7 @@
 
 struct Area
 {
-    static constexpr const char* STARTING_AREA = "0";
+    static constexpr const char* STARTING_AREA = "1";
 
     enum enumDomains
     {
