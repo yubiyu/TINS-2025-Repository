@@ -11,6 +11,8 @@ std::string Area::adjacentRooms[Direction::NUM_DIRECTIONS];
 bool Area::inRoomTransition;
 int Area::roomTransitionEffect;
 
+float Area::previousRoomXPosition, previousRoomYPosition;
+
 void Area::Initialize(const char* room)
 {
     std::fill(std::begin(currentRoom), std::end(currentRoom), CellIndex::CELL_VOID);
@@ -186,6 +188,19 @@ void Area::Drawing()
             al_draw_bitmap(Image::areaCellsSub[ currentRoom[y*COLS+x] ],
                            x*Tile::WIDTH, y*Tile::HEIGHT,
                            0);
+        }
+    }
+
+    if(inRoomTransition && roomTransitionEffect == ROOM_TRANSITION_TRANSLATION)
+    {
+        for(size_t y = 0; y < ROWS; y++)
+        {
+            for(size_t x = 0; x < COLS; x++)
+            {
+                al_draw_bitmap(Image::areaCellsSub[ previousRoom[y*COLS+x] ],
+                           x*Tile::WIDTH - previousRoomXPosition, y*Tile::HEIGHT - previousRoomYPosition,
+                           0);
+            }
         }
     }
 }

@@ -46,6 +46,8 @@ struct Area
         ROOM_TRANSITION_TELEPORT_INSTANT = 1
     };
 
+    static float previousRoomXPosition, previousRoomYPosition;
+
     static void Initialize(const char* room);
     static void Uninitialize();
     static void LoadRoomBlueprint(const char* room);

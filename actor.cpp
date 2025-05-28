@@ -62,8 +62,13 @@ void Actor::Walk(int in_dir)
                 SetYCell(yCell-1, false);
             else if(Area::adjacentRooms[facing] != "")
             {
-                Area::ChangeRoom(Area::adjacentRooms[facing]);
-                SetYCell(Area::ROWS-1, true);
+                Area::ChangeRoom(Area::adjacentRooms[facing]); // Todo: Ensure only PC actor can trigger a room change.
+
+                // This following method prevents the actor from moving effectively moving two spaces consecutively during a room change.
+                // (A consequence of being warped to destination coords on the opposite side of the grid, therefore enabling movement input -- while input is pending).
+                SetYCell(Area::ROWS-0, true);
+                SetYCell(Area::ROWS-1, false);
+
             }
             break;
 
@@ -73,7 +78,8 @@ void Actor::Walk(int in_dir)
             else if(Area::adjacentRooms[facing] != "")
             {
                 Area::ChangeRoom(Area::adjacentRooms[facing]);
-                SetYCell(0, true);
+                SetYCell(0-1, true);
+                SetYCell(0-0, false);
             }
             break;
 
@@ -83,7 +89,8 @@ void Actor::Walk(int in_dir)
             else if(Area::adjacentRooms[facing] != "")
             {
                 Area::ChangeRoom(Area::adjacentRooms[facing]);
-                SetXCell(Area::COLS-1, true);
+                SetXCell(Area::COLS-0, true);
+                SetXCell(Area::COLS-1, false);
             }
             break;
 
@@ -93,7 +100,8 @@ void Actor::Walk(int in_dir)
             else if(Area::adjacentRooms[facing] != "")
             {
                 Area::ChangeRoom(Area::adjacentRooms[facing]);
-                SetXCell(0, true);
+                SetXCell(0-1, true);
+                SetXCell(0-0, false);
             }
             break;
         }
