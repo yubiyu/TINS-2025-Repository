@@ -7,7 +7,7 @@ Actor::Actor()
     atDestination = true;
 
     facing = Direction::DOWN;
-    moveSpeed = ActorIndex::MOVE_SPEED_BASE;
+    moveSpeed = ActorIndex::WALK_SPEED_BASE;
 
     SetAction(ActorIndex::ACTION_STAND);
 }

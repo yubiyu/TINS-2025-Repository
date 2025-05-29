@@ -5,6 +5,7 @@
 #include "image.h"
 
 #include "cellindex.h"
+#include "actorindex.h"
 
 #include "direction.h"
 
@@ -45,7 +46,11 @@ struct Area
         ROOM_TRANSITION_TRANSLATION = 0,
         ROOM_TRANSITION_TELEPORT_INSTANT = 1
     };
+    static int roomTransitionDirection;
+    static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH*COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
+    static const int ROOM_TRANSITION_Y_SPEED = Tile::HEIGHT*ROWS / ActorIndex::WALK_DURATION;
 
+    static float currentRoomXPosition, currentRoomYPosition;
     static float previousRoomXPosition, previousRoomYPosition;
 
     static void Initialize(const char* room);

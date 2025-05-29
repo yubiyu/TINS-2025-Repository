@@ -1,6 +1,7 @@
 #pragma once
 
 #include "direction.h"
+#include "tile.h"
 
 struct ActorIndex
 {
@@ -14,7 +15,8 @@ struct ActorIndex
     static const int MARKER_SPRITE_ID_END = SPRITE_GNAW;
     static const int NUM_SPRITE_IDS = MARKER_SPRITE_ID_END + 1;
 
-    static constexpr float MOVE_SPEED_BASE = 1.0;
+    static constexpr float WALK_SPEED_BASE = 1.0;
+    static const int WALK_DURATION = Tile::WIDTH / WALK_SPEED_BASE; // In logic ticks. 
 
     enum enumActions
     {

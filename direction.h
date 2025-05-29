@@ -2,6 +2,9 @@
 
 struct Direction
 {
+
+    static const int NONE = -1; // Not counted as one of four directions. Definitely should not be used as an array index.
+
     enum enumUDLR
     {
         UP = 0,
