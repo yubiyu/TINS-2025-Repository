@@ -19,23 +19,24 @@
 
 struct Area
 {
-    static constexpr const char* STARTING_AREA = "1";
+/// BEGIN WORLD GRID DATA ///
+    static const int WORLD_COLS = 10;
+    static const int WORLD_ROWS = 10;
 
-    enum enumDomains
-    {
-        DOMAIN_SULWON = 0,
-        DOMAIN_RUWON = 1,
-        DOMAIN_YION = 2
-    };
+    static std::string worldGrid[WORLD_COLS*WORLD_ROWS];
 
-    static const int COLS = 10;
-    static const int ROWS = 8;
+    static int worldCurrentCol, worldCurrentRow;
 
-    static int roomBlueprint[COLS*ROWS];
-    static int currentRoom[COLS*ROWS];
-    static int previousRoom[COLS*ROWS]; // Used for the scrolling room transition effect.
+/// END WORLD GRID DATA ///
 
-    static int defaultSpawnCol, defaultSpawnRow;
+    static const int ROOM_COLS = 10;
+    static const int ROOM_ROWS = 8;
+
+    static int roomBlueprint[ROOM_COLS*ROOM_ROWS];
+    static int currentRoom[ROOM_COLS*ROOM_ROWS];
+    static int previousRoom[ROOM_COLS*ROOM_ROWS]; // Used for the scrolling room transition effect.
+
+    static int roomSpawnCol, roomSpawnRow;
 
     static std::string adjacentRooms[Direction::NUM_DIRECTIONS];
 
@@ -47,20 +48,22 @@ struct Area
         ROOM_TRANSITION_TELEPORT_INSTANT = 1
     };
     static int roomTransitionDirection;
-    static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH*COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
-    static const int ROOM_TRANSITION_Y_SPEED = Tile::HEIGHT*ROWS / ActorIndex::WALK_DURATION;
+    static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH*ROOM_COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
+    static const int ROOM_TRANSITION_Y_SPEED = Tile::HEIGHT*ROOM_ROWS / ActorIndex::WALK_DURATION;
 
     static float currentRoomXPosition, currentRoomYPosition;
     static float previousRoomXPosition, previousRoomYPosition;
 
-    static void Initialize(const char* room);
+    static void Initialize();
     static void Uninitialize();
-    static void LoadRoomBlueprint(const char* room);
+    static void LoadWorldGrid(const char* worldgrid);
+    static void LoadRoomBlueprint(int world_x, int world_y);
     static void ParseToRoomBlueprint(int x, int y, int data);
     static void ConstructRoom();
 
     static void Logic();
     static void Drawing();
 
-    static void ChangeRoom(std::string destination);
+    //static void ChangeRoom(std::string destination);
+    static void ChangeRoom(int dest_x, int dest_y);
 };

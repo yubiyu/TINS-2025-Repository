@@ -60,24 +60,25 @@ void Actor::Walk(int in_dir)
         case Direction::UP:
             if(yCell > 0)
                 SetYCell(yCell-1, false);
-            else if(Area::adjacentRooms[facing] != "")
+            else if(Area::worldCurrentRow - 1 >= 0)
             {
-                Area::ChangeRoom(Area::adjacentRooms[facing]); // Todo: Ensure only PC actor can trigger a room change.
+                /// Todo: Ensure only PC actor can trigger a room change.
+                Area::ChangeRoom(Area::worldCurrentCol, Area::worldCurrentRow-1);
 
                 // This following method prevents the actor from moving effectively moving two spaces consecutively during a room change.
                 // (A consequence of being warped to destination coords on the opposite side of the grid, therefore enabling movement input -- while input is pending).
-                SetYCell(Area::ROWS-0, true);
-                SetYCell(Area::ROWS-1, false);
+                SetYCell(Area::ROOM_ROWS-0, true);
+                SetYCell(Area::ROOM_ROWS-1, false);
 
             }
             break;
 
         case Direction::DOWN:
-            if(yCell < Area::ROWS-1)
+            if(yCell < Area::ROOM_ROWS-1)
                 SetYCell(yCell+1, false);
-            else if(Area::adjacentRooms[facing] != "")
+            else if(Area::worldCurrentRow + 1 < Area::WORLD_ROWS)
             {
-                Area::ChangeRoom(Area::adjacentRooms[facing]);
+                Area::ChangeRoom(Area::worldCurrentCol, Area::worldCurrentRow+1);
                 SetYCell(0-1, true);
                 SetYCell(0-0, false);
             }
@@ -86,20 +87,20 @@ void Actor::Walk(int in_dir)
         case Direction::LEFT:
             if(xCell > 0)
                 SetXCell(xCell-1, false);
-            else if(Area::adjacentRooms[facing] != "")
+            else if(Area::worldCurrentCol - 1 >= 0)
             {
-                Area::ChangeRoom(Area::adjacentRooms[facing]);
-                SetXCell(Area::COLS-0, true);
-                SetXCell(Area::COLS-1, false);
+                Area::ChangeRoom(Area::worldCurrentCol-1, Area::worldCurrentRow);
+                SetXCell(Area::ROOM_COLS-0, true);
+                SetXCell(Area::ROOM_COLS-1, false);
             }
             break;
 
         case Direction::RIGHT:
-            if(xCell < Area::COLS-1)
+            if(xCell < Area::ROOM_COLS-1)
                 SetXCell(xCell+1, false);
-            else if(Area::adjacentRooms[facing] != "")
+            else if(Area::worldCurrentCol + 1 < Area::WORLD_COLS)
             {
-                Area::ChangeRoom(Area::adjacentRooms[facing]);
+                Area::ChangeRoom(Area::worldCurrentCol+1, Area::worldCurrentRow);
                 SetXCell(0-1, true);
                 SetXCell(0-0, false);
             }

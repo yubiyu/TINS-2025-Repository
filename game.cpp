@@ -101,7 +101,7 @@ bool Game::Initialize(char **argv)
 
     Settings::LoadFromConfig();
 
-    Area::Initialize(Area::STARTING_AREA);
+    Area::Initialize();
 
     PC::pc = new PC();
 
