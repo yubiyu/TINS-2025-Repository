@@ -60,7 +60,7 @@ void Actor::Walk(int in_dir)
         case Direction::UP:
             if(yCell > 0)
                 SetYCell(yCell-1, false);
-            else if(Area::worldCurrentRow - 1 >= 0)
+            else if(Area::adjacentRooms[Direction::UP] != Area::VOID_ROOM)
             {
                 /// Todo: Ensure only PC actor can trigger a room change.
                 Area::ChangeRoom(Area::worldCurrentCol, Area::worldCurrentRow-1);
@@ -76,7 +76,7 @@ void Actor::Walk(int in_dir)
         case Direction::DOWN:
             if(yCell < Area::ROOM_ROWS-1)
                 SetYCell(yCell+1, false);
-            else if(Area::worldCurrentRow + 1 < Area::WORLD_ROWS)
+            else if(Area::adjacentRooms[Direction::DOWN] != Area::VOID_ROOM)
             {
                 Area::ChangeRoom(Area::worldCurrentCol, Area::worldCurrentRow+1);
                 SetYCell(0-1, true);
@@ -87,7 +87,7 @@ void Actor::Walk(int in_dir)
         case Direction::LEFT:
             if(xCell > 0)
                 SetXCell(xCell-1, false);
-            else if(Area::worldCurrentCol - 1 >= 0)
+            else if(Area::adjacentRooms[Direction::LEFT] != Area::VOID_ROOM)
             {
                 Area::ChangeRoom(Area::worldCurrentCol-1, Area::worldCurrentRow);
                 SetXCell(Area::ROOM_COLS-0, true);
@@ -98,7 +98,7 @@ void Actor::Walk(int in_dir)
         case Direction::RIGHT:
             if(xCell < Area::ROOM_COLS-1)
                 SetXCell(xCell+1, false);
-            else if(Area::worldCurrentCol + 1 < Area::WORLD_COLS)
+            else if(Area::adjacentRooms[Direction::RIGHT] != Area::VOID_ROOM)
             {
                 Area::ChangeRoom(Area::worldCurrentCol+1, Area::worldCurrentRow);
                 SetXCell(0-1, true);

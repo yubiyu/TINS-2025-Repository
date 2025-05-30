@@ -37,7 +37,7 @@ void Area::LoadWorldGrid(const char *worldgrid)
 {
     std::cout << "Area: Loading world grid " << worldgrid << " from config/areas.cfg: " << std::endl;
 
-    std::fill(std::begin(worldGrid), std::end(worldGrid), "0000");
+    std::fill(std::begin(worldGrid), std::end(worldGrid), VOID_ROOM);
 
     size_t x = 0;
     for(size_t y = 0; y < WORLD_ROWS; y++)
@@ -104,6 +104,8 @@ void Area::LoadRoomBlueprint(int world_x, int world_y)
         col = 0;
         std::cout << std::endl;
     }
+
+    std::fill(std::begin(adjacentRooms), std::end(adjacentRooms), VOID_ROOM);
 
     if(world_y-1 >= 0)
         adjacentRooms[Direction::NORTH] = worldGrid[(world_y-1)*WORLD_COLS + world_x];

@@ -20,6 +20,8 @@
 struct Area
 {
 /// BEGIN WORLD GRID DATA ///
+    static constexpr const char* VOID_ROOM = "0000";
+
     static const int WORLD_COLS = 10;
     static const int WORLD_ROWS = 10;
 
