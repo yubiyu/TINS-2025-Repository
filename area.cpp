@@ -1,7 +1,7 @@
 #include "area.h"
 
 std::string Area::worldGrid[WORLD_COLS * WORLD_ROWS];
-int Area::worldCurrentCol{}, Area:: worldCurrentRow{};
+int Area::worldGridCurrentCol{}, Area:: worldGridCurrentRow{};
 
 
 int Area::roomBlueprint[ROOM_COLS * ROOM_ROWS];
@@ -25,8 +25,12 @@ void Area::Initialize()
     std::fill(std::begin(previousRoom), std::end(previousRoom), CellIndex::CELL_VOID);
 
     LoadWorldGrid("World Grid A");
-    LoadRoomBlueprint(worldCurrentCol, worldCurrentRow);
+    LoadRoomBlueprint(worldGridCurrentCol, worldGridCurrentRow);
     ConstructRoom();
+
+    UpdateRoomXYPositions();
+    inRoomTransition = true;
+    roomTransitionEffect = ROOM_TRANSITION_TELEPORT_INSTANT;
 }
 
 void Area::Uninitialize()
@@ -63,10 +67,10 @@ void Area::LoadWorldGrid(const char *worldgrid)
         std::cout << std::endl;
     }
 
-    worldCurrentCol = Configuration::GetInt(Configuration::areasCfg, worldgrid, "worldSpawnX");
-    worldCurrentRow = Configuration::GetInt(Configuration::areasCfg, worldgrid, "worldSpawnY");
-    std::cout << "World spawning coords = " << worldCurrentCol << ", " << worldCurrentRow << std::endl;
-    std::cout << "Current room ID = " << worldGrid[worldCurrentRow*WORLD_COLS + worldCurrentCol] << std::endl;
+    worldGridCurrentCol = Configuration::GetInt(Configuration::areasCfg, worldgrid, "worldSpawnX");
+    worldGridCurrentRow = Configuration::GetInt(Configuration::areasCfg, worldgrid, "worldSpawnY");
+    std::cout << "World spawning coords = " << worldGridCurrentCol << ", " << worldGridCurrentRow << std::endl;
+    std::cout << "Current room ID = " << worldGrid[worldGridCurrentRow*WORLD_COLS + worldGridCurrentCol] << std::endl;
 
 }
 
@@ -215,41 +219,30 @@ void Area::ConstructRoom()
     }
 }
 
+void Area::UpdateRoomXYPositions()
+{
+    previousRoomXPosition = currentRoomXPosition;
+    previousRoomYPosition = currentRoomYPosition;
+    currentRoomXPosition = worldGridCurrentCol * ROOM_COLS*Tile::WIDTH;
+    currentRoomYPosition = worldGridCurrentRow * ROOM_ROWS*Tile::HEIGHT;
+
+    Camera::SetDestination(currentRoomXPosition, currentRoomYPosition);
+}
+
 void Area::Logic()
 {
     if (inRoomTransition)
     {
         if (roomTransitionEffect == ROOM_TRANSITION_TRANSLATION)
         {
-            if (currentRoomXPosition < 0)
-            {
-                currentRoomXPosition += ROOM_TRANSITION_X_SPEED;
-                previousRoomXPosition += ROOM_TRANSITION_X_SPEED;
-            }
-            else if (currentRoomXPosition > 0)
-            {
-                currentRoomXPosition -= ROOM_TRANSITION_X_SPEED;
-                previousRoomXPosition -= ROOM_TRANSITION_X_SPEED;
-            }
-
-            if (currentRoomYPosition < 0)
-            {
-                currentRoomYPosition += ROOM_TRANSITION_Y_SPEED;
-                previousRoomYPosition += ROOM_TRANSITION_Y_SPEED;
-            }
-            else if (currentRoomYPosition > 0)
-            {
-                currentRoomYPosition -= ROOM_TRANSITION_Y_SPEED;
-                previousRoomYPosition -= ROOM_TRANSITION_Y_SPEED;
-            }
-
-            if (currentRoomXPosition == 0 && currentRoomYPosition == 0)
-            {
+            Camera::ApproachDestinationLinear(ROOM_TRANSITION_X_SPEED, ROOM_TRANSITION_Y_SPEED);
+            if (Camera::atDestination)
                 inRoomTransition = false;
-            }
         }
         else if (roomTransitionEffect == ROOM_TRANSITION_TELEPORT_INSTANT)
         {
+            Camera::SetDestination(currentRoomXPosition, currentRoomYPosition);
+            Camera::WarpToXYDestination();
             inRoomTransition = false;
         }
     }
@@ -262,7 +255,8 @@ void Area::Drawing()
         for (size_t x = 0; x < ROOM_COLS; x++)
         {
             al_draw_bitmap(Image::areaCellsSub[currentRoom[y * ROOM_COLS + x]],
-                           x * Tile::WIDTH + currentRoomXPosition, y * Tile::HEIGHT + currentRoomYPosition,
+                           x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
+                           y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
                            0);
         }
     }
@@ -274,7 +268,8 @@ void Area::Drawing()
             for (size_t x = 0; x < ROOM_COLS; x++)
             {
                 al_draw_bitmap(Image::areaCellsSub[previousRoom[y * ROOM_COLS + x]],
-                               x * Tile::WIDTH + previousRoomXPosition, y * Tile::HEIGHT + previousRoomYPosition,
+                               x * Tile::WIDTH + previousRoomXPosition - Camera::xPosition,
+                               y * Tile::HEIGHT + previousRoomYPosition - Camera::yPosition,
                                0);
             }
         }
@@ -285,18 +280,20 @@ void Area::ChangeRoom(int dest_x, int dest_y)
 {
     if(dest_x < 0 || dest_x >= WORLD_COLS || dest_y < 0 || dest_y >= WORLD_ROWS)
     {
-        std::cout << "Area: Error: Room change out of bounds on worldGrid! Roomchange redirecting to 0,0." << std::endl;
+        std::cout << "Area: Error: Room change out of bounds on worldGrid! RoomChange(x,y) redirecting to 0,0." << std::endl;
         ChangeRoom(0,0);
         return;
     }
 
-    worldCurrentCol = dest_x;
-    worldCurrentRow = dest_y;
+    worldGridCurrentCol = dest_x;
+    worldGridCurrentRow = dest_y;
+
+    UpdateRoomXYPositions();
 
     inRoomTransition = true;
 
-    roomTransitionEffect = ROOM_TRANSITION_TELEPORT_INSTANT;
-    roomTransitionDirection = Direction::NONE;
+    roomTransitionEffect = ROOM_TRANSITION_TELEPORT_INSTANT; // Default / fallback
+    roomTransitionDirection = Direction::NONE; // Default / fallback
 
     for (size_t i = 0; i < Direction::NUM_DIRECTIONS; i++)
     {
@@ -312,27 +309,4 @@ void Area::ChangeRoom(int dest_x, int dest_y)
     LoadRoomBlueprint(dest_x, dest_y);
     ConstructRoom();
 
-    previousRoomXPosition = 0;
-    previousRoomYPosition = 0;
-    currentRoomXPosition = 0;
-    currentRoomYPosition = 0;
-
-    switch (roomTransitionDirection)
-    {
-    case Direction::NORTH:
-        currentRoomYPosition -= Tile::HEIGHT * ROOM_ROWS;
-        break;
-
-    case Direction::SOUTH:
-        currentRoomYPosition += Tile::HEIGHT * ROOM_ROWS;
-        break;
-
-    case Direction::WEST:
-        currentRoomXPosition -= Tile::WIDTH * ROOM_COLS;
-        break;
-
-    case Direction::EAST:
-        currentRoomXPosition += Tile::WIDTH * ROOM_COLS;
-        break;
-    }
 }

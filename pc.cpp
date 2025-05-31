@@ -6,6 +6,11 @@ PC::PC()
 {
     SetHasAnimations(true);
     SetSpriteID(ActorIndex::SPRITE_OWL);
+
+    SetWorldXYCell(Area::worldGridCurrentCol * Area::ROOM_COLS + Area::roomSpawnCol,
+                   Area::worldGridCurrentRow * Area::ROOM_ROWS + Area::roomSpawnRow,
+                   true);
+    
 }
 
 PC::~PC()
@@ -26,13 +31,19 @@ void PC::Drawing()
     {
     case ActorIndex::ACTION_WALK:
         drawIndex = (GetSpriteID()*ActorIndex::WALK_SUB_BITMAPS_COLS) + GetFacing()*ActorIndex::NUM_WALK_FRAMES + GetCurrentFrame();
-        al_draw_bitmap(Image::actorWalkSub[drawIndex], GetXPosition(), GetYPosition(), 0);
+        al_draw_bitmap(Image::actorWalkSub[drawIndex],
+            GetXPosition() - Camera::xPosition,
+            GetYPosition() - Camera::yPosition,
+            0);
         break;
 
     case ActorIndex::ACTION_STAND:
         drawIndex = GetSpriteID()*ActorIndex::STAND_SUB_BITMAPS_COLS +
                     GetFacing()*ActorIndex::NUM_STAND_FRAMES;
-        al_draw_bitmap(Image::actorStandSub[drawIndex], GetXPosition(), GetYPosition(), 0);
+        al_draw_bitmap(Image::actorStandSub[drawIndex],
+            GetXPosition() - Camera::xPosition,
+            GetYPosition() - Camera::yPosition,
+            0);
         break;
     }
 }

@@ -98,6 +98,8 @@ void Worldview::DrawGridUnderlay()
     }
 }
 
+
+
 void Worldview::DrawGridText(float mouseTransformedX, float mouseTransformedY)
 {
     int mouseCrosshairXPosition = Camera::xPosition + mouseTransformedX;
@@ -112,3 +114,4 @@ void Worldview::DrawGridText(float mouseTransformedX, float mouseTransformedY)
 
     Util::string_al_draw_text(Text::builtin8, COLKEY_DEBUG_TEXT_HIGHLIGHTED, 0, 0, ALLEGRO_ALIGN_LEFT, mouseCrosshairPositionString);
 }
+

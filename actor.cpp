@@ -14,24 +14,23 @@ Actor::Actor()
 
 Actor::~Actor()
 {
-
 }
 
 void Actor::Logic()
 {
-    if(!atDestination)
+    if (!atDestination)
     {
         ApproachDestinationLinear(moveSpeed);
     }
 
-    if(hasAnimations)
+    if (hasAnimations)
     {
         currentFrameDelay++;
-        if(currentFrameDelay > maxFrameDelay)
+        if (currentFrameDelay > maxFrameDelay)
         {
             currentFrameDelay = 0;
             currentFrame++;
-            if(currentFrame >= numFrames)
+            if (currentFrame >= numFrames)
             {
                 currentFrame = 0;
             }
@@ -41,7 +40,7 @@ void Actor::Logic()
 
 void Actor::Face(int in_dir)
 {
-    if(atDestination)
+    if (atDestination)
         facing = in_dir;
 }
 
@@ -49,60 +48,52 @@ void Actor::Walk(int in_dir)
 {
     Face(in_dir);
 
-    if(atDestination)
+    if (atDestination)
     {
         atDestination = false;
 
         SetAction(ActorIndex::ACTION_WALK);
 
-        switch(facing)
+        switch (facing)
         {
         case Direction::UP:
-            if(yCell > 0)
-                SetYCell(yCell-1, false);
-            else if(Area::adjacentRooms[Direction::UP] != Area::VOID_ROOM)
+            if (roomYCell > 0)
+                SetRoomYCell(roomYCell - 1, false);
+            else if (Area::adjacentRooms[Direction::UP] != Area::VOID_ROOM)
             {
                 /// Todo: Ensure only PC actor can trigger a room change.
-                Area::ChangeRoom(Area::worldCurrentCol, Area::worldCurrentRow-1);
-
-                // This following method prevents the actor from moving effectively moving two spaces consecutively during a room change.
-                // (A consequence of being warped to destination coords on the opposite side of the grid, therefore enabling movement input -- while input is pending).
-                SetYCell(Area::ROOM_ROWS-0, true);
-                SetYCell(Area::ROOM_ROWS-1, false);
-
+                Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow - 1);
+                SetWorldYCell(worldYCell - 1, true);
             }
             break;
 
         case Direction::DOWN:
-            if(yCell < Area::ROOM_ROWS-1)
-                SetYCell(yCell+1, false);
-            else if(Area::adjacentRooms[Direction::DOWN] != Area::VOID_ROOM)
+            if (roomYCell < Area::ROOM_ROWS - 1)
+                SetRoomYCell(roomYCell + 1, false);
+            else if (Area::adjacentRooms[Direction::DOWN] != Area::VOID_ROOM)
             {
-                Area::ChangeRoom(Area::worldCurrentCol, Area::worldCurrentRow+1);
-                SetYCell(0-1, true);
-                SetYCell(0-0, false);
+                Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow + 1);
+                SetWorldYCell(worldYCell + 1, true);
             }
             break;
 
         case Direction::LEFT:
-            if(xCell > 0)
-                SetXCell(xCell-1, false);
-            else if(Area::adjacentRooms[Direction::LEFT] != Area::VOID_ROOM)
+            if (roomXCell > 0)
+                SetRoomXCell(roomXCell - 1, false);
+            else if (Area::adjacentRooms[Direction::LEFT] != Area::VOID_ROOM)
             {
-                Area::ChangeRoom(Area::worldCurrentCol-1, Area::worldCurrentRow);
-                SetXCell(Area::ROOM_COLS-0, true);
-                SetXCell(Area::ROOM_COLS-1, false);
+                Area::ChangeRoom(Area::worldGridCurrentCol - 1, Area::worldGridCurrentRow);
+                SetWorldXCell(worldXCell - 1, true);
             }
             break;
 
         case Direction::RIGHT:
-            if(xCell < Area::ROOM_COLS-1)
-                SetXCell(xCell+1, false);
-            else if(Area::adjacentRooms[Direction::RIGHT] != Area::VOID_ROOM)
+            if (roomXCell < Area::ROOM_COLS - 1)
+                SetRoomXCell(roomXCell + 1, false);
+            else if (Area::adjacentRooms[Direction::RIGHT] != Area::VOID_ROOM)
             {
-                Area::ChangeRoom(Area::worldCurrentCol+1, Area::worldCurrentRow);
-                SetXCell(0-1, true);
-                SetXCell(0-0, false);
+                Area::ChangeRoom(Area::worldGridCurrentCol + 1, Area::worldGridCurrentRow);
+                SetWorldXCell(worldXCell + 1, true);
             }
             break;
         }
@@ -111,23 +102,23 @@ void Actor::Walk(int in_dir)
 
 void Actor::Stand()
 {
-    if(atDestination)
+    if (atDestination)
         SetAction(ActorIndex::ACTION_STAND);
 }
 
 void Actor::ApproachDestinationLinear(float change)
 {
-    if(xPosition < xDestination)
+    if (xPosition < xDestination)
         xPosition += change;
-    else if(xPosition > xDestination)
+    else if (xPosition > xDestination)
         xPosition -= change;
 
-    if(yPosition < yDestination)
+    if (yPosition < yDestination)
         yPosition += change;
-    else if(yPosition > yDestination)
+    else if (yPosition > yDestination)
         yPosition -= change;
 
-    if(std::abs(xDestination - xPosition) <= change && std::abs(yDestination - yPosition) <= change)
+    if (std::abs(xDestination - xPosition) <= change && std::abs(yDestination - yPosition) <= change)
     {
         WarpToXYDestination();
         atDestination = true;
@@ -136,13 +127,13 @@ void Actor::ApproachDestinationLinear(float change)
 
 void Actor::ApproachDestinationFractional(float change)
 {
-    if(xPosition != xDestination)
-        xPosition += (xDestination - xPosition)*change;
+    if (xPosition != xDestination)
+        xPosition += (xDestination - xPosition) * change;
 
-    if(yPosition != yDestination)
-        yPosition += (yDestination - yPosition)*change;
+    if (yPosition != yDestination)
+        yPosition += (yDestination - yPosition) * change;
 
-    if(std::abs(xDestination - xPosition) <= change && std::abs(yDestination - yPosition) <= change)
+    if (std::abs(xDestination - xPosition) <= change && std::abs(yDestination - yPosition) <= change)
     {
         WarpToXYDestination();
         atDestination = true;
@@ -151,7 +142,7 @@ void Actor::ApproachDestinationFractional(float change)
 
 void Actor::SetAction(int which_action)
 {
-    if(action != which_action)
+    if (action != which_action)
     {
         SetCurrentFrame(0);
         SetCurrentFrameDelay(0);
@@ -159,9 +150,9 @@ void Actor::SetAction(int which_action)
 
     action = which_action;
 
-    if(hasAnimations)
+    if (hasAnimations)
     {
-        switch(action)
+        switch (action)
         {
         case ActorIndex::ACTION_WALK:
             SetNumFrames(ActorIndex::NUM_WALK_FRAMES);
@@ -172,6 +163,5 @@ void Actor::SetAction(int which_action)
             break;
         }
         SetMaxFrameDelay(ActorIndex::BASE_FRAME_DELAY);
-
     }
 }

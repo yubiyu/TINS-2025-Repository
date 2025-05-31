@@ -9,15 +9,15 @@ float Camera::zoomScale;
 float Camera::zoomTranslateX;
 float Camera::zoomTranslateY;
 
-bool Camera::worldviewCameraMousePanningDisabled;
-float Camera::mouseTransformedX;
-float Camera::mouseTransformedY;
+//bool Camera::worldviewCameraMousePanningDisabled;
+//float Camera::mouseTransformedX;
+//float Camera::mouseTransformedY;
 
 bool Camera::atDestination;
 bool Camera::approachingDestination;
 
-int Camera::xCell;
-int Camera::yCell;
+int Camera::worldXCell;
+int Camera::worldYCell;
 float Camera::xPosition;
 float Camera::yPosition;
 float Camera::xDestination;
@@ -53,9 +53,9 @@ void Camera::SetPosition(float x, float y)
 }
 void Camera::SetCell(int x, int y)
 {
-    xCell = x;
-    yCell = y;
-    SetDestination(xCell*Tile::WIDTH, yCell*Tile::HEIGHT);
+    worldXCell = x;
+    worldYCell = y;
+    SetDestination(worldXCell*Tile::WIDTH, worldYCell*Tile::HEIGHT);
 }
 void Camera::SetDestination(float x, float y)
 {
@@ -87,6 +87,7 @@ void Camera::Logic()
 
 void Camera::Input()
 {
+/*
     if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_UP])
     {
         if(zoomScale < SCALE_MAX)
@@ -126,39 +127,41 @@ void Camera::Input()
     {
 
     }
-
+    */
 }
 
-void Camera::ApproachDestinationLinear(float change)
+void Camera::ApproachDestinationLinear(float x_change, float y_change)
 {
     if(!atDestination)
     {
         if(xPosition < xDestination)
-            xPosition += change;
+            xPosition += x_change;
         else if(xPosition > xDestination)
-            xPosition -= change;
+            xPosition -= x_change;
 
         if(yPosition < yDestination)
-            yPosition += change;
+            yPosition += y_change;
         else if(yPosition > yDestination)
-            yPosition -= change;
+            yPosition -= y_change;
 
-        if(std::abs(xDestination - xPosition) <= 2.0 && std::abs(yDestination - yPosition) <= 2.0)
+        if(std::abs(xDestination - xPosition) <= APPROACH_DESTINATION_X_PRECISION 
+        && std::abs(yDestination - yPosition) <= APPROACH_DESTINATION_Y_PRECISION)
             WarpToXYDestination();
     }
 }
 
-void Camera::ApproachDestinationFractional(float change)
+void Camera::ApproachDestinationFractional(float x_change, float y_change)
 {
     if(!atDestination)
     {
         if(xPosition != xDestination)
-            xPosition += (xDestination - xPosition)*change;
+            xPosition += (xDestination - xPosition)*x_change;
 
         if(yPosition != yDestination)
-            yPosition += (yDestination - yPosition)*change;
+            yPosition += (yDestination - yPosition)*y_change;
 
-        if(std::abs(xDestination - xPosition) <= 2.0 && std::abs(yDestination - yPosition) <= 2.0)
+        if(std::abs(xDestination - xPosition) <= APPROACH_DESTINATION_X_PRECISION
+         && std::abs(yDestination - yPosition) <= APPROACH_DESTINATION_Y_PRECISION)
             WarpToXYDestination();
     }
 }

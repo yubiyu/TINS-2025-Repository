@@ -34,7 +34,7 @@ struct Worldview
     static void Drawing();
 
     static void DrawGridUnderlay();
-    static void DrawGridCameraCrosshair();
+    //static void DrawGridCameraCrosshair();
     static void DrawGridText(float mouseTransformedX, float mouseTransformedY);
 
 };

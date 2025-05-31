@@ -1,5 +1,7 @@
 #pragma once
 
+#include "camera.h"
+
 #include "tile.h"
 
 #include "actorindex.h"
@@ -14,7 +16,8 @@ class Actor
 
     float xPosition{}, yPosition{};
     float drawXPosition{}, drawYPosition{};
-    int xCell{}, yCell{};
+    int worldXCell{}, worldYCell{};
+    int roomXCell{}, roomYCell{};
 
     bool atDestination{};
     float xDestination{}, yDestination{};
@@ -87,27 +90,55 @@ public:
         SetDrawYPosition(y);
     }
 
-    int GetXCell()const{return xCell;}
-    int GetYCell()const{return yCell;}
-    void SetXCell(int x, bool warp_to_dest)
+    int GetWorldXCell()const{return worldXCell;}
+    int GetWorldYCell()const{return worldYCell;}
+    void SetWorldXCell(int x, bool warp_to_dest)
     {
-        xCell = x;
-        SetXDestination(xCell * Tile::WIDTH);
+        worldXCell = x;
+        roomXCell = worldXCell% Area::ROOM_COLS;
+        SetXDestination(worldXCell * Tile::WIDTH);
+
         if(warp_to_dest)
             WarpToXDestination();
     }
-    void SetYCell(int y, bool warp_to_dest)
+    void SetWorldYCell(int y, bool warp_to_dest)
     {
-        yCell = y;
-        SetYDestination(yCell * Tile::HEIGHT);
+        worldYCell = y;
+        roomYCell = worldYCell%Area::ROOM_ROWS;
+        SetYDestination(worldYCell * Tile::HEIGHT);
+
         if(warp_to_dest)
             WarpToYDestination();
     }
-    void SetXYCell(int x, int y, bool warp_to_dest)
+    void SetWorldXYCell(int x, int y, bool warp_to_dest)
     {
-        SetXCell(x, warp_to_dest);
-        SetYCell(y, warp_to_dest);
+        SetWorldXCell(x, warp_to_dest);
+        SetWorldYCell(y, warp_to_dest);
     }
+
+    int GetRoomXCell()const{return roomXCell;}
+    int GetRoomYCell()const{return roomYCell;}
+    void SetRoomXCell(int x, bool warp_to_dest)
+    {
+        roomXCell = x;
+        worldXCell = Area::worldGridCurrentCol*Area::ROOM_COLS + roomXCell;
+        SetXDestination(worldXCell*Tile::WIDTH);
+        if(warp_to_dest)
+            WarpToXDestination();
+    }
+    void SetRoomYCell(int y, bool warp_to_dest)
+    {
+        roomYCell = y;
+        worldYCell = Area::worldGridCurrentRow*Area::ROOM_ROWS + roomYCell;
+        SetYDestination(worldYCell*Tile::HEIGHT);
+        if(warp_to_dest)
+            WarpToYDestination();
+    }
+    void SetRoomXYCell(int x, int y, bool warp_to_dest)
+    {
+        SetRoomXCell(x, warp_to_dest);
+        SetRoomYCell(y, warp_to_dest);
+    } 
 
     int GetFacing()const{return facing;}
 

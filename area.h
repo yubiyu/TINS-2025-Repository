@@ -2,6 +2,8 @@
 
 #include "configuration.h"
 
+#include "camera.h"
+
 #include "image.h"
 
 #include "cellindex.h"
@@ -27,10 +29,9 @@ struct Area
 
     static std::string worldGrid[WORLD_COLS*WORLD_ROWS];
 
-    static int worldCurrentCol, worldCurrentRow;
-
+    static int worldGridCurrentCol, worldGridCurrentRow;
 /// END WORLD GRID DATA ///
-
+/// BEGIN ROOM DATA ///
     static const int ROOM_COLS = 10;
     static const int ROOM_ROWS = 8;
 
@@ -55,6 +56,7 @@ struct Area
 
     static float currentRoomXPosition, currentRoomYPosition;
     static float previousRoomXPosition, previousRoomYPosition;
+/// END ROOM DATA ///
 
     static void Initialize();
     static void Uninitialize();
@@ -62,10 +64,10 @@ struct Area
     static void LoadRoomBlueprint(int world_x, int world_y);
     static void ParseToRoomBlueprint(int x, int y, int data);
     static void ConstructRoom();
+    static void UpdateRoomXYPositions();
 
     static void Logic();
     static void Drawing();
 
-    //static void ChangeRoom(std::string destination);
     static void ChangeRoom(int dest_x, int dest_y);
 };
