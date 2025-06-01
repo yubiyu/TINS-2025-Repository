@@ -19,6 +19,10 @@ struct Image
 
     static ALLEGRO_BITMAP *titleImagePng;
 
+    static ALLEGRO_BITMAP *loadgamePlaceholderPng;
+
+    static ALLEGRO_BITMAP *archivePlaceholderPng;
+
     static ALLEGRO_BITMAP *settingsVolumeBarFullPng;
     static ALLEGRO_BITMAP *settingsVolumeBarEmptyPng;
 

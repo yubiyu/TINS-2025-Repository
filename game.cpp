@@ -156,6 +156,10 @@ void Game::InputSwitchboard()
         Worldview::Input();
         break;
 
+    case Scene::INPUT_CONTEXT_LOADGAME:
+        LoadGame::Input();
+        break;
+
     case Scene::INPUT_CONTEXT_ARCHIVE:
         Archive::Input();
         break;
@@ -182,6 +186,10 @@ void Game::LogicSwitchboard()
         Worldview::Logic();
         break;
 
+    case Scene::SCENE_LOADGAME:
+        LoadGame::Logic();
+        break;
+
     case Scene::SCENE_SETTINGS:
         Settings::Logic();
         break;
@@ -206,6 +214,10 @@ void Game::DrawingSwitchboard()
 
     case Scene::SCENE_WORLDVIEW:
         Worldview::Drawing();
+        break;
+
+    case Scene::SCENE_LOADGAME:
+        LoadGame::Drawing();
         break;
 
     case Scene::SCENE_SETTINGS:

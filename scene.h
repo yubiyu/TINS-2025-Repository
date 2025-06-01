@@ -10,6 +10,7 @@ struct Scene
 
         SCENE_WORLDVIEW,
 
+        SCENE_LOADGAME,
         SCENE_ARCHIVE,
         SCENE_SETTINGS,
     };
@@ -21,6 +22,7 @@ struct Scene
 
         INPUT_CONTEXT_WORLDVIEW,
 
+        INPUT_CONTEXT_LOADGAME,
         INPUT_CONTEXT_ARCHIVE,
         INPUT_CONTEXT_SETTINGS,
     };

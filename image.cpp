@@ -4,6 +4,10 @@ ALLEGRO_BITMAP* Image::menuOptionMarkerPng;
 
 ALLEGRO_BITMAP* Image::titleImagePng;
 
+ALLEGRO_BITMAP* Image::loadgamePlaceholderPng;
+
+ALLEGRO_BITMAP* Image::archivePlaceholderPng;
+
 ALLEGRO_BITMAP* Image::settingsVolumeBarFullPng;
 ALLEGRO_BITMAP* Image::settingsVolumeBarEmptyPng;
 
@@ -44,6 +48,10 @@ void Image::LoadResources()
 
     titleImagePng = al_load_bitmap("titleImage.png");
 
+    loadgamePlaceholderPng = al_load_bitmap("loadMenu.png");
+
+    archivePlaceholderPng = al_load_bitmap("archiveMenu.png");
+
     settingsVolumeBarFullPng = al_load_bitmap("settingsVolumeBarFull.png");
     settingsVolumeBarEmptyPng = al_load_bitmap("settingsVolumeBarEmpty.png");
 
@@ -78,6 +86,10 @@ void Image::UnloadResources()
     al_destroy_bitmap(menuOptionMarkerPng);
 
     al_destroy_bitmap(titleImagePng);
+
+    al_destroy_bitmap(loadgamePlaceholderPng);
+    
+    al_destroy_bitmap(archivePlaceholderPng);
 
     al_destroy_bitmap(settingsVolumeBarFullPng);
     al_destroy_bitmap(settingsVolumeBarEmptyPng);

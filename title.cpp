@@ -28,26 +28,26 @@ void Title::Input()
 {
     if(Keyboard::keyHoldTicks[Keyboard::KEY_UP] == 1)
     {
-        Title::AdjustTargetedOptionUp();
+        AdjustTargetedOptionUp();
     }
     else if(Keyboard::keyHoldTicks[Keyboard::KEY_DOWN] == 1)
     {
-        Title::AdjustTargetedOptionDown();
+        AdjustTargetedOptionDown();
     }
 
     if(Keyboard::keyHoldTicks[Keyboard::KEY_ESC] == 1)
     {
-        Title::SetTargetedOption(Title::OPTION_EXIT);
+        SetTargetedOption(Title::OPTION_EXIT);
     }
     else if(Keyboard::keyHoldTicks[Keyboard::KEY_ENTER] == 1)
     {
-        switch(Title::targetedOption)
+        switch(targetedOption)
         {
         case Title::OPTION_NEW_GAME:
             Scene::ChangeScene(Scene::SCENE_WORLDVIEW);
             break;
         case Title::OPTION_LOAD_GAME:
-            Scene::ChangeScene(Scene::SCENE_WORLDVIEW);
+            Scene::ChangeScene(Scene::SCENE_LOADGAME);
             break;
         case Title::OPTION_ARCHIVE:
             Scene::ChangeScene(Scene::SCENE_ARCHIVE);

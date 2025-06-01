@@ -23,6 +23,10 @@ void Scene::ChangeScene(int whichScene)
         ChangeInputContext(INPUT_CONTEXT_WORLDVIEW);
         break;
 
+    case SCENE_LOADGAME:
+        ChangeInputContext(INPUT_CONTEXT_LOADGAME);
+        break;
+
     case SCENE_ARCHIVE:
         ChangeInputContext(INPUT_CONTEXT_ARCHIVE);
         break;

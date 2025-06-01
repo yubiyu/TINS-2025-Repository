@@ -21,5 +21,5 @@ void Archive::Input()
 
 void Archive::Drawing()
 {
-
+    al_draw_bitmap(Image::archivePlaceholderPng,0,0,0);
 }

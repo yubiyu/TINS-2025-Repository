@@ -5,6 +5,7 @@
 
 #include "keyboard.h"
 
+#include "image.h"
 #include "text.h"
 #include "palette.h"
 
