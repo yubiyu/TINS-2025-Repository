@@ -14,6 +14,9 @@ ALLEGRO_BITMAP* Image::settingsVolumeBarEmptyPng;
 ALLEGRO_BITMAP* Image::areaCellsPng;
 std::vector<ALLEGRO_BITMAP*> Image::areaCellsSub;
 
+ALLEGRO_BITMAP* Image::areaFeaturesPng;
+std::vector<ALLEGRO_BITMAP*> Image::areaFeaturesSub;
+
 ALLEGRO_BITMAP* Image::actorPng;
 std::vector<ALLEGRO_BITMAP*> Image::actorWalkSub;
 std::vector<ALLEGRO_BITMAP*> Image::actorStandSub;
@@ -57,7 +60,11 @@ void Image::LoadResources()
 
     areaCellsPng = al_load_bitmap("areaCells.png");
     for(size_t i = 0; i < CellIndex::NUM_CELL_TYPES; i++)
-        areaCellsSub.push_back( al_create_sub_bitmap(areaCellsPng, Tile::WIDTH*i, Tile::HALF_HEIGHT*0, Tile::WIDTH, Tile::HEIGHT) );
+        areaCellsSub.push_back( al_create_sub_bitmap(areaCellsPng, Tile::WIDTH*i, Tile::HEIGHT*0, Tile::WIDTH, Tile::HEIGHT) );
+
+    areaFeaturesPng = al_load_bitmap("areaFeatures.png");
+    for(size_t i = 0; i < FeatureIndex::NUM_FEATURE_TYPES; i++)
+        areaFeaturesSub.push_back( al_create_sub_bitmap(areaFeaturesPng, Tile::WIDTH*i, Tile::HEIGHT*0, Tile::WIDTH, Tile::HEIGHT));
 
     actorPng = al_load_bitmap("actorAtlas.png");
 
@@ -98,6 +105,11 @@ void Image::UnloadResources()
         al_destroy_bitmap(areaCellsSub[i]);
     areaCellsSub.clear();
     al_destroy_bitmap(areaCellsPng);
+
+    for(size_t i = 0; i < areaFeaturesSub.size(); i++)
+        al_destroy_bitmap(areaFeaturesSub[i]);
+    areaFeaturesSub.clear();
+    al_destroy_bitmap(areaFeaturesPng);
 
     for(size_t i = 0; i < actorStandSub.size(); i++)
         al_destroy_bitmap(actorStandSub[i]);

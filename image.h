@@ -29,6 +29,9 @@ struct Image
     static ALLEGRO_BITMAP *areaCellsPng;
     static std::vector<ALLEGRO_BITMAP*>areaCellsSub;
 
+    static ALLEGRO_BITMAP *areaFeaturesPng;
+    static std::vector<ALLEGRO_BITMAP*>areaFeaturesSub;
+
     static ALLEGRO_BITMAP *actorPng;
     static std::vector<ALLEGRO_BITMAP*>actorWalkSub;
     static std::vector<ALLEGRO_BITMAP*>actorStandSub;

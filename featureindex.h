@@ -1,0 +1,8 @@
+struct FeatureIndex
+{
+    enum enumFeatures
+    {
+        
+    }
+
+}
