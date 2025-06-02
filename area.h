@@ -7,6 +7,7 @@
 #include "image.h"
 
 #include "cellindex.h"
+#include "featureindex.h"
 #include "actorindex.h"
 
 #include "direction.h"
@@ -21,23 +22,26 @@
 
 struct Area
 {
-/// BEGIN WORLD GRID DATA ///
-    static constexpr const char* VOID_ROOM = "0000";
+    /// BEGIN WORLD GRID DATA ///
+    static constexpr const char *VOID_ROOM = "0000";
 
     static const int WORLD_COLS = 10;
     static const int WORLD_ROWS = 10;
 
-    static std::string worldGrid[WORLD_COLS*WORLD_ROWS];
+    static std::string worldGrid[WORLD_COLS * WORLD_ROWS];
 
     static int worldGridCurrentCol, worldGridCurrentRow;
-/// END WORLD GRID DATA ///
-/// BEGIN ROOM DATA ///
-    static const int ROOM_COLS = 10;
-    static const int ROOM_ROWS = 8;
+    /// END WORLD GRID DATA ///
+    /// BEGIN ROOM DATA ///
+    static const int ROOM_COLS = 10; // Y
+    static const int ROOM_ROWS = 8;  // X
+    static const int ROOM_AREA = ROOM_COLS * ROOM_ROWS;
 
-    static int roomBlueprint[ROOM_COLS*ROOM_ROWS];
-    static int currentRoom[ROOM_COLS*ROOM_ROWS];
-    static int previousRoom[ROOM_COLS*ROOM_ROWS]; // Used for the scrolling room transition effect.
+    static int roomCellBlueprint[ROOM_AREA];
+    static int currentRoomCells[ROOM_AREA];
+    static int currentRoomFeatures[ROOM_AREA];
+    static int previousRoomCells[ROOM_AREA]; // Used for the scrolling room transition effect.
+    static int previousRoomFeatures[ROOM_AREA];
 
     static int roomSpawnCol, roomSpawnRow;
 
@@ -51,18 +55,18 @@ struct Area
         ROOM_TRANSITION_TELEPORT_INSTANT = 1
     };
     static int roomTransitionDirection;
-    static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH*ROOM_COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
-    static const int ROOM_TRANSITION_Y_SPEED = Tile::HEIGHT*ROOM_ROWS / ActorIndex::WALK_DURATION;
+    static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH * ROOM_COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
+    static const int ROOM_TRANSITION_Y_SPEED = Tile::HEIGHT * ROOM_ROWS / ActorIndex::WALK_DURATION;
 
     static float currentRoomXPosition, currentRoomYPosition;
     static float previousRoomXPosition, previousRoomYPosition;
-/// END ROOM DATA ///
+    /// END ROOM DATA ///
 
     static void Initialize();
     static void Uninitialize();
-    static void LoadWorldGrid(const char* worldgrid);
-    static void LoadRoomBlueprint(int world_x, int world_y);
-    static void ParseToRoomBlueprint(int x, int y, int data);
+    static void LoadWorldGrid(const char *worldgrid);
+    static void LoadRoomCellBlueprint(int world_x, int world_y);
+    static void ParseToRoomCellBlueprint(int x, int y, int data);
     static void ConstructRoom();
     static void UpdateRoomXYPositions();
 

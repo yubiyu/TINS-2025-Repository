@@ -6,6 +6,7 @@
 
 #include "tile.h"
 #include "cellindex.h"
+#include "featureindex.h"
 #include "actorindex.h"
 
 #include <vector>
