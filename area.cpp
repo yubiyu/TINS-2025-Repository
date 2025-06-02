@@ -4,6 +4,7 @@ std::string Area::worldGrid[WORLD_COLS * WORLD_ROWS];
 int Area::worldGridCurrentCol{}, Area::worldGridCurrentRow{};
 
 int Area::roomCellBlueprint[ROOM_AREA];
+int Area::roomFeatureBlueprint[ROOM_AREA];
 int Area::currentRoomCells[ROOM_AREA];
 int Area::currentRoomFeatures[ROOM_AREA];
 int Area::previousRoomCells[ROOM_AREA];
@@ -29,7 +30,7 @@ void Area::Initialize()
     std::fill(std::begin(previousRoomFeatures), std::end(previousRoomFeatures), FeatureIndex::FEATURE_NONE);
 
     LoadWorldGrid("World Grid A");
-    LoadRoomCellBlueprint(worldGridCurrentCol, worldGridCurrentRow);
+    LoadRoomBlueprints(worldGridCurrentCol, worldGridCurrentRow);
     ConstructRoom();
 
     UpdateRoomXYPositions();
@@ -77,18 +78,20 @@ void Area::LoadWorldGrid(const char *worldgrid)
     std::cout << "Current room ID = " << worldGrid[worldGridCurrentRow * WORLD_COLS + worldGridCurrentCol] << std::endl;
 }
 
-void Area::LoadRoomCellBlueprint(int world_x, int world_y)
+void Area::LoadRoomBlueprints(int world_x, int world_y)
 {
     const char *room = worldGrid[world_y * WORLD_COLS + world_x].c_str();
 
     std::cout << "Area: Loading room blueprint " << room << " from config/areas.cfg: " << std::endl;
-
+/// BEGIN CELLS PART ///
+    std::cout << "Cells BP:" << std::endl;
     std::fill(std::begin(roomCellBlueprint), std::end(roomCellBlueprint), CellIndex::BLUEPRINT_CELL_VOID_GENERIC);
 
     size_t col = 0;
     for (size_t row = 0; row < ROOM_ROWS; row++)
     {
-        const char *key = std::to_string(row).c_str();
+        std::string keyStr = std::to_string(row) + "C";
+        const char *key = keyStr.c_str();
         std::string rowData = Configuration::GetString(Configuration::areasCfg, room, key);
         std::cout << rowData << " --> ";
 
@@ -111,6 +114,40 @@ void Area::LoadRoomCellBlueprint(int world_x, int world_y)
         col = 0;
         std::cout << std::endl;
     }
+/// END CELLS PART ///
+/// BEGIN FEATURES PART ///
+    // Note: literally the same thing as CELLS PART but with Feature arrays instead of Cells.
+    std::cout << "Features BP: " << std::endl;
+    std::fill(std::begin(roomFeatureBlueprint), std::end(roomFeatureBlueprint), FeatureIndex::BLUEPRINT_FEATURE_NONE);
+
+    col = 0; // reusing size_t col declared in CELLS PART.
+    for( size_t row = 0; row < ROOM_ROWS; row++)
+    {
+        std::string keyStr = std::to_string(row) + "F";
+        const char *key = keyStr.c_str();
+        std::string rowData = Configuration::GetString(Configuration::areasCfg, room, key);
+        std::cout << rowData << " --> ";
+
+        std::istringstream iss(rowData);
+        while(std::getline(iss, rowData, ','))
+        {
+            if(col >= ROOM_COLS) // Invalid:
+            {
+                std::cout << std::endl 
+                          << "ERROR: rowData exceeds ROOM_COLS. Discarding overflow...";
+                break;
+            }
+
+            int data = std::stoi(rowData, nullptr, 16);  // String to hexedecimal conversion.
+            std::cout << std::setw(3) << data << " ";
+
+            ParseToRoomFeatureBlueprint(col, row, data);
+            col++;
+        }
+        col = 0;
+        std::cout << std::endl;
+    }
+/// END FEATURES PART ///
 
     std::fill(std::begin(adjacentRooms), std::end(adjacentRooms), VOID_ROOM);
 
@@ -163,10 +200,19 @@ void Area::ParseToRoomCellBlueprint(int x, int y, int data)
     }
 }
 
+
+void Area::ParseToRoomFeatureBlueprint(int x, int y, int data)
+{
+    if(data >= FeatureIndex::BLUEPRINT_FEATURE_NONE && data < FeatureIndex::NUM_BLUEPRINT_FEATURE_TYPES)
+        roomFeatureBlueprint[y * ROOM_COLS + x] = data;
+    else // Invalid data
+        roomFeatureBlueprint[y * ROOM_COLS + x] = FeatureIndex::FEATURE_NONE;
+}
+
 void Area::ConstructRoom()
 {
     std::cout << "Area: Constructing room from blueprint: " << std::endl;
-
+/// BEGIN CELLS PART
     for (size_t i = 0; i < ROOM_AREA; i++)
         currentRoomCells[i] = CellIndex::CELL_VOID;
 
@@ -219,6 +265,20 @@ void Area::ConstructRoom()
         }
         std::cout << std::endl;
     }
+/// END CELLS PART
+/// BEGIN FEATURES PART
+    for(size_t i = 0; i < ROOM_AREA; i++)
+        currentRoomFeatures[i] = FeatureIndex::FEATURE_NONE;
+
+    for(size_t y = 0; y < ROOM_ROWS; y++)
+    {
+        for(size_t x = 0; x < ROOM_COLS; x++)
+        {
+            currentRoomFeatures[y*ROOM_COLS+x] = roomFeatureBlueprint[y*ROOM_COLS+x]; /// Assuming for the time being that features and blueprints are 1:1.
+        }
+    }
+
+/// END FEATURES PART
 }
 
 void Area::UpdateRoomXYPositions()
@@ -319,6 +379,7 @@ void Area::ChangeRoom(int dest_x, int dest_y)
     }
 
     std::copy(std::begin(currentRoomCells), std::end(currentRoomCells), std::begin(previousRoomCells));
-    LoadRoomCellBlueprint(dest_x, dest_y);
+    std::copy(std::begin(currentRoomFeatures), std::end(currentRoomFeatures), std::begin(previousRoomFeatures));
+    LoadRoomBlueprints(dest_x, dest_y);
     ConstructRoom();
 }

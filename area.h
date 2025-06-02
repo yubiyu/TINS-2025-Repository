@@ -38,6 +38,7 @@ struct Area
     static const int ROOM_AREA = ROOM_COLS * ROOM_ROWS;
 
     static int roomCellBlueprint[ROOM_AREA];
+    static int roomFeatureBlueprint[ROOM_AREA];
     static int currentRoomCells[ROOM_AREA];
     static int currentRoomFeatures[ROOM_AREA];
     static int previousRoomCells[ROOM_AREA]; // Used for the scrolling room transition effect.
@@ -65,8 +66,10 @@ struct Area
     static void Initialize();
     static void Uninitialize();
     static void LoadWorldGrid(const char *worldgrid);
-    static void LoadRoomCellBlueprint(int world_x, int world_y);
+    static void LoadRoomBlueprints(int world_x, int world_y);
     static void ParseToRoomCellBlueprint(int x, int y, int data);
+    static void LoadRoomFeatureBlueprint(int world_x, int world_y);
+    static void ParseToRoomFeatureBlueprint(int x, int y, int data);
     static void ConstructRoom();
     static void UpdateRoomXYPositions();
 
