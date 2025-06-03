@@ -4,6 +4,8 @@ ALLEGRO_CONFIG* Configuration::settingsCfg;
 
 ALLEGRO_CONFIG* Configuration::areasCfg;
 
+ALLEGRO_CONFIG* Configuration::dialogsCfg;
+
 void Configuration::LoadConfigurations()
 {
     settingsCfg = al_load_config_file("config/settings.cfg");
@@ -17,6 +19,12 @@ void Configuration::LoadConfigurations()
         std::cout << "Error - Configuration: config/areas.cfg not loaded." << std::endl;
     else
         std::cout << "Configuration: config/areas.cfg successfully loaded." << std::endl;
+
+    dialogsCfg = al_load_config_file("config/dialogs.cfg");
+    if(!dialogsCfg)
+        std::cout << "Error - Configuration: config/dialogs.cfg not loaded." << std::endl;
+    else
+        std::cout << "Configuration: config/dialogs.cfg sucessfully loaded." << std::endl;
 }
 
 void Configuration::UnloadConfigurations()
@@ -24,6 +32,8 @@ void Configuration::UnloadConfigurations()
     al_destroy_config(settingsCfg);
 
     al_destroy_config(areasCfg);
+
+    al_destroy_config(dialogsCfg);
 }
 
 
@@ -31,8 +41,20 @@ std::string Configuration::GetString(const ALLEGRO_CONFIG* config, const char* s
 {
     const char* configValue = al_get_config_value(config, section, key);
     if(configValue != NULL)
-        return configValue;
-    else
+    {
+        std::string configValueString = configValue;
+
+        // Replace any literal \n (two chars) in loaded text to an actual newline character.
+        size_t pos = 0;
+        while((pos = configValueString.find("\\n", pos)) != std::string::npos)
+        {
+            configValueString.replace(pos, 2, "\n");
+            pos++;
+        }
+
+        return configValueString;
+    }
+    else // configValue == NULL
         return "";
 }
 

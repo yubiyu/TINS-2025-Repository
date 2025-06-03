@@ -23,7 +23,7 @@
 struct Area
 {
     /// BEGIN WORLD GRID DATA ///
-    static constexpr const char *VOID_ROOM = "0000";
+    static constexpr const char *VOID_ROOM_ID = "0000";
 
     static const int WORLD_COLS = 10;
     static const int WORLD_ROWS = 10;
@@ -72,9 +72,14 @@ struct Area
     static void ParseToRoomFeatureBlueprint(int x, int y, int data);
     static void ConstructRoom();
     static void UpdateRoomXYPositions();
+    
+
 
     static void Logic();
     static void Drawing();
 
     static void ChangeRoom(int dest_x, int dest_y);
+
+    static bool RoomBoundaryCheck(int x, int y);
+    static bool WalkObstacleCheck(int x, int y);
 };

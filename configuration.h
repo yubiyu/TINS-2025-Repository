@@ -8,8 +8,8 @@
 struct Configuration
 {
     static ALLEGRO_CONFIG* settingsCfg;
-
     static ALLEGRO_CONFIG* areasCfg;
+    static ALLEGRO_CONFIG* dialogsCfg;
 
     static void LoadConfigurations();
     static void UnloadConfigurations();

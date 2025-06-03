@@ -46,7 +46,7 @@ void Area::LoadWorldGrid(const char *worldgrid)
 {
     std::cout << "Area: Loading world grid " << worldgrid << " from config/areas.cfg: " << std::endl;
 
-    std::fill(std::begin(worldGrid), std::end(worldGrid), VOID_ROOM);
+    std::fill(std::begin(worldGrid), std::end(worldGrid), VOID_ROOM_ID);
 
     size_t x = 0;
     for (size_t y = 0; y < WORLD_ROWS; y++)
@@ -149,7 +149,7 @@ void Area::LoadRoomBlueprints(int world_x, int world_y)
     }
 /// END FEATURES PART ///
 
-    std::fill(std::begin(adjacentRooms), std::end(adjacentRooms), VOID_ROOM);
+    std::fill(std::begin(adjacentRooms), std::end(adjacentRooms), VOID_ROOM_ID);
 
     if (world_y - 1 >= 0)
         adjacentRooms[Direction::NORTH] = worldGrid[(world_y - 1) * WORLD_COLS + world_x];
@@ -382,4 +382,26 @@ void Area::ChangeRoom(int dest_x, int dest_y)
     std::copy(std::begin(currentRoomFeatures), std::end(currentRoomFeatures), std::begin(previousRoomFeatures));
     LoadRoomBlueprints(dest_x, dest_y);
     ConstructRoom();
+}
+
+bool Area::RoomBoundaryCheck(int x, int y)
+{
+    if (x >= 0 && x < ROOM_COLS && y >= 0 && y < ROOM_ROWS)
+        return false;
+    
+    return true;
+}
+
+bool Area::WalkObstacleCheck(int x, int y)
+{
+    if (RoomBoundaryCheck(x, y)) // Out of bounds in the first place
+        return true;
+
+    int checkIndex = y * ROOM_COLS + x;
+
+    if (currentRoomCells[checkIndex] >= CellIndex::MARKER_CELL_PLATFORM_BEGIN && currentRoomCells[checkIndex] <= CellIndex::MARKER_CELL_PLATFORM_END)
+        if(currentRoomFeatures[checkIndex] == FeatureIndex::FEATURE_NONE)
+            return false;
+
+    return true;
 }

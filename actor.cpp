@@ -38,15 +38,15 @@ void Actor::Logic()
     }
 }
 
-void Actor::Face(int in_dir)
+void Actor::Face(int direction)
 {
     if (atDestination)
-        facing = in_dir;
+        facing = direction;
 }
 
-void Actor::Walk(int in_dir)
+void Actor::Walk(int direction)
 {
-    Face(in_dir);
+    Face(direction);
 
     if (atDestination)
     {
@@ -57,40 +57,52 @@ void Actor::Walk(int in_dir)
         switch (facing)
         {
         case Direction::UP:
-            if (roomYCell > 0)
-                SetRoomYCell(roomYCell - 1, false);
-            else if (Area::adjacentRooms[Direction::UP] != Area::VOID_ROOM)
+            if (!Area::RoomBoundaryCheck(roomXCell,roomYCell-1))
             {
-                /// Todo: Ensure only PC actor can trigger a room change.
-                Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow - 1);
-                SetWorldYCell(worldYCell - 1, true);
+                if (!Area::WalkObstacleCheck(roomXCell,roomYCell-1))
+                    SetRoomYCell(roomYCell - 1, false);
+            }
+            else if (Area::adjacentRooms[Direction::UP] != Area::VOID_ROOM_ID)
+            {
+                    /// Todo: Ensure only PC actor can trigger a room change.
+                    Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow - 1);
+                    SetWorldYCell(worldYCell - 1, true);
             }
             break;
 
         case Direction::DOWN:
-            if (roomYCell < Area::ROOM_ROWS - 1)
-                SetRoomYCell(roomYCell + 1, false);
-            else if (Area::adjacentRooms[Direction::DOWN] != Area::VOID_ROOM)
+            if (!Area::RoomBoundaryCheck(roomXCell,roomYCell+1))
             {
-                Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow + 1);
-                SetWorldYCell(worldYCell + 1, true);
+                if (!Area::WalkObstacleCheck(roomXCell,roomYCell+1))
+                    SetRoomYCell(roomYCell + 1, false);
+            }
+            else if (Area::adjacentRooms[Direction::DOWN] != Area::VOID_ROOM_ID)
+            {
+                    Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow + 1);
+                    SetWorldYCell(worldYCell + 1, true);
             }
             break;
 
         case Direction::LEFT:
-            if (roomXCell > 0)
-                SetRoomXCell(roomXCell - 1, false);
-            else if (Area::adjacentRooms[Direction::LEFT] != Area::VOID_ROOM)
+            if (!Area::RoomBoundaryCheck(roomXCell - 1, roomYCell))
             {
-                Area::ChangeRoom(Area::worldGridCurrentCol - 1, Area::worldGridCurrentRow);
-                SetWorldXCell(worldXCell - 1, true);
+                if (!Area::WalkObstacleCheck(roomXCell - 1, roomYCell))
+                    SetRoomXCell(roomXCell - 1, false);
+            }
+            else if (Area::adjacentRooms[Direction::LEFT] != Area::VOID_ROOM_ID)
+            {
+                    Area::ChangeRoom(Area::worldGridCurrentCol - 1, Area::worldGridCurrentRow);
+                    SetWorldXCell(worldXCell - 1, true);
             }
             break;
 
         case Direction::RIGHT:
-            if (roomXCell < Area::ROOM_COLS - 1)
-                SetRoomXCell(roomXCell + 1, false);
-            else if (Area::adjacentRooms[Direction::RIGHT] != Area::VOID_ROOM)
+            if (!Area::RoomBoundaryCheck(roomXCell+1, roomYCell))
+            {
+                if (!Area::WalkObstacleCheck(roomXCell+1, roomYCell))
+                    SetRoomXCell(roomXCell + 1, false);
+            }
+            else if (Area::adjacentRooms[Direction::RIGHT] != Area::VOID_ROOM_ID)
             {
                 Area::ChangeRoom(Area::worldGridCurrentCol + 1, Area::worldGridCurrentRow);
                 SetWorldXCell(worldXCell + 1, true);

@@ -1,6 +1,9 @@
 #pragma once
 
 #include "display.h"
+#include "keyboard.h"
+#include "configuration.h"
+
 #include "tile.h"
 #include "util.h"
 
@@ -19,7 +22,7 @@ struct Dialog
         Some distinctions:
     Frame      = The green rectangular sprite that encompasses the text field.
     Text Field = The area intended for the three rows of text to be drawn within the frame.
-    Text area  = The entire text, to be drawn as a rectangular area. Can easily extend far below the text field - and above, as scrolling proceeds. 
+    Text area/text buffer  = The entire text, to be drawn as a rectangular area. Can easily extend far below the text field - and above, as scrolling proceeds. 
     */
 
     static std::string text;
@@ -48,7 +51,7 @@ struct Dialog
     static constexpr float TEXT_FIELD_ROW_HEIGHT = Text::HEIGHT_8 * 1.5;
     static const int TEXT_CHAR_WIDTH = 8; // Assumes monospace, for now.
 
-    static int textFieldRow; // The top-most row within the text field.
+    static int textFieldTopRow; // The top-most row within the text field.
     static int textBufferNumRows;
     static std::vector<int>textBufferRowWidths;
 
@@ -70,6 +73,7 @@ struct Dialog
     static void Input();
 
     static void Activate(std::string text_content);
+    static void Activate(const char* section, const char* key);
     static void Deactivate();
     static void Advance();
 

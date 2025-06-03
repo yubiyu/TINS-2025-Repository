@@ -28,6 +28,8 @@ void Worldview::Input()
     {
         if (Dialog::isActive)
         {
+            // Move the following to Dialog::Input?
+            Dialog::Input();
             if (Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
                 Dialog::Advance();
             else if (Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
@@ -38,7 +40,8 @@ void Worldview::Input()
             PC::pc->Input();
 
             if (Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
-                Dialog::Activate("All this long eve, so balmy and serene,\nhave I been gazing on the western sky,\nAnd its peculiar tint of yellow green:\nAnd still I gaze- and with how blank an eye!\nAnd those thin clouds above, in flakes and bars,\nThat give away their motion to the stars;\nThose stars, that glide behind them or between,\nNow sparkling, now bedimmed, but always seen:");
+                Dialog::Activate("Test","Test");
+                //Dialog::Activate("All this long eve, so balmy and serene,\nhave I been gazing on the western sky,\nAnd its peculiar tint of yellow green:\nAnd still I gaze- and with how blank an eye!\nAnd those thin clouds above, in flakes and bars,\nThat give away their motion to the stars;\nThose stars, that glide behind them or between,\nNow sparkling, now bedimmed, but always seen:");
         }
     }
 

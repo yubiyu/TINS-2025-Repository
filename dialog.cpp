@@ -7,7 +7,7 @@ std::string Dialog::text{};
 ALLEGRO_BITMAP *Dialog::textBuffer{};
 int Dialog::textBufferXPosition{}, Dialog::textBufferYPosition{};
 
-int Dialog::textFieldRow{};
+int Dialog::textFieldTopRow{};
 int Dialog::textBufferNumRows{};
 std::vector<int> Dialog::textBufferRowWidths{};
 
@@ -42,13 +42,13 @@ void Dialog::Logic()
             {
                 frameScrollingTick = 0;
                 revealedCol++;
-                if (revealedCol >= TEXT_FIELD_COLS || (revealedCol >= textBufferRowWidths[textFieldRow + revealedRow] / TEXT_CHAR_WIDTH))
+                if (revealedCol >= TEXT_FIELD_COLS || (revealedCol >= textBufferRowWidths[textFieldTopRow + revealedRow] / TEXT_CHAR_WIDTH))
                 {
                     revealedCol = 0;
                     revealedRow++;
                 }
 
-                if (revealedRow >= TEXT_FIELD_ROWS)
+                if (revealedRow >= TEXT_FIELD_ROWS) // To clarify, revealedRow would have to be at least one line beyond the end of the text field.
                     isScrolling = false;
 
                 caretFrame++;
@@ -81,10 +81,8 @@ void Dialog::Drawing()
                     al_draw_filled_rectangle(TEXT_FIELD_X + revealedCol * Tile::HALF_WIDTH, TEXT_FIELD_Y + revealedRow * TEXT_FIELD_ROW_HEIGHT,
                                              TEXT_FIELD_X + TEXT_FIELD_WIDTH, TEXT_FIELD_Y + TEXT_FIELD_HEIGHT,
                                              COLKEY_DIALOG_TEXTFIELD);
-
             }
 
-            
             al_draw_bitmap(Image::dialogCaretSub[caretFrame],
                            TEXT_FIELD_X + revealedCol * Tile::HALF_WIDTH,
                            TEXT_FIELD_Y + revealedRow * TEXT_FIELD_ROW_HEIGHT, 0);
@@ -94,6 +92,13 @@ void Dialog::Drawing()
 
 void Dialog::Input()
 {
+    if (isActive)
+    {
+        if (Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
+            Advance();
+        else if (Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
+            Deactivate();
+    }
 }
 
 void Dialog::Activate(std::string text_content)
@@ -120,11 +125,16 @@ void Dialog::Activate(std::string text_content)
     al_set_target_bitmap(previousTargetBitmap);
     al_draw_bitmap(textBuffer, TEXT_FIELD_X, TEXT_FIELD_Y, 0);
 
-    textFieldRow = 0;
+    textFieldTopRow = 0;
     revealedRow = 0;
     revealedCol = 0;
 
     frameScrollingTick = 0;
+}
+
+void Dialog::Activate(const char *section, const char *key)
+{
+    Activate(Configuration::GetString(Configuration::dialogsCfg, section, key));
 }
 
 void Dialog::Deactivate()
@@ -140,26 +150,31 @@ void Dialog::Deactivate()
 
 void Dialog::Advance()
 {
-    if (!isScrolling && 
-        textFieldRow + TEXT_FIELD_ROWS >= textBufferNumRows)
+    if(isScrolling)
     {
-        Deactivate();
-        return;
+            // Advance to the end of the current textbuffer region. Stop scrolling.
+            revealedRow = TEXT_FIELD_ROWS;
+            revealedCol = TEXT_FIELD_COLS;
+            isScrolling = false;
     }
-    else if(revealedRow < TEXT_FIELD_ROWS - 1) // Advance to the end of the current textbuffer region. Stop scrolling.
+    else //!isScrolling
     {
-        revealedRow = TEXT_FIELD_ROWS;
-        revealedCol = TEXT_FIELD_COLS;
-        isScrolling = false;
-    }
-    else // Advance to the *next* textbuffer region. Begin scrolling again.
-    {
-        isScrolling = true;
+        if(textFieldTopRow + TEXT_FIELD_ROWS >= textBufferNumRows)
+        {
+            Deactivate();
+            return;
+        }
+        else
+        {
+            // Advance to the *next* textbuffer region (default: three rows ahead). 
+            //Begin scrolling again.
+            textFieldTopRow += TEXT_BUFFER_ADVANCE_ROWS;
+            textBufferYPosition += TEXT_FIELD_ROW_HEIGHT * TEXT_BUFFER_ADVANCE_ROWS;
 
-        textFieldRow += TEXT_BUFFER_ADVANCE_ROWS;
-        textBufferYPosition += TEXT_FIELD_ROW_HEIGHT * TEXT_BUFFER_ADVANCE_ROWS;
+            revealedRow = 0;
+            revealedCol = 0;
 
-        revealedRow = 0;
-        revealedCol = 0;
+            isScrolling = true;
+        }
     }
 }
