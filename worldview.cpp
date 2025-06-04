@@ -30,10 +30,6 @@ void Worldview::Input()
         {
             // Move the following to Dialog::Input?
             Dialog::Input();
-            if (Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
-                Dialog::Advance();
-            else if (Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
-                Dialog::Deactivate();
         }
         else
         {

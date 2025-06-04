@@ -11,11 +11,12 @@ int Dialog::textFieldTopRow{};
 int Dialog::textBufferNumRows{};
 std::vector<int> Dialog::textBufferRowWidths{};
 
-int Dialog::revealedRow{};
-int Dialog::revealedCol{};
+int Dialog::textFieldRevealedRow{};
+int Dialog::textFieldRevealedCol{};
 
 int Dialog::frameScrollingTick{};
 
+bool Dialog::spaceAtCaret{};
 int Dialog::caretFrame{};
 
 void Dialog::Initialize()
@@ -41,14 +42,20 @@ void Dialog::Logic()
             if (frameScrollingTick >= FRAME_SCROLLING_TICKS_NEEDED)
             {
                 frameScrollingTick = 0;
-                revealedCol++;
-                if (revealedCol >= TEXT_FIELD_COLS || (revealedCol >= textBufferRowWidths[textFieldTopRow + revealedRow] / TEXT_CHAR_WIDTH))
+                textFieldRevealedCol++;
+
+                // Scrolling advances one line if revealed to the end of line.
+                if (textFieldTopRow + textFieldRevealedRow < textBufferNumRows // Guards against memory access outside textBufferRowWidths
+                    && textFieldRevealedCol >= textBufferRowWidths[textFieldTopRow + textFieldRevealedRow] / TEXT_CHAR_WIDTH)
                 {
-                    revealedCol = 0;
-                    revealedRow++;
+                    /*if(textFieldRevealedCol >= TEXT_FIELD_COLS) is not necessary 
+                    because textBufferRowWidths = Util::collect_multiline_widths() already takes into account the width of the textfield.*/
+                    textFieldRevealedCol = 0;
+                    textFieldRevealedRow++;
                 }
 
-                if (revealedRow >= TEXT_FIELD_ROWS) // To clarify, revealedRow would have to be at least one line beyond the end of the text field.
+                if (textFieldRevealedRow >= TEXT_FIELD_ROWS // To clarify, textFieldRevealedRow would have to be at least one line beyond the end of the text field.
+                    || textFieldRevealedRow > textBufferNumRows - textFieldTopRow - 1)
                     isScrolling = false;
 
                 caretFrame++;
@@ -71,21 +78,23 @@ void Dialog::Drawing()
 
         if (isScrolling)
         {
-            if (revealedRow < TEXT_FIELD_ROWS)
+            if (textFieldRevealedRow < TEXT_FIELD_ROWS)
             {
-                al_draw_filled_rectangle(TEXT_FIELD_X, TEXT_FIELD_Y + (revealedRow + 1) * TEXT_FIELD_ROW_HEIGHT,
+                // Draws two overlapping rectangles the same colour as the textfield. Obscures cols and rows beyond textFieldRevealedCol and textFieldRevealedRow.
+                // In the future, update to use masking alpha colour on a transparent bitmap.
+                al_draw_filled_rectangle(TEXT_FIELD_X, TEXT_FIELD_Y + (textFieldRevealedRow + 1) * TEXT_FIELD_ROW_HEIGHT,
                                          TEXT_FIELD_X + TEXT_FIELD_WIDTH, TEXT_FIELD_Y + TEXT_FIELD_HEIGHT,
                                          COLKEY_DIALOG_TEXTFIELD);
 
-                if (revealedCol < TEXT_FIELD_COLS)
-                    al_draw_filled_rectangle(TEXT_FIELD_X + revealedCol * Tile::HALF_WIDTH, TEXT_FIELD_Y + revealedRow * TEXT_FIELD_ROW_HEIGHT,
+                if (textFieldRevealedCol < TEXT_FIELD_COLS)
+                    al_draw_filled_rectangle(TEXT_FIELD_X + textFieldRevealedCol * Tile::HALF_WIDTH, TEXT_FIELD_Y + textFieldRevealedRow * TEXT_FIELD_ROW_HEIGHT,
                                              TEXT_FIELD_X + TEXT_FIELD_WIDTH, TEXT_FIELD_Y + TEXT_FIELD_HEIGHT,
                                              COLKEY_DIALOG_TEXTFIELD);
             }
 
             al_draw_bitmap(Image::dialogCaretSub[caretFrame],
-                           TEXT_FIELD_X + revealedCol * Tile::HALF_WIDTH,
-                           TEXT_FIELD_Y + revealedRow * TEXT_FIELD_ROW_HEIGHT, 0);
+                           TEXT_FIELD_X + textFieldRevealedCol * Tile::HALF_WIDTH,
+                           TEXT_FIELD_Y + textFieldRevealedRow * TEXT_FIELD_ROW_HEIGHT, 0);
         }
     }
 }
@@ -126,8 +135,8 @@ void Dialog::Activate(std::string text_content)
     al_draw_bitmap(textBuffer, TEXT_FIELD_X, TEXT_FIELD_Y, 0);
 
     textFieldTopRow = 0;
-    revealedRow = 0;
-    revealedCol = 0;
+    textFieldRevealedRow = 0;
+    textFieldRevealedCol = 0;
 
     frameScrollingTick = 0;
 }
@@ -150,31 +159,27 @@ void Dialog::Deactivate()
 
 void Dialog::Advance()
 {
-    if(isScrolling)
+    if (textFieldRevealedRow < TEXT_FIELD_ROWS) // Current textfield is not fully revealed.
     {
-            // Advance to the end of the current textbuffer region. Stop scrolling.
-            revealedRow = TEXT_FIELD_ROWS;
-            revealedCol = TEXT_FIELD_COLS;
-            isScrolling = false;
+        // Advance to the end of the current textbuffer region. Stop scrolling.
+        textFieldRevealedRow = TEXT_FIELD_ROWS;
+        textFieldRevealedCol = TEXT_FIELD_COLS;
+        isScrolling = false;
     }
-    else //!isScrolling
+    else
     {
-        if(textFieldTopRow + TEXT_FIELD_ROWS >= textBufferNumRows)
+        if (textFieldTopRow + TEXT_FIELD_ROWS >= textBufferNumRows)
         {
             Deactivate();
             return;
         }
-        else
-        {
-            // Advance to the *next* textbuffer region (default: three rows ahead). 
-            //Begin scrolling again.
-            textFieldTopRow += TEXT_BUFFER_ADVANCE_ROWS;
-            textBufferYPosition += TEXT_FIELD_ROW_HEIGHT * TEXT_BUFFER_ADVANCE_ROWS;
+        // Advance to the *next* textbuffer region (default: three rows ahead).
+        textFieldTopRow += TEXT_BUFFER_ADVANCE_ROWS;
+        textBufferYPosition += TEXT_FIELD_ROW_HEIGHT * TEXT_BUFFER_ADVANCE_ROWS;
 
-            revealedRow = 0;
-            revealedCol = 0;
+        textFieldRevealedRow = 0;
+        textFieldRevealedCol = 0;
 
-            isScrolling = true;
-        }
+        isScrolling = true;
     }
 }

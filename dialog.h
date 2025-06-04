@@ -15,8 +15,8 @@
 
 struct Dialog
 {
-    static bool isActive;
-    static bool isScrolling;
+    static bool isActive; // The frame appears. Logic() progresses each tick.
+    static bool isScrolling; // textFieldRevealedRow/textFieldRevealedCol progresses each tick.
 
     /*
         Some distinctions:
@@ -45,8 +45,8 @@ struct Dialog
     static constexpr float TEXT_FIELD_WIDTH = FRAME_WIDTH - Tile::WIDTH;
     static constexpr float TEXT_FIELD_HEIGHT = FRAME_HEIGHT - Tile::HEIGHT;
 
-    static const int TEXT_FIELD_ROWS = 3;  // 3 rows for 3 lines.
-    static const int TEXT_FIELD_COLS = 18; // 18 cols for 18 characters.
+    static const int TEXT_FIELD_ROWS = 3;  // 3 rows for 3 lines. Note that lines are numbered 0 to 2.
+    static const int TEXT_FIELD_COLS = 18; // 18 cols for 18 characters. Note that cols are numbered 0 to 17.
 
     static constexpr float TEXT_FIELD_ROW_HEIGHT = Text::HEIGHT_8 * 1.5;
     static const int TEXT_CHAR_WIDTH = 8; // Assumes monospace, for now.
@@ -55,14 +55,15 @@ struct Dialog
     static int textBufferNumRows;
     static std::vector<int>textBufferRowWidths;
 
-    static int revealedRow; // Previously known as "caretRow" or "scrollingRow".
-    static int revealedCol; // Only applies to current row.
+    static int textFieldRevealedRow; // Previously known as "caretRow" or "scrollingRow".
+    static int textFieldRevealedCol; // Only applies to current row.
 
     static const int FRAME_SCROLLING_TICKS_NEEDED = 3;
     static int frameScrollingTick; // Delay for text-scrolling.
 
     static const int TEXT_BUFFER_ADVANCE_ROWS = 3;
 
+    static bool spaceAtCaret;
     static int caretFrame; // Text scrolling caret alternates between "0 = black" and "1 = white."
 
     static void Initialize();
