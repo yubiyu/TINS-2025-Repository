@@ -159,9 +159,11 @@ void Dialog::Deactivate()
 
 void Dialog::Advance()
 {
-    if (textFieldRevealedRow < TEXT_FIELD_ROWS) // Current textfield is not fully revealed.
+    //Note that textfieldTopRow counts from zeroth line, while textBufferNumRows is equal to the number of lines in textBuffer.
+    int availableRows = std::min(TEXT_FIELD_ROWS, textBufferNumRows - textFieldTopRow); // "available" to textfield, available to textBuffer. The smaller of the two.
+    if (textFieldRevealedRow < availableRows) // Current textfield is not fully revealed
     {
-        // Advance to the end of the current textbuffer region. Stop scrolling.
+        // Advance to the end of the current textfield region. Stop scrolling.
         textFieldRevealedRow = TEXT_FIELD_ROWS;
         textFieldRevealedCol = TEXT_FIELD_COLS;
         isScrolling = false;

@@ -12,6 +12,8 @@
 
 #include "direction.h"
 
+#include "dialog.h"
+
 #include <string>
 #include <sstream>
 
@@ -72,8 +74,6 @@ struct Area
     static void ParseToRoomFeatureBlueprint(int x, int y, int data);
     static void ConstructRoom();
     static void UpdateRoomXYPositions();
-    
-
 
     static void Logic();
     static void Drawing();
@@ -82,4 +82,6 @@ struct Area
 
     static bool RoomBoundaryCheck(int x, int y);
     static bool WalkObstacleCheck(int x, int y);
+
+    static void ActivateFeature(int x, int y);
 };

@@ -405,3 +405,29 @@ bool Area::WalkObstacleCheck(int x, int y)
 
     return true;
 }
+
+void Area::ActivateFeature(int x, int y)
+{
+    if(RoomBoundaryCheck(x,y)) // Out of bounds.
+    {
+        // Todo: question mark response.
+        return; // Prevent invalid array access in the next step.
+    }
+
+    int feature = currentRoomFeatures[y * ROOM_COLS + x];
+    switch(feature)
+    {
+        case FeatureIndex::FEATURE_NONE:
+            // Function activates nothing.
+            Dialog::Activate("Tests", "TestMedium");
+        break;
+
+        case FeatureIndex::FEATURE_CHEST_CLOSED:
+
+        break;
+
+        case FeatureIndex::FEATURE_CHEST_OPEN:
+            Dialog::Activate("Features", "chestEmpty");
+        break;
+    }
+}

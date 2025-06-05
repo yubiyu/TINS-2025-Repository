@@ -12,6 +12,7 @@
 #include "palette.h"
 
 #include <string>
+#include <algorithm>
 
 struct Dialog
 {
@@ -45,7 +46,7 @@ struct Dialog
     static constexpr float TEXT_FIELD_WIDTH = FRAME_WIDTH - Tile::WIDTH;
     static constexpr float TEXT_FIELD_HEIGHT = FRAME_HEIGHT - Tile::HEIGHT;
 
-    static const int TEXT_FIELD_ROWS = 3;  // 3 rows for 3 lines. Note that lines are numbered 0 to 2.
+    static constexpr int TEXT_FIELD_ROWS = 3;  // 3 rows for 3 lines. Note that lines are numbered 0 to 2.
     static const int TEXT_FIELD_COLS = 18; // 18 cols for 18 characters. Note that cols are numbered 0 to 17.
 
     static constexpr float TEXT_FIELD_ROW_HEIGHT = Text::HEIGHT_8 * 1.5;

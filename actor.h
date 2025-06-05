@@ -15,9 +15,10 @@ class Actor
     bool isActive{};
 
     float xPosition{}, yPosition{};
-    float drawXPosition{}, drawYPosition{};
+    //float drawXPosition{}, drawYPosition{};
     int worldXCell{}, worldYCell{};
     int roomXCell{}, roomYCell{};
+    
 
     bool atDestination{};
     float xDestination{}, yDestination{};
@@ -80,6 +81,7 @@ public:
     void ApproachDestinationLinear(float change);
     void ApproachDestinationFractional(float change);
 
+    /*
     float GetDrawXPosition()const{return drawXPosition;}
     float GetDrawYPosition()const{return drawYPosition;}
     void SetDrawXPosition(float x){drawXPosition = x;}
@@ -89,6 +91,7 @@ public:
         SetDrawXPosition(x);
         SetDrawYPosition(y);
     }
+        */
 
     int GetWorldXCell()const{return worldXCell;}
     int GetWorldYCell()const{return worldYCell;}
