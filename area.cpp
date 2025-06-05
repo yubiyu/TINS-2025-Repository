@@ -3,12 +3,12 @@
 std::string Area::worldGrid[WORLD_COLS * WORLD_ROWS];
 int Area::worldGridCurrentCol{}, Area::worldGridCurrentRow{};
 
-int Area::roomCellBlueprint[ROOM_AREA];
-int Area::roomFeatureBlueprint[ROOM_AREA];
-int Area::currentRoomCells[ROOM_AREA];
-int Area::currentRoomFeatures[ROOM_AREA];
-int Area::previousRoomCells[ROOM_AREA];
-int Area::previousRoomFeatures[ROOM_AREA];
+std::array<int,Area::ROOM_AREA> Area::roomCellBlueprint {};
+std::array<int,Area::ROOM_AREA> Area::roomFeatureBlueprint {};
+std::array<int,Area::ROOM_AREA> Area::currentRoomCells {};
+std::array<int,Area::ROOM_AREA> Area::currentRoomFeatures {};
+std::array<int,Area::ROOM_AREA> Area::previousRoomCells {};
+std::array<int,Area::ROOM_AREA> Area::previousRoomFeatures {};
 
 int Area::roomSpawnCol{}, Area::roomSpawnRow{};
 
@@ -20,6 +20,8 @@ int Area::roomTransitionDirection{};
 
 float Area::currentRoomXPosition{}, Area::currentRoomYPosition{};
 float Area::previousRoomXPosition{}, Area::previousRoomYPosition{};
+
+std::unordered_map<std::string, std::array<int,Area::ROOM_AREA>>Area::featuresState {};
 
 void Area::Initialize()
 {
@@ -419,11 +421,11 @@ void Area::ActivateFeature(int x, int y)
     {
         case FeatureIndex::FEATURE_NONE:
             // Function activates nothing.
-            Dialog::Activate("Tests", "TestMedium");
+            // Dialog::Activate("Tests", "TestShort"); // Test
         break;
 
         case FeatureIndex::FEATURE_CHEST_CLOSED:
-
+            Dialog::Activate("Features", "chestLocked");
         break;
 
         case FeatureIndex::FEATURE_CHEST_OPEN:
