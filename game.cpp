@@ -5,17 +5,17 @@ bool Game::redraw;
 
 void Game::MainLoop()
 {
-    while(!exit)
+    while (!exit)
     {
         al_wait_for_event(Event::eventQueue, &Event::event);
 
-        if(Event::event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+        if (Event::event.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
             exit = true;
 
-        if(Event::event.type == ALLEGRO_EVENT_KEY_DOWN)
+        if (Event::event.type == ALLEGRO_EVENT_KEY_DOWN)
             Keyboard::InputKeydown();
 
-        if(Event::event.type == ALLEGRO_EVENT_KEY_UP)
+        if (Event::event.type == ALLEGRO_EVENT_KEY_UP)
             Keyboard::InputKeyup();
 
         /*
@@ -30,19 +30,19 @@ void Game::MainLoop()
         }
         */
 
-        if(Event::event.type == ALLEGRO_EVENT_MOUSE_AXES)
+        if (Event::event.type == ALLEGRO_EVENT_MOUSE_AXES)
         {
             Mouse::InputMouseXY();
             Mouse::InputMousewheel();
         }
 
-        if(Event::event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
+        if (Event::event.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN)
             Mouse::InputMouseDown();
 
-        if(Event::event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
+        if (Event::event.type == ALLEGRO_EVENT_MOUSE_BUTTON_UP)
             Mouse::InputMouseUp();
 
-        if(Event::event.type == ALLEGRO_EVENT_TIMER)
+        if (Event::event.type == ALLEGRO_EVENT_TIMER)
         {
             redraw = true;
 
@@ -52,7 +52,7 @@ void Game::MainLoop()
             Audio::Logic();
         }
 
-        if(redraw && al_is_event_queue_empty(Event::eventQueue))
+        if (redraw && al_is_event_queue_empty(Event::eventQueue))
         {
             DrawingSwitchboard();
         }
@@ -140,13 +140,12 @@ void Game::Uninitialize()
     al_uninstall_system();
 }
 
-
 void Game::InputSwitchboard()
 {
     Keyboard::InputKeyHold();
     Mouse::InputMouseButtonHold();
 
-    switch(Scene::inputContext)
+    switch (Scene::inputContext)
     {
     case Scene::INPUT_CONTEXT_TITLE:
         Title::Input();
@@ -174,11 +173,11 @@ void Game::InputSwitchboard()
 
 void Game::LogicSwitchboard()
 {
-    switch(Scene::scene)
+    switch (Scene::scene)
     {
     case Scene::SCENE_TITLE:
         Title::Logic();
-        if(Title::exitOptionSelected)
+        if (Title::exitOptionSelected)
             exit = true;
         break;
 
@@ -196,7 +195,6 @@ void Game::LogicSwitchboard()
     case Scene::SCENE_ARCHIVE:
         Archive::Logic();
         break;
-
     }
 }
 
@@ -206,7 +204,7 @@ void Game::DrawingSwitchboard()
     al_set_target_bitmap(Display::scaleBuffer);
     al_clear_to_color(COLKEY_BACKGROUND);
 
-    switch(Scene::scene)
+    switch (Scene::scene)
     {
     case Scene::SCENE_TITLE:
         Title::Drawing();
@@ -226,7 +224,6 @@ void Game::DrawingSwitchboard()
     case Scene::SCENE_ARCHIVE:
         Archive::Drawing();
         break;
-
     }
 
     al_set_target_backbuffer(Display::display);

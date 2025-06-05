@@ -28,14 +28,14 @@ struct Image
     static ALLEGRO_BITMAP *settingsVolumeBarEmptyPng;
 
     static ALLEGRO_BITMAP *areaCellsPng;
-    static std::vector<ALLEGRO_BITMAP*>areaCellsSub;
+    static std::vector<ALLEGRO_BITMAP *> areaCellsSub;
 
     static ALLEGRO_BITMAP *areaFeaturesPng;
-    static std::vector<ALLEGRO_BITMAP*>areaFeaturesSub;
+    static std::vector<ALLEGRO_BITMAP *> areaFeaturesSub;
 
     static ALLEGRO_BITMAP *actorPng;
-    static std::vector<ALLEGRO_BITMAP*>actorWalkSub;
-    static std::vector<ALLEGRO_BITMAP*>actorStandSub;
+    static std::vector<ALLEGRO_BITMAP *> actorWalkSub;
+    static std::vector<ALLEGRO_BITMAP *> actorStandSub;
 
     static ALLEGRO_BITMAP *statusFramePng;
 

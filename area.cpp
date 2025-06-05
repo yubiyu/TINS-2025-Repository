@@ -3,12 +3,12 @@
 std::string Area::worldGrid[WORLD_COLS * WORLD_ROWS];
 int Area::worldGridCurrentCol{}, Area::worldGridCurrentRow{};
 
-std::array<int,Area::ROOM_AREA> Area::roomCellBlueprint {};
-std::array<int,Area::ROOM_AREA> Area::roomFeatureBlueprint {};
-std::array<int,Area::ROOM_AREA> Area::currentRoomCells {};
-std::array<int,Area::ROOM_AREA> Area::currentRoomFeatures {};
-std::array<int,Area::ROOM_AREA> Area::previousRoomCells {};
-std::array<int,Area::ROOM_AREA> Area::previousRoomFeatures {};
+std::array<int, Area::ROOM_AREA> Area::roomCellBlueprint{};
+std::array<int, Area::ROOM_AREA> Area::roomFeatureBlueprint{};
+std::array<int, Area::ROOM_AREA> Area::currentRoomCells{};
+std::array<int, Area::ROOM_AREA> Area::currentRoomFeatures{};
+std::array<int, Area::ROOM_AREA> Area::previousRoomCells{};
+std::array<int, Area::ROOM_AREA> Area::previousRoomFeatures{};
 
 int Area::roomSpawnCol{}, Area::roomSpawnRow{};
 
@@ -21,7 +21,7 @@ int Area::roomTransitionDirection{};
 float Area::currentRoomXPosition{}, Area::currentRoomYPosition{};
 float Area::previousRoomXPosition{}, Area::previousRoomYPosition{};
 
-std::unordered_map<std::string, std::array<int,Area::ROOM_AREA>>Area::featuresState {};
+std::unordered_map<std::string, std::array<int, Area::ROOM_AREA>> Area::featuresState{};
 
 void Area::Initialize()
 {
@@ -85,7 +85,7 @@ void Area::LoadRoomBlueprints(int world_x, int world_y)
     const char *room = worldGrid[world_y * WORLD_COLS + world_x].c_str();
 
     std::cout << "Area: Loading room blueprint " << room << " from config/areas.cfg: " << std::endl;
-/// BEGIN CELLS PART ///
+    /// BEGIN CELLS PART ///
     std::cout << "Cells BP:" << std::endl;
     std::fill(std::begin(roomCellBlueprint), std::end(roomCellBlueprint), CellIndex::BLUEPRINT_CELL_VOID_GENERIC);
 
@@ -116,14 +116,14 @@ void Area::LoadRoomBlueprints(int world_x, int world_y)
         col = 0;
         std::cout << std::endl;
     }
-/// END CELLS PART ///
-/// BEGIN FEATURES PART ///
+    /// END CELLS PART ///
+    /// BEGIN FEATURES PART ///
     // Note: literally the same thing as CELLS PART but with Feature arrays instead of Cells.
     std::cout << "Features BP: " << std::endl;
     std::fill(std::begin(roomFeatureBlueprint), std::end(roomFeatureBlueprint), FeatureIndex::BLUEPRINT_FEATURE_NONE);
 
     col = 0; // reusing size_t col declared in CELLS PART.
-    for( size_t row = 0; row < ROOM_ROWS; row++)
+    for (size_t row = 0; row < ROOM_ROWS; row++)
     {
         std::string keyStr = std::to_string(row) + "F";
         const char *key = keyStr.c_str();
@@ -131,16 +131,16 @@ void Area::LoadRoomBlueprints(int world_x, int world_y)
         std::cout << rowData << " --> ";
 
         std::istringstream iss(rowData);
-        while(std::getline(iss, rowData, ','))
+        while (std::getline(iss, rowData, ','))
         {
-            if(col >= ROOM_COLS) // Invalid:
+            if (col >= ROOM_COLS) // Invalid:
             {
-                std::cout << std::endl 
+                std::cout << std::endl
                           << "ERROR: rowData exceeds ROOM_COLS. Discarding overflow...";
                 break;
             }
 
-            int data = std::stoi(rowData, nullptr, 16);  // String to hexedecimal conversion.
+            int data = std::stoi(rowData, nullptr, 16); // String to hexedecimal conversion.
             std::cout << std::setw(3) << data << " ";
 
             ParseToRoomFeatureBlueprint(col, row, data);
@@ -149,7 +149,7 @@ void Area::LoadRoomBlueprints(int world_x, int world_y)
         col = 0;
         std::cout << std::endl;
     }
-/// END FEATURES PART ///
+    /// END FEATURES PART ///
 
     std::fill(std::begin(adjacentRooms), std::end(adjacentRooms), VOID_ROOM_ID);
 
@@ -202,10 +202,9 @@ void Area::ParseToRoomCellBlueprint(int x, int y, int data)
     }
 }
 
-
 void Area::ParseToRoomFeatureBlueprint(int x, int y, int data)
 {
-    if(data >= FeatureIndex::BLUEPRINT_FEATURE_NONE && data < FeatureIndex::NUM_BLUEPRINT_FEATURE_TYPES)
+    if (data >= FeatureIndex::BLUEPRINT_FEATURE_NONE && data < FeatureIndex::NUM_BLUEPRINT_FEATURE_TYPES)
         roomFeatureBlueprint[y * ROOM_COLS + x] = data;
     else // Invalid data
         roomFeatureBlueprint[y * ROOM_COLS + x] = FeatureIndex::FEATURE_NONE;
@@ -214,7 +213,7 @@ void Area::ParseToRoomFeatureBlueprint(int x, int y, int data)
 void Area::ConstructRoom()
 {
     std::cout << "Area: Constructing room from blueprint: " << std::endl;
-/// BEGIN CELLS PART
+    /// BEGIN CELLS PART
     for (size_t i = 0; i < ROOM_AREA; i++)
         currentRoomCells[i] = CellIndex::CELL_VOID;
 
@@ -267,20 +266,20 @@ void Area::ConstructRoom()
         }
         std::cout << std::endl;
     }
-/// END CELLS PART
-/// BEGIN FEATURES PART
-    for(size_t i = 0; i < ROOM_AREA; i++)
+    /// END CELLS PART
+    /// BEGIN FEATURES PART
+    for (size_t i = 0; i < ROOM_AREA; i++)
         currentRoomFeatures[i] = FeatureIndex::FEATURE_NONE;
 
-    for(size_t y = 0; y < ROOM_ROWS; y++)
+    for (size_t y = 0; y < ROOM_ROWS; y++)
     {
-        for(size_t x = 0; x < ROOM_COLS; x++)
+        for (size_t x = 0; x < ROOM_COLS; x++)
         {
-            currentRoomFeatures[y*ROOM_COLS+x] = roomFeatureBlueprint[y*ROOM_COLS+x]; /// Assuming for the time being that features and blueprints are 1:1.
+            currentRoomFeatures[y * ROOM_COLS + x] = roomFeatureBlueprint[y * ROOM_COLS + x]; /// Assuming for the time being that features and blueprints are 1:1.
         }
     }
 
-/// END FEATURES PART
+    /// END FEATURES PART
 }
 
 void Area::UpdateRoomXYPositions()
@@ -390,7 +389,7 @@ bool Area::RoomBoundaryCheck(int x, int y)
 {
     if (x >= 0 && x < ROOM_COLS && y >= 0 && y < ROOM_ROWS)
         return false;
-    
+
     return true;
 }
 
@@ -402,7 +401,7 @@ bool Area::WalkObstacleCheck(int x, int y)
     int checkIndex = y * ROOM_COLS + x;
 
     if (currentRoomCells[checkIndex] >= CellIndex::MARKER_CELL_PLATFORM_BEGIN && currentRoomCells[checkIndex] <= CellIndex::MARKER_CELL_PLATFORM_END)
-        if(currentRoomFeatures[checkIndex] == FeatureIndex::FEATURE_NONE)
+        if (currentRoomFeatures[checkIndex] == FeatureIndex::FEATURE_NONE)
             return false;
 
     return true;
@@ -410,26 +409,26 @@ bool Area::WalkObstacleCheck(int x, int y)
 
 void Area::ActivateFeature(int x, int y)
 {
-    if(RoomBoundaryCheck(x,y)) // Out of bounds.
+    if (RoomBoundaryCheck(x, y)) // Out of bounds.
     {
         // Todo: question mark response.
         return; // Prevent invalid array access in the next step.
     }
 
     int feature = currentRoomFeatures[y * ROOM_COLS + x];
-    switch(feature)
+    switch (feature)
     {
-        case FeatureIndex::FEATURE_NONE:
-            // Function activates nothing.
-            // Dialog::Activate("Tests", "TestShort"); // Test
+    case FeatureIndex::FEATURE_NONE:
+        // Function activates nothing.
+        // Dialog::Activate("Tests", "TestShort"); // Test
         break;
 
-        case FeatureIndex::FEATURE_CHEST_CLOSED:
-            Dialog::Activate("Features", "chestLocked");
+    case FeatureIndex::FEATURE_CHEST_CLOSED:
+        Dialog::Activate("Features", "chestLocked");
         break;
 
-        case FeatureIndex::FEATURE_CHEST_OPEN:
-            Dialog::Activate("Features", "chestEmpty");
+    case FeatureIndex::FEATURE_CHEST_OPEN:
+        Dialog::Activate("Features", "chestEmpty");
         break;
     }
 }

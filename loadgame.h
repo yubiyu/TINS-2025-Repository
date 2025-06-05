@@ -14,5 +14,4 @@ struct LoadGame
     static void Logic();
     static void Input();
     static void Drawing();
-
 };

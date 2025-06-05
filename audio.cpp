@@ -1,9 +1,9 @@
 #include "audio.h"
 
-ALLEGRO_SAMPLE_INSTANCE* Audio::activeBgmInstance;
-std::vector<ALLEGRO_SAMPLE_INSTANCE*> Audio::activeSfxInstances;
+ALLEGRO_SAMPLE_INSTANCE *Audio::activeBgmInstance;
+std::vector<ALLEGRO_SAMPLE_INSTANCE *> Audio::activeSfxInstances;
 
-ALLEGRO_SAMPLE* Audio::titleBgm;
+ALLEGRO_SAMPLE *Audio::titleBgm;
 
 float Audio::bgmGain;
 float Audio::sfxGain;
@@ -23,7 +23,7 @@ void Audio::Initialize()
 
 void Audio::Uninitialize()
 {
-    for(std::vector<ALLEGRO_SAMPLE_INSTANCE*>::iterator it = activeSfxInstances.begin(); it!= activeSfxInstances.end(); ++it)
+    for (std::vector<ALLEGRO_SAMPLE_INSTANCE *>::iterator it = activeSfxInstances.begin(); it != activeSfxInstances.end(); ++it)
     {
         al_destroy_sample_instance(*it);
     }
@@ -45,13 +45,12 @@ void Audio::LoadResources()
 void Audio::UnloadResources()
 {
     al_destroy_sample(titleBgm);
-
 }
 
 void Audio::SetBgmGain(float gain)
 {
     bgmGain = gain;
-    if(activeBgmInstance != nullptr)
+    if (activeBgmInstance != nullptr)
     {
         al_set_sample_instance_gain(activeBgmInstance, bgmGain);
     }
@@ -62,9 +61,9 @@ void Audio::SetSfxGain(float gain)
     sfxGain = gain;
 }
 
-void Audio::AddSfx(ALLEGRO_SAMPLE*  whichSfx)
+void Audio::AddSfx(ALLEGRO_SAMPLE *whichSfx)
 {
-    ALLEGRO_SAMPLE_INSTANCE*sfx;
+    ALLEGRO_SAMPLE_INSTANCE *sfx;
     sfx = al_create_sample_instance(whichSfx);
     al_set_sample_instance_gain(sfx, Audio::sfxGain);
 
@@ -73,9 +72,9 @@ void Audio::AddSfx(ALLEGRO_SAMPLE*  whichSfx)
     al_play_sample_instance(sfx);
 }
 
-void Audio::SetActiveBgm(ALLEGRO_SAMPLE* whichBgm, unsigned int position_secs)
+void Audio::SetActiveBgm(ALLEGRO_SAMPLE *whichBgm, unsigned int position_secs)
 {
-    if(activeBgmInstance != nullptr)
+    if (activeBgmInstance != nullptr)
     {
         al_detach_sample_instance(activeBgmInstance);
         al_destroy_sample_instance(activeBgmInstance);
@@ -84,17 +83,16 @@ void Audio::SetActiveBgm(ALLEGRO_SAMPLE* whichBgm, unsigned int position_secs)
     activeBgmInstance = al_create_sample_instance(whichBgm);
     al_set_sample_instance_playmode(activeBgmInstance, ALLEGRO_PLAYMODE_LOOP);
     al_set_sample_instance_gain(activeBgmInstance, bgmGain);
-    al_set_sample_instance_position(activeBgmInstance, al_get_sample_instance_frequency(activeBgmInstance)*position_secs);
+    al_set_sample_instance_position(activeBgmInstance, al_get_sample_instance_frequency(activeBgmInstance) * position_secs);
     al_attach_sample_instance_to_mixer(activeBgmInstance, al_get_default_mixer());
     al_play_sample_instance(activeBgmInstance);
-
 }
 
 void Audio::Logic()
 {
-    for(std::vector<ALLEGRO_SAMPLE_INSTANCE*>::iterator it = activeSfxInstances.begin(); it != activeSfxInstances.end();)
+    for (std::vector<ALLEGRO_SAMPLE_INSTANCE *>::iterator it = activeSfxInstances.begin(); it != activeSfxInstances.end();)
     {
-        if(!al_get_sample_instance_playing(*it))
+        if (!al_get_sample_instance_playing(*it))
         {
             al_detach_sample_instance(*it);
             al_destroy_sample_instance(*it);
@@ -105,5 +103,4 @@ void Audio::Logic()
             ++it;
         }
     }
-
 }

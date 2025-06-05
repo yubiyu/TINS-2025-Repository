@@ -21,7 +21,7 @@
 
 struct Settings
 {
-/// Options
+    /// Options
     enum enumOptions
     {
         OPTION_FULLSCREEN = 0,
@@ -43,29 +43,29 @@ struct Settings
     static const int LAST_AUDIO_OPTION = OPTION_SFX_LEVEL;
 
     static const inline std::unordered_map<int, std::string> optionLabels =
-    {
-        {OPTION_FULLSCREEN, "Display"},
-        {OPTION_RESOLUTION, "Scale"},
-        {OPTION_VSYNC,      "Vsync"},
-        {OPTION_FPS,        "FPS"},
-        {OPTION_PALETTE,    "Palette"},
+        {
+            {OPTION_FULLSCREEN, "Display"},
+            {OPTION_RESOLUTION, "Scale"},
+            {OPTION_VSYNC, "Vsync"},
+            {OPTION_FPS, "FPS"},
+            {OPTION_PALETTE, "Palette"},
 
-        {OPTION_BGM_LEVEL, "Music"},
-        {OPTION_SFX_LEVEL, "Sound"},
-        {OPTION_RETURN_TO_TITLE, "Return to Title"},
+            {OPTION_BGM_LEVEL, "Music"},
+            {OPTION_SFX_LEVEL, "Sound"},
+            {OPTION_RETURN_TO_TITLE, "Return to Title"},
     };
     static std::unordered_map<int, std::string> optionValues;
 
-    static const int OPTION_LABELS_X = Tile::HALF_WIDTH*1;
-    static const int OPTION_VALUES_X = Tile::HALF_WIDTH*9;
+    static const int OPTION_LABELS_X = Tile::HALF_WIDTH * 1;
+    static const int OPTION_VALUES_X = Tile::HALF_WIDTH * 9;
 
     static int optionTextY[NUM_OPTIONS];
-    static const int OPTION_TEXT_Y_BASE = Tile::HEIGHT*1;
-    static const int OPTION_TEXT_Y_SPACING = Tile::HALF_HEIGHT*1.5;
+    static const int OPTION_TEXT_Y_BASE = Tile::HEIGHT * 1;
+    static const int OPTION_TEXT_Y_SPACING = Tile::HALF_HEIGHT * 1.5;
 
     static int targetedOption;
 
-/// Graphics settings
+    /// Graphics settings
     static bool fullscreenOption;
     static int windowScaleOption;
     static const int WINDOW_SCALE_MIN = 1;
@@ -76,17 +76,17 @@ struct Settings
     static int fpsOption;
     static int paletteOption;
 
-/// Audio settings
+    /// Audio settings
     static int bgmBars;
     static int sfxBars;
     static const int MAX_VOLUME_BARS = 10;
-    static constexpr float VOLUME_BARS_X = OPTION_LABELS_X + Tile::WIDTH*3;
+    static constexpr float VOLUME_BARS_X = OPTION_LABELS_X + Tile::WIDTH * 3;
     static constexpr float VOLUME_BAR_WIDTH = Tile::HALF_WIDTH;
     static float bgmBarsTotalWidth;
     static float sfxBarsTotalWidth;
     static constexpr float VOLUME_BAR_HEIGHT = Tile::HALF_HEIGHT;
 
-/// Settings functions
+    /// Settings functions
     static void Initialize();
 
     static void Logic();

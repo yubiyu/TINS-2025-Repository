@@ -1,8 +1,8 @@
 #include "display.h"
 
 ALLEGRO_MONITOR_INFO Display::monitorInfo;
-ALLEGRO_DISPLAY* Display::display;
-ALLEGRO_BITMAP* Display::scaleBuffer;
+ALLEGRO_DISPLAY *Display::display;
+ALLEGRO_BITMAP *Display::scaleBuffer;
 
 int Display::windowScale;
 int Display::width;
@@ -30,7 +30,7 @@ void Display::Resize()
     al_resize_display(display, width, height);
 
     al_get_monitor_info(al_get_display_adapter(display), &monitorInfo);
-    al_set_window_position(display, monitorInfo.x2/2 - al_get_display_width(display)/2, monitorInfo.y2/2 - al_get_display_height(display)/2);
+    al_set_window_position(display, monitorInfo.x2 / 2 - al_get_display_width(display) / 2, monitorInfo.y2 / 2 - al_get_display_height(display) / 2);
 
     al_destroy_bitmap(scaleBuffer);
     scaleBuffer = al_create_bitmap(width, height);
@@ -50,7 +50,7 @@ void Display::SetWindowScale(int scale)
 {
     windowScale = scale;
 
-    if(al_get_display_flags(display) & ALLEGRO_FULLSCREEN_WINDOW)
+    if (al_get_display_flags(display) & ALLEGRO_FULLSCREEN_WINDOW)
     {
         width = al_get_display_width(display);
         height = al_get_display_height(display);
@@ -66,7 +66,7 @@ void Display::SetWindowScale(int scale)
 
 void Display::SetVsync(int vsync_mode)
 {
-    if(vsync_mode >= VSYNC_MODE_FIRST && vsync_mode <= VSYNC_MODE_LAST)
+    if (vsync_mode >= VSYNC_MODE_FIRST && vsync_mode <= VSYNC_MODE_LAST)
     {
         al_set_display_option(display, ALLEGRO_VSYNC, vsync_mode);
         std::cout << "Display: vsync mode set to " << al_get_display_option(display, ALLEGRO_VSYNC) << std::endl;
@@ -75,10 +75,9 @@ void Display::SetVsync(int vsync_mode)
 
 void Display::SetFPS(int set_fps)
 {
-    if(set_fps >= FPS_MIN && set_fps <= FPS_MAX)
+    if (set_fps >= FPS_MIN && set_fps <= FPS_MAX)
     {
         fps = set_fps;
         std::cout << "Display: FPS set to " << set_fps << std::endl;
     }
-
 }

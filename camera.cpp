@@ -1,6 +1,6 @@
 #include "camera.h"
 
-ALLEGRO_BITMAP* Camera::cameraBuffer;
+ALLEGRO_BITMAP *Camera::cameraBuffer;
 
 ALLEGRO_TRANSFORM Camera::identityTransform; // identity transform
 ALLEGRO_TRANSFORM Camera::zoomTransform;
@@ -9,9 +9,9 @@ float Camera::zoomScale;
 float Camera::zoomTranslateX;
 float Camera::zoomTranslateY;
 
-//bool Camera::worldviewCameraMousePanningDisabled;
-//float Camera::mouseTransformedX;
-//float Camera::mouseTransformedY;
+// bool Camera::worldviewCameraMousePanningDisabled;
+// float Camera::mouseTransformedX;
+// float Camera::mouseTransformedY;
 
 bool Camera::atDestination;
 bool Camera::approachingDestination;
@@ -37,7 +37,6 @@ void Camera::Initialize()
 
     Camera::SetCell(0, 0);
     Camera::WarpToXYDestination();
-
 }
 
 void Camera::Uninitialize()
@@ -55,7 +54,7 @@ void Camera::SetCell(int x, int y)
 {
     worldXCell = x;
     worldYCell = y;
-    SetDestination(worldXCell*Tile::WIDTH, worldYCell*Tile::HEIGHT);
+    SetDestination(worldXCell * Tile::WIDTH, worldYCell * Tile::HEIGHT);
 }
 void Camera::SetDestination(float x, float y)
 {
@@ -66,102 +65,100 @@ void Camera::SetDestination(float x, float y)
 }
 void Camera::SetDestinationCell(int x, int y)
 {
-    SetDestination(x*Tile::WIDTH, y*Tile::HEIGHT);
+    SetDestination(x * Tile::WIDTH, y * Tile::HEIGHT);
 }
 
 void Camera::Logic()
 {
-    if(atDestination)
+    if (atDestination)
     {
-        if(xPosition < MIN_X_POSITION)
+        if (xPosition < MIN_X_POSITION)
             xPosition = MIN_X_POSITION;
-        else if(xPosition > MAX_X_POSITION)
+        else if (xPosition > MAX_X_POSITION)
             xPosition = MAX_X_POSITION;
 
-        if(yPosition < MIN_Y_POSITION)
+        if (yPosition < MIN_Y_POSITION)
             yPosition = MIN_Y_POSITION;
-        else if(yPosition > MAX_Y_POSITION)
+        else if (yPosition > MAX_Y_POSITION)
             yPosition = MAX_Y_POSITION;
     }
 }
 
 void Camera::Input()
 {
-/*
-    if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_UP])
-    {
-        if(zoomScale < SCALE_MAX)
+    /*
+        if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_UP])
         {
-            zoomScale += 0.1;
+            if(zoomScale < SCALE_MAX)
+            {
+                zoomScale += 0.1;
 
-            zoomTranslateX -= Display::NATIVE_WIDTH*0.05; // Ten 0.05s = 0.5
-            zoomTranslateY -= Display::NATIVE_HEIGHT*0.05;
+                zoomTranslateX -= Display::NATIVE_WIDTH*0.05; // Ten 0.05s = 0.5
+                zoomTranslateY -= Display::NATIVE_HEIGHT*0.05;
 
-            //std::cout << "zoom scale " << zoomScale << " (" << zoomScale*100 << "%)" << std::endl;
+                //std::cout << "zoom scale " << zoomScale << " (" << zoomScale*100 << "%)" << std::endl;
+            }
+
+            al_set_mouse_z(0);
+        }
+        else if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_DOWN])
+        {
+            if(zoomScale > SCALE_MIN)
+            {
+                zoomScale -= 0.1;
+
+                zoomTranslateX += Display::NATIVE_WIDTH*0.05; // Ten 0.05s = 0.5
+                zoomTranslateY += Display::NATIVE_HEIGHT*0.05;
+
+                //std::cout << "zoom scale " << zoomScale << " (" << zoomScale*100 << "%)" << std::endl;
+            }
+
+            al_set_mouse_z(0);
+        }
+        else if(Mouse::mouseInput[Mouse::MOUSE_MIDDLE])
+        {
+            zoomScale = 1;
+            zoomTranslateX = 0;
+            zoomTranslateY = 0;
         }
 
-        al_set_mouse_z(0);
-    }
-    else if(Mouse::mousewheelInput[Mouse::MOUSEWHEEL_DOWN])
-    {
-        if(zoomScale > SCALE_MIN)
+        if(Mouse::mouseButtonHoldTicks[Mouse::MOUSE_LEFT] == 1)
         {
-            zoomScale -= 0.1;
 
-            zoomTranslateX += Display::NATIVE_WIDTH*0.05; // Ten 0.05s = 0.5
-            zoomTranslateY += Display::NATIVE_HEIGHT*0.05;
-
-            //std::cout << "zoom scale " << zoomScale << " (" << zoomScale*100 << "%)" << std::endl;
         }
-
-        al_set_mouse_z(0);
-    }
-    else if(Mouse::mouseInput[Mouse::MOUSE_MIDDLE])
-    {
-        zoomScale = 1;
-        zoomTranslateX = 0;
-        zoomTranslateY = 0;
-    }
-
-    if(Mouse::mouseButtonHoldTicks[Mouse::MOUSE_LEFT] == 1)
-    {
-
-    }
-    */
+        */
 }
 
 void Camera::ApproachDestinationLinear(float x_change, float y_change)
 {
-    if(!atDestination)
+    if (!atDestination)
     {
-        if(xPosition < xDestination)
+        if (xPosition < xDestination)
             xPosition += x_change;
-        else if(xPosition > xDestination)
+        else if (xPosition > xDestination)
             xPosition -= x_change;
 
-        if(yPosition < yDestination)
+        if (yPosition < yDestination)
             yPosition += y_change;
-        else if(yPosition > yDestination)
+        else if (yPosition > yDestination)
             yPosition -= y_change;
 
-        if(std::abs(xDestination - xPosition) <= APPROACH_DESTINATION_X_PRECISION 
-        && std::abs(yDestination - yPosition) <= APPROACH_DESTINATION_Y_PRECISION)
+        if (std::abs(xDestination - xPosition) <= APPROACH_DESTINATION_X_PRECISION && std::abs(yDestination - yPosition) <= APPROACH_DESTINATION_Y_PRECISION)
             WarpToXYDestination();
     }
 }
 
 void Camera::ApproachDestinationFractional(float x_change, float y_change)
 {
-    if(!atDestination)
+    if (!atDestination)
     {
-        if(xPosition != xDestination)
-            xPosition += (xDestination - xPosition)*x_change;
+        if (xPosition != xDestination)
+            xPosition += (xDestination - xPosition) * x_change;
 
-        if(yPosition != yDestination)
-            yPosition += (yDestination - yPosition)*y_change;
+        if (yPosition != yDestination)
+            yPosition += (yDestination - yPosition) * y_change;
 
-        if(std::abs(xDestination - xPosition) <= APPROACH_DESTINATION_X_PRECISION
-         && std::abs(yDestination - yPosition) <= APPROACH_DESTINATION_Y_PRECISION)
+        if (std::abs(xDestination - xPosition) <= APPROACH_DESTINATION_X_PRECISION && std::abs(yDestination - yPosition) <= APPROACH_DESTINATION_Y_PRECISION)
             WarpToXYDestination();
     }
 }

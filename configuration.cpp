@@ -1,27 +1,27 @@
 #include "configuration.h"
 
-ALLEGRO_CONFIG* Configuration::settingsCfg;
+ALLEGRO_CONFIG *Configuration::settingsCfg;
 
-ALLEGRO_CONFIG* Configuration::areasCfg;
+ALLEGRO_CONFIG *Configuration::areasCfg;
 
-ALLEGRO_CONFIG* Configuration::dialogsCfg;
+ALLEGRO_CONFIG *Configuration::dialogsCfg;
 
 void Configuration::LoadConfigurations()
 {
     settingsCfg = al_load_config_file("config/settings.cfg");
-    if(!settingsCfg)
+    if (!settingsCfg)
         std::cout << "Error - Configuration: config/settings.cfg not loaded." << std::endl;
     else
         std::cout << "Configuration: config/settings.cfg successfully loaded." << std::endl;
 
     areasCfg = al_load_config_file("config/areasBase.cfg");
-    if(!areasCfg)
+    if (!areasCfg)
         std::cout << "Error - Configuration: config/areasBase.cfg not loaded." << std::endl;
     else
         std::cout << "Configuration: config/areasBase.cfg successfully loaded." << std::endl;
 
     dialogsCfg = al_load_config_file("config/dialogs.cfg");
-    if(!dialogsCfg)
+    if (!dialogsCfg)
         std::cout << "Error - Configuration: config/dialogs.cfg not loaded." << std::endl;
     else
         std::cout << "Configuration: config/dialogs.cfg sucessfully loaded." << std::endl;
@@ -36,17 +36,16 @@ void Configuration::UnloadConfigurations()
     al_destroy_config(dialogsCfg);
 }
 
-
-std::string Configuration::GetString(const ALLEGRO_CONFIG* config, const char* section, const char* key)
+std::string Configuration::GetString(const ALLEGRO_CONFIG *config, const char *section, const char *key)
 {
-    const char* configValue = al_get_config_value(config, section, key);
-    if(configValue != NULL)
+    const char *configValue = al_get_config_value(config, section, key);
+    if (configValue != NULL)
     {
         std::string configValueString = configValue;
 
         // Replace any literal \n (two chars) in loaded text to an actual newline character.
         size_t pos = 0;
-        while((pos = configValueString.find("\\n", pos)) != std::string::npos)
+        while ((pos = configValueString.find("\\n", pos)) != std::string::npos)
         {
             configValueString.replace(pos, 2, "\n");
             pos++;
@@ -58,10 +57,10 @@ std::string Configuration::GetString(const ALLEGRO_CONFIG* config, const char* s
         return "";
 }
 
-int Configuration::GetInt(const ALLEGRO_CONFIG* config, const char* section, const char* key)
+int Configuration::GetInt(const ALLEGRO_CONFIG *config, const char *section, const char *key)
 {
-    const char* configValue = al_get_config_value(config, section, key);
-    if(configValue != NULL)
+    const char *configValue = al_get_config_value(config, section, key);
+    if (configValue != NULL)
     {
         std::stringstream strValue;
         strValue << configValue;
@@ -75,12 +74,12 @@ int Configuration::GetInt(const ALLEGRO_CONFIG* config, const char* section, con
         return 0;
 }
 
-void Configuration::SetKey(ALLEGRO_CONFIG* config, const char* section, const char* key, const char* value)
+void Configuration::SetKey(ALLEGRO_CONFIG *config, const char *section, const char *key, const char *value)
 {
     al_set_config_value(config, section, key, value);
 }
 
-void Configuration::SetKey(ALLEGRO_CONFIG* config, const char* section, const char* key, int value)
+void Configuration::SetKey(ALLEGRO_CONFIG *config, const char *section, const char *key, int value)
 {
-    al_set_config_value(config, section, key, std::to_string(value).c_str() );
+    al_set_config_value(config, section, key, std::to_string(value).c_str());
 }

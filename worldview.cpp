@@ -36,26 +36,25 @@ void Worldview::Input()
 
             if (Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
             {
-                switch(PC::pc->GetFacing())
+                switch (PC::pc->GetFacing())
                 {
-                    case Direction::NORTH:
-                        Area::ActivateFeature(PC::pc->GetRoomXCell(), PC::pc->GetRoomYCell()-1); 
+                case Direction::NORTH:
+                    Area::ActivateFeature(PC::pc->GetRoomXCell(), PC::pc->GetRoomYCell() - 1);
                     break;
 
-                    case Direction::SOUTH:
-                        Area::ActivateFeature(PC::pc->GetRoomXCell(), PC::pc->GetRoomYCell()+1); 
+                case Direction::SOUTH:
+                    Area::ActivateFeature(PC::pc->GetRoomXCell(), PC::pc->GetRoomYCell() + 1);
                     break;
 
-                    case Direction::WEST:
-                        Area::ActivateFeature(PC::pc->GetRoomXCell()-1, PC::pc->GetRoomYCell()); 
+                case Direction::WEST:
+                    Area::ActivateFeature(PC::pc->GetRoomXCell() - 1, PC::pc->GetRoomYCell());
                     break;
 
-                    case Direction::EAST:
-                        Area::ActivateFeature(PC::pc->GetRoomXCell()+1, PC::pc->GetRoomYCell()); 
+                case Direction::EAST:
+                    Area::ActivateFeature(PC::pc->GetRoomXCell() + 1, PC::pc->GetRoomYCell());
                     break;
-
-                } 
-                //Dialog::Activate("Test","Test");
+                }
+                // Dialog::Activate("Test","Test");
             }
         }
     }
@@ -116,8 +115,6 @@ void Worldview::DrawGridUnderlay()
     }
 }
 
-
-
 void Worldview::DrawGridText(float mouseTransformedX, float mouseTransformedY)
 {
     int mouseCrosshairXPosition = Camera::xPosition + mouseTransformedX;
@@ -132,4 +129,3 @@ void Worldview::DrawGridText(float mouseTransformedX, float mouseTransformedY)
 
     Util::string_al_draw_text(Text::builtin8, COLKEY_DEBUG_TEXT_HIGHLIGHTED, 0, 0, ALLEGRO_ALIGN_LEFT, mouseCrosshairPositionString);
 }
-

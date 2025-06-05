@@ -42,5 +42,4 @@ struct Game
     static void InputSwitchboard();
     static void LogicSwitchboard();
     static void DrawingSwitchboard();
-
 };

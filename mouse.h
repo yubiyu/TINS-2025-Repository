@@ -30,7 +30,6 @@ struct Mouse
     static const int NUM_MOUSEWHEEL_OPTIONS = 2;
     static bool mousewheelInput[NUM_MOUSEWHEEL_OPTIONS];
 
-
     static void Initialize();
     static void Uninitialize();
 

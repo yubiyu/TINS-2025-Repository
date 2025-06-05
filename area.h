@@ -42,12 +42,12 @@ struct Area
     static const int ROOM_ROWS = 8;  // X
     static constexpr int ROOM_AREA = ROOM_COLS * ROOM_ROWS;
 
-    static std::array<int,ROOM_AREA> roomCellBlueprint;
-    static std::array<int,ROOM_AREA> roomFeatureBlueprint;
-    static std::array<int,ROOM_AREA> currentRoomCells;
-    static std::array<int,ROOM_AREA> currentRoomFeatures;
-    static std::array<int,ROOM_AREA> previousRoomCells; // Used for the scrolling room transition effect.
-    static std::array<int,ROOM_AREA> previousRoomFeatures;
+    static std::array<int, ROOM_AREA> roomCellBlueprint;
+    static std::array<int, ROOM_AREA> roomFeatureBlueprint;
+    static std::array<int, ROOM_AREA> currentRoomCells;
+    static std::array<int, ROOM_AREA> currentRoomFeatures;
+    static std::array<int, ROOM_AREA> previousRoomCells; // Used for the scrolling room transition effect.
+    static std::array<int, ROOM_AREA> previousRoomFeatures;
 
     static int roomSpawnCol, roomSpawnRow;
 
@@ -68,7 +68,7 @@ struct Area
     static float previousRoomXPosition, previousRoomYPosition;
     /// END ROOM DATA ///
     /// BEGIN PERSISTENT STATE AND SERIALIZATION
-    static std::unordered_map<std::string, std::array<int,ROOM_AREA>> featuresState; // Add to/update this map as rooms are visited.
+    static std::unordered_map<std::string, std::array<int, ROOM_AREA>> featuresState; // Add to/update this map as rooms are visited.
     /// END PERSISTENT STATE AND SERIALIZATION
 
     static void Initialize();

@@ -7,12 +7,11 @@
 #include "actorindex.h"
 #include "actor.h"
 
-
 class PC : public Actor
 {
 
 public:
-    static PC* pc;
+    static PC *pc;
 
     PC();
     ~PC();

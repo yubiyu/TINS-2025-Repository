@@ -48,7 +48,7 @@ void Dialog::Logic()
                 if (textFieldTopRow + textFieldRevealedRow < textBufferNumRows // Guards against memory access outside textBufferRowWidths
                     && textFieldRevealedCol >= textBufferRowWidths[textFieldTopRow + textFieldRevealedRow] / TEXT_CHAR_WIDTH)
                 {
-                    /*if(textFieldRevealedCol >= TEXT_FIELD_COLS) is not necessary 
+                    /*if(textFieldRevealedCol >= TEXT_FIELD_COLS) is not necessary
                     because textBufferRowWidths = Util::collect_multiline_widths() already takes into account the width of the textfield.*/
                     textFieldRevealedCol = 0;
                     textFieldRevealedRow++;
@@ -159,9 +159,9 @@ void Dialog::Deactivate()
 
 void Dialog::Advance()
 {
-    //Note that textfieldTopRow counts from zeroth line, while textBufferNumRows is equal to the number of lines in textBuffer.
+    // Note that textfieldTopRow counts from zeroth line, while textBufferNumRows is equal to the number of lines in textBuffer.
     int availableRows = std::min(TEXT_FIELD_ROWS, textBufferNumRows - textFieldTopRow); // "available" to textfield, available to textBuffer. The smaller of the two.
-    if (textFieldRevealedRow < availableRows) // Current textfield is not fully revealed
+    if (textFieldRevealedRow < availableRows)                                           // Current textfield is not fully revealed
     {
         // Advance to the end of the current textfield region. Stop scrolling.
         textFieldRevealedRow = TEXT_FIELD_ROWS;

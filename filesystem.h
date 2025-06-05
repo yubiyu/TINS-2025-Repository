@@ -10,7 +10,7 @@ struct Filesystem
     static void Initialize(char **argv)
     {
         PHYSFS_init(argv[0]);
-        if(PHYSFS_mount("./data.zip", "/", 1) == 0)
+        if (PHYSFS_mount("./data.zip", "/", 1) == 0)
             std::cout << "Error - Filesystem: ./data.zip not found." << std::endl;
         else
             std::cout << "Filesystem: ./data.zip successfully mounted." << std::endl;

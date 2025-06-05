@@ -1,10 +1,10 @@
 #include "timer.h"
 
-ALLEGRO_TIMER* Timer::FPSTimer;
+ALLEGRO_TIMER *Timer::FPSTimer;
 
 void Timer::Initialize()
 {
-    FPSTimer = al_create_timer(1.0/FPS);
+    FPSTimer = al_create_timer(1.0 / FPS);
     al_start_timer(FPSTimer);
 }
 

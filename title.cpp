@@ -6,13 +6,12 @@ int Title::optionTextY[NUM_OPTIONS];
 int Title::targetedOption;
 bool Title::exitOptionSelected;
 
-
 void Title::Initialize()
 {
-    for(int i = 0; i < NUM_OPTIONS; i++)
+    for (int i = 0; i < NUM_OPTIONS; i++)
     {
         optionTextX[i] = OPTION_TEXT_X_BASE;
-        optionTextY[i] = OPTION_TEXT_Y_BASE + i*OPTION_TEXT_Y_SPACING;
+        optionTextY[i] = OPTION_TEXT_Y_BASE + i * OPTION_TEXT_Y_SPACING;
     }
 
     SetTargetedOption(OPTION_NEW_GAME);
@@ -21,27 +20,26 @@ void Title::Initialize()
 
 void Title::Logic()
 {
-
 }
 
 void Title::Input()
 {
-    if(Keyboard::keyHoldTicks[Keyboard::KEY_UP] == 1)
+    if (Keyboard::keyHoldTicks[Keyboard::KEY_UP] == 1)
     {
         AdjustTargetedOptionUp();
     }
-    else if(Keyboard::keyHoldTicks[Keyboard::KEY_DOWN] == 1)
+    else if (Keyboard::keyHoldTicks[Keyboard::KEY_DOWN] == 1)
     {
         AdjustTargetedOptionDown();
     }
 
-    if(Keyboard::keyHoldTicks[Keyboard::KEY_ESC] == 1)
+    if (Keyboard::keyHoldTicks[Keyboard::KEY_ESC] == 1)
     {
         SetTargetedOption(Title::OPTION_EXIT);
     }
-    else if(Keyboard::keyHoldTicks[Keyboard::KEY_ENTER] == 1)
+    else if (Keyboard::keyHoldTicks[Keyboard::KEY_ENTER] == 1)
     {
-        switch(targetedOption)
+        switch (targetedOption)
         {
         case Title::OPTION_NEW_GAME:
             Scene::ChangeScene(Scene::SCENE_WORLDVIEW);
@@ -73,32 +71,31 @@ void Title::Drawing()
                    optionTextY[Title::targetedOption],
                    0);
 
-    for(int i = 0; i < Title::NUM_OPTIONS; i++)
+    for (int i = 0; i < Title::NUM_OPTIONS; i++)
     {
-        if(targetedOption == i)
+        if (targetedOption == i)
         {
             Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_MENU_TEXT_HIGHLIGHTED,
-                                 Title::optionTextX[i], Title::optionTextY[i],
-                                 ALLEGRO_ALIGN_LEFT, Title::optionStrings.at(i));
+                                      Title::optionTextX[i], Title::optionTextY[i],
+                                      ALLEGRO_ALIGN_LEFT, Title::optionStrings.at(i));
         }
         else
             Util::string_al_draw_text(FONTDEF_MENU_OPTION, COLKEY_MENU_TEXT,
-                                 Title::optionTextX[i], Title::optionTextY[i],
-                                 ALLEGRO_ALIGN_LEFT, Title::optionStrings.at(i));
+                                      Title::optionTextX[i], Title::optionTextY[i],
+                                      ALLEGRO_ALIGN_LEFT, Title::optionStrings.at(i));
     }
 }
 
-
 void Title::AdjustTargetedOptionUp()
 {
-    if(targetedOption > FIRST_OPTION)
-        targetedOption --;
+    if (targetedOption > FIRST_OPTION)
+        targetedOption--;
 }
 
 void Title::AdjustTargetedOptionDown()
 {
-    if(targetedOption < LAST_OPTION)
-        targetedOption ++;
+    if (targetedOption < LAST_OPTION)
+        targetedOption++;
 }
 
 void Title::SetTargetedOption(int whichOption)

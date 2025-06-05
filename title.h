@@ -18,15 +18,15 @@
 
 struct Title
 {
-/// Title text
-    static constexpr char const* TITLE_TEXT = "TINS 2025";
+    /// Title text
+    static constexpr char const *TITLE_TEXT = "TINS 2025";
     static const int TITLE_TEXT_X = Tile::HALF_WIDTH;
-    static const int TITLE_TEXT_Y = Tile::HEIGHT*1;
+    static const int TITLE_TEXT_Y = Tile::HEIGHT * 1;
 
     static constexpr float TITLE_IMAGE_X = 0;
     static constexpr float TITLE_IMAGE_Y = 0;
 
-/// Title options
+    /// Title options
     enum enumOptions
     {
         OPTION_NEW_GAME = 0,
@@ -40,25 +40,24 @@ struct Title
     static const int LAST_OPTION = OPTION_EXIT;
 
     static const inline std::unordered_map<int, std::string> optionStrings =
-    {
-        {OPTION_NEW_GAME, "New Game"},
-        {OPTION_LOAD_GAME, "Load Game"},
-        {OPTION_ARCHIVE, "Archive"},
-        {OPTION_SETTINGS, "Settings"},
-        {OPTION_EXIT, "Exit"}
-    };
+        {
+            {OPTION_NEW_GAME, "New Game"},
+            {OPTION_LOAD_GAME, "Load Game"},
+            {OPTION_ARCHIVE, "Archive"},
+            {OPTION_SETTINGS, "Settings"},
+            {OPTION_EXIT, "Exit"}};
 
     static int optionTextX[NUM_OPTIONS];
     static const int OPTION_TEXT_X_BASE = TITLE_TEXT_X;
 
     static int optionTextY[NUM_OPTIONS];
-    static const int OPTION_TEXT_Y_BASE = Tile::HEIGHT*4;
+    static const int OPTION_TEXT_Y_BASE = Tile::HEIGHT * 4;
     static const int OPTION_TEXT_Y_SPACING = Tile::HALF_HEIGHT * 1.5;
 
     static int targetedOption;
     static bool exitOptionSelected;
 
-/// Title functions
+    /// Title functions
     static void Initialize();
 
     static void Logic();

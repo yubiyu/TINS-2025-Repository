@@ -7,7 +7,7 @@ void Keyboard::Initialize()
 {
     al_install_keyboard();
 
-    for(unsigned i = 0; i < NUM_INPUT_KEYS; i++)
+    for (unsigned i = 0; i < NUM_INPUT_KEYS; i++)
     {
         keyInput[i] = false;
         keyHoldTicks[i] = 0;
@@ -21,7 +21,7 @@ void Keyboard::Uninitialize()
 
 void Keyboard::InputKeydown()
 {
-    switch(Event::event.keyboard.keycode)
+    switch (Event::event.keyboard.keycode)
     {
     case ALLEGRO_KEY_A:
         keyInput[KEY_A] = true;
@@ -193,7 +193,7 @@ void Keyboard::InputKeydown()
 
 void Keyboard::InputKeyup()
 {
-    switch(Event::event.keyboard.keycode)
+    switch (Event::event.keyboard.keycode)
     {
     case ALLEGRO_KEY_A:
         keyInput[KEY_A] = false;
@@ -421,7 +421,7 @@ void Keyboard::InputKeyup()
 
 void Keyboard::InputKeyHold()
 {
-    for(unsigned i = KEY_MARKER_FIRST; i <= KEY_MARKER_LAST; i++)
-        if(keyInput[i])
-            keyHoldTicks[i] ++;
+    for (unsigned i = KEY_MARKER_FIRST; i <= KEY_MARKER_LAST; i++)
+        if (keyInput[i])
+            keyHoldTicks[i]++;
 }

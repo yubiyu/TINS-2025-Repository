@@ -7,10 +7,10 @@
 
 struct Audio
 {
-    static ALLEGRO_SAMPLE_INSTANCE*activeBgmInstance;
-    static std::vector<ALLEGRO_SAMPLE_INSTANCE*>activeSfxInstances;
+    static ALLEGRO_SAMPLE_INSTANCE *activeBgmInstance;
+    static std::vector<ALLEGRO_SAMPLE_INSTANCE *> activeSfxInstances;
 
-    static ALLEGRO_SAMPLE*titleBgm;
+    static ALLEGRO_SAMPLE *titleBgm;
 
     static float bgmGain;
     static float sfxGain;
@@ -24,8 +24,8 @@ struct Audio
     static void SetBgmGain(float gain);
     static void SetSfxGain(float gain);
 
-    static void AddSfx(ALLEGRO_SAMPLE* whichSfx);
-    static void SetActiveBgm(ALLEGRO_SAMPLE* whichBgm, unsigned int position_secs);
+    static void AddSfx(ALLEGRO_SAMPLE *whichSfx);
+    static void SetActiveBgm(ALLEGRO_SAMPLE *whichBgm, unsigned int position_secs);
 
     static void Logic();
 };

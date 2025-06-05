@@ -1,6 +1,5 @@
 #include "mouse.h"
 
-
 bool Mouse::mouseAxesAltered = false;
 float Mouse::displayXPosition;
 float Mouse::displayYPosition;
@@ -13,15 +12,15 @@ bool Mouse::mousewheelInput[NUM_MOUSEWHEEL_OPTIONS];
 void Mouse::Initialize()
 {
     al_install_mouse();
-    //al_hide_mouse_cursor(Display::display);
+    // al_hide_mouse_cursor(Display::display);
 
-    for(int i = 0; i < NUM_MOUSE_BUTTONS; i++)
+    for (int i = 0; i < NUM_MOUSE_BUTTONS; i++)
     {
         mouseInput[i] = false;
         mouseButtonHoldTicks[i] = 0;
     }
 
-    for(int i = 0; i < NUM_MOUSEWHEEL_OPTIONS; i++)
+    for (int i = 0; i < NUM_MOUSEWHEEL_OPTIONS; i++)
         mousewheelInput[i] = false;
 }
 
@@ -41,12 +40,12 @@ void Mouse::InputMousewheel()
 {
     mouseAxesAltered = true;
 
-    if(Event::event.mouse.z > 0)
+    if (Event::event.mouse.z > 0)
         mousewheelInput[MOUSEWHEEL_UP] = true;
     else
         mousewheelInput[MOUSEWHEEL_UP] = false;
 
-    if(Event::event.mouse.z < 0)
+    if (Event::event.mouse.z < 0)
         mousewheelInput[MOUSEWHEEL_DOWN] = true;
     else
         mousewheelInput[MOUSEWHEEL_DOWN] = false;
@@ -54,7 +53,7 @@ void Mouse::InputMousewheel()
 
 void Mouse::InputMouseDown()
 {
-    switch(Event::event.mouse.button)
+    switch (Event::event.mouse.button)
     {
     case MOUSE_LEFT:
         mouseInput[MOUSE_LEFT] = true;
@@ -70,7 +69,7 @@ void Mouse::InputMouseDown()
 
 void Mouse::InputMouseUp()
 {
-    switch(Event::event.mouse.button)
+    switch (Event::event.mouse.button)
     {
     case MOUSE_LEFT:
         mouseInput[MOUSE_LEFT] = false;
@@ -89,10 +88,10 @@ void Mouse::InputMouseUp()
 
 void Mouse::InputMouseButtonHold()
 {
-    if(mouseInput[MOUSE_LEFT])
-        mouseButtonHoldTicks[MOUSE_LEFT] ++;
-    if(mouseInput[MOUSE_RIGHT])
-        mouseButtonHoldTicks[MOUSE_RIGHT] ++;
-    if(mouseInput[MOUSE_MIDDLE])
-        mouseButtonHoldTicks[MOUSE_MIDDLE] ++;
+    if (mouseInput[MOUSE_LEFT])
+        mouseButtonHoldTicks[MOUSE_LEFT]++;
+    if (mouseInput[MOUSE_RIGHT])
+        mouseButtonHoldTicks[MOUSE_RIGHT]++;
+    if (mouseInput[MOUSE_MIDDLE])
+        mouseButtonHoldTicks[MOUSE_MIDDLE]++;
 }

@@ -2,12 +2,11 @@
 
 void LoadGame::Logic()
 {
-    
 }
 
 void LoadGame::Input()
 {
-    if(Keyboard::keyHoldTicks[Keyboard::KEY_ESC] == 1)
+    if (Keyboard::keyHoldTicks[Keyboard::KEY_ESC] == 1)
     {
         Scene::ChangeScene(Scene::SCENE_TITLE);
     }

@@ -1,8 +1,8 @@
 #include "text.h"
 
-ALLEGRO_FONT* Text::builtin8;
-ALLEGRO_FONT* Text::publicPixel8;
-ALLEGRO_FONT* Text::publicPixel16;
+ALLEGRO_FONT *Text::builtin8;
+ALLEGRO_FONT *Text::publicPixel8;
+ALLEGRO_FONT *Text::publicPixel16;
 
 void Text::Initialize()
 {

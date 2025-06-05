@@ -7,16 +7,15 @@
 
 struct Configuration
 {
-    static ALLEGRO_CONFIG* settingsCfg;
-    static ALLEGRO_CONFIG* areasCfg;
-    static ALLEGRO_CONFIG* dialogsCfg;
+    static ALLEGRO_CONFIG *settingsCfg;
+    static ALLEGRO_CONFIG *areasCfg;
+    static ALLEGRO_CONFIG *dialogsCfg;
 
     static void LoadConfigurations();
     static void UnloadConfigurations();
 
-    static std::string GetString(const ALLEGRO_CONFIG* config, const char* section, const char* key);
-    static int GetInt(const ALLEGRO_CONFIG* config, const char* section, const char* key);
-    static void SetKey(ALLEGRO_CONFIG* config, const char* section, const char* key, const char* value);
-    static void SetKey(ALLEGRO_CONFIG* config, const char* section, const char* key, int value);
-
+    static std::string GetString(const ALLEGRO_CONFIG *config, const char *section, const char *key);
+    static int GetInt(const ALLEGRO_CONFIG *config, const char *section, const char *key);
+    static void SetKey(ALLEGRO_CONFIG *config, const char *section, const char *key, const char *value);
+    static void SetKey(ALLEGRO_CONFIG *config, const char *section, const char *key, int value);
 };

@@ -12,7 +12,7 @@ void Scene::ChangeScene(int whichScene)
 {
     scene = whichScene;
 
-    switch(scene)
+    switch (scene)
     {
     case SCENE_TITLE:
         ChangeInputContext(INPUT_CONTEXT_TITLE);

@@ -4,9 +4,9 @@ struct CellIndex
 {
     enum enumCells
     {
-        CELL_VOID = 0, // Default
-        CELL_VOID_LOWER_EDGE = 1, // Void immediately under a platform
-        CELL_VOID_RIGHT_EDGE = 2, // Void immediately right of a platform
+        CELL_VOID = 0,                    // Default
+        CELL_VOID_LOWER_EDGE = 1,         // Void immediately under a platform
+        CELL_VOID_RIGHT_EDGE = 2,         // Void immediately right of a platform
         CELL_VOID_UPPER_RIGHT_CORNER = 3, // Void immediately under a platform AND immediately right of a platform.
         CELL_VOID_LOWER_RIGHT_CORNER = 4, // Void to the right of a LOWER_EDGE and below a RIGHT_EDGE (and of course, not a platform)
 

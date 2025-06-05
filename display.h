@@ -33,7 +33,6 @@ struct Display
     static const int FPS_MIN = 5;
     static const int FPS_MAX = 300;
 
-
     static void Initialize();
     static void Uninitialize();
 

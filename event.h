@@ -7,7 +7,7 @@
 
 struct Event
 {
-    static ALLEGRO_EVENT_QUEUE* eventQueue;
+    static ALLEGRO_EVENT_QUEUE *eventQueue;
     static ALLEGRO_EVENT event;
 
     static void Initialize();
