@@ -83,6 +83,8 @@ void Worldview::Drawing()
     al_clear_to_color(COLKEY_BACKGROUND);
     al_draw_bitmap(Camera::cameraBuffer, 0, 0, 0);
 
+    Util::string_al_draw_text(Text::publicPixel8, COLKEY_DEBUG_TEXT_HIGHLIGHTED, 0, 0, ALLEGRO_ALIGN_LEFT, "(" + std::to_string((int)Camera::xPosition) + "," + std::to_string((int)Camera::yPosition) + ")" );
+
     StatusFrame::Drawing();
     Dialog::Drawing();
 }
@@ -123,9 +125,9 @@ void Worldview::DrawGridText(float mouseTransformedX, float mouseTransformedY)
     int mouseCrosshairXPositionCell = mouseCrosshairXPosition / Tile::WIDTH;
     int mouseCrosshairYPositionCell = mouseCrosshairYPosition / Tile::HEIGHT;
 
-    int zoomPercentage = Camera::zoomScale * 100;
+    //int zoomPercentage = Camera::zoomScale * 100;
 
-    std::string mouseCrosshairPositionString = "(" + std::to_string(mouseCrosshairXPosition) + ", " + std::to_string(mouseCrosshairYPosition) + ") : (" + std::to_string(mouseCrosshairXPositionCell) + ", " + std::to_string(mouseCrosshairYPositionCell) + ") " + std::to_string(zoomPercentage) + "%";
+    std::string mouseCrosshairPositionString = "(" + std::to_string(mouseCrosshairXPosition) + ", " + std::to_string(mouseCrosshairYPosition) + ") : (" + std::to_string(mouseCrosshairXPositionCell) + ", " + std::to_string(mouseCrosshairYPositionCell) + ") " /* + std::to_string(zoomPercentage) + "%"*/;
 
     Util::string_al_draw_text(Text::builtin8, COLKEY_DEBUG_TEXT_HIGHLIGHTED, 0, 0, ALLEGRO_ALIGN_LEFT, mouseCrosshairPositionString);
 }

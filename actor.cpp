@@ -21,6 +21,28 @@ void Actor::Logic()
     if (!atDestination)
     {
         ApproachDestinationLinear(moveSpeed);
+        if(atDestination) // Reached destination
+        {
+            //std::cout << "Actor: Logic() debug: I have Arrived!" << std::endl;
+            if(Area::VoidCellCheck(roomXCell, roomYCell))
+            {
+                std::cout << "Actor: Logic(): I'm falliiiiiiing!" << std::endl;
+                Area::DescendLayer();
+                SetWorldYCell(Area::worldGridCurrentRow*Area::ROOM_ROWS + GetRoomYCell(), true);
+                WarpToXYDestination();
+
+            }
+            else if(Area::TeleporterCellCheck(roomXCell,roomYCell))
+            {
+                ///Todo: The case where an actor lands on a teleporter after teleporting.
+                ///Todo: The case where an actor lands on a teleporter after teleporting, but its next move is blocked by an obstacle, triggering the teleporter without changing cell. 
+                std::cout << "Actor: Logic(): I'm on a teleporter!" << std::endl;
+                
+                Area::AscendLayer();
+                SetWorldYCell(Area::worldGridCurrentRow*Area::ROOM_ROWS + GetRoomYCell(), true);
+                WarpToXYDestination();
+            }
+        }
     }
 
     if (hasAnimations)
@@ -65,7 +87,7 @@ void Actor::Walk(int direction)
             else if (Area::adjacentRooms[Direction::UP] != Area::VOID_ROOM_ID)
             {
                 /// Todo: Ensure only PC actor can trigger a room change.
-                Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow - 1);
+                Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow - 1, Area::ROOM_TRANSITION_TRANSLATION);
                 SetWorldYCell(worldYCell - 1, true);
             }
             break;
@@ -78,7 +100,7 @@ void Actor::Walk(int direction)
             }
             else if (Area::adjacentRooms[Direction::DOWN] != Area::VOID_ROOM_ID)
             {
-                Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow + 1);
+                Area::ChangeRoom(Area::worldGridCurrentCol, Area::worldGridCurrentRow + 1, Area::ROOM_TRANSITION_TRANSLATION);
                 SetWorldYCell(worldYCell + 1, true);
             }
             break;
@@ -91,7 +113,7 @@ void Actor::Walk(int direction)
             }
             else if (Area::adjacentRooms[Direction::LEFT] != Area::VOID_ROOM_ID)
             {
-                Area::ChangeRoom(Area::worldGridCurrentCol - 1, Area::worldGridCurrentRow);
+                Area::ChangeRoom(Area::worldGridCurrentCol - 1, Area::worldGridCurrentRow, Area::ROOM_TRANSITION_TRANSLATION);
                 SetWorldXCell(worldXCell - 1, true);
             }
             break;
@@ -104,7 +126,7 @@ void Actor::Walk(int direction)
             }
             else if (Area::adjacentRooms[Direction::RIGHT] != Area::VOID_ROOM_ID)
             {
-                Area::ChangeRoom(Area::worldGridCurrentCol + 1, Area::worldGridCurrentRow);
+                Area::ChangeRoom(Area::worldGridCurrentCol + 1, Area::worldGridCurrentRow, Area::ROOM_TRANSITION_TRANSLATION);
                 SetWorldXCell(worldXCell + 1, true);
             }
             break;

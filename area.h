@@ -23,15 +23,18 @@
 #include <algorithm>
 
 #include <array>
-#include <unordered_map>
+#include <map>
 
 struct Area
 {
     /// BEGIN WORLD GRID DATA ///
-    static constexpr const char *VOID_ROOM_ID = "0000";
+    static constexpr const char *VOID_ROOM_ID = "xxxx";
 
-    static const int WORLD_COLS = 10;
-    static const int WORLD_ROWS = 10;
+    static const int WORLD_LAYERS = 9;
+    static const int WORLD_LAYER_ROWS = 3; // The number of worldGrid rows in a layer.
+    
+    static const int WORLD_COLS = 3;
+    static const int WORLD_ROWS = WORLD_LAYERS*WORLD_LAYER_ROWS;
 
     static std::string worldGrid[WORLD_COLS * WORLD_ROWS];
 
@@ -58,9 +61,15 @@ struct Area
     enum enumRoomTransitionEffects
     {
         ROOM_TRANSITION_TRANSLATION = 0,
-        ROOM_TRANSITION_TELEPORT_INSTANT = 1
+        ROOM_TRANSITION_TELEPORT_INSTANT = 1,
+        ROOM_TRANSITION_ASCEND = 2,
+        ROOM_TRANSITION_DESCEND = 3
     };
-    static int roomTransitionDirection;
+
+    static int roomTransitionDelay; // Pause before camera movement.
+    static const int ROOM_TRANSITION_ASCEND_BASE_DELAY = ActorIndex::WALK_DURATION * 3;
+    static const int ROOM_TRANSITION_DESCEND_BASE_DELAY = ActorIndex::WALK_DURATION * 3;
+
     static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH * ROOM_COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
     static const int ROOM_TRANSITION_Y_SPEED = Tile::HEIGHT * ROOM_ROWS / ActorIndex::WALK_DURATION;
 
@@ -68,7 +77,7 @@ struct Area
     static float previousRoomXPosition, previousRoomYPosition;
     /// END ROOM DATA ///
     /// BEGIN PERSISTENT STATE AND SERIALIZATION
-    static std::unordered_map<std::string, std::array<int, ROOM_AREA>> featuresState; // Add to/update this map as rooms are visited.
+    static std::map<std::string, std::vector<bool>> featuresActive; // Add to/update this map as rooms are visited.
     /// END PERSISTENT STATE AND SERIALIZATION
 
     static void Initialize();
@@ -84,10 +93,15 @@ struct Area
     static void Logic();
     static void Drawing();
 
-    static void ChangeRoom(int dest_x, int dest_y);
+    static void ChangeRoom(int dest_x, int dest_y, int transition_effect);
 
     static bool RoomBoundaryCheck(int x, int y);
     static bool WalkObstacleCheck(int x, int y);
+    static bool VoidCellCheck(int x, int y);
+    static bool TeleporterCellCheck(int x, int y);
 
     static void ActivateFeature(int x, int y);
+
+    static void AscendLayer();
+    static void DescendLayer();
 };
