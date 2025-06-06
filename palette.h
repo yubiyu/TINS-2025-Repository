@@ -43,12 +43,12 @@ struct Palette
     static const int COL_GB_NUM_SWAPS = COL_GB_LAST+1;
     static const inline std::unordered_map<int, std::string>palettePresetNames =
     {
-        {COL_GB_GREEN,   "Green"},
-        {COL_GB_BLUE,    "Blue"},
-        {COL_GB_VIOLET,  "Violet"},
-        {COL_GB_MAGENTA, "Magenta"},
-        {COL_GB_RED,     "Red"},
-        {COL_GB_YELLOW,  "Yellow"}
+        {COL_GB_GREEN,   "Default"},
+        {COL_GB_BLUE,    "B"},
+        {COL_GB_VIOLET,  "C"},
+        {COL_GB_MAGENTA, "D"},
+        {COL_GB_RED,     "E"},
+        {COL_GB_YELLOW,  "F"}
     };
 
     static ALLEGRO_COLOR COL_GB_BASE[COL_GB_NUM_COLOURS];
