@@ -15,7 +15,8 @@ class Actor
     bool isActive{};
 
     float xPosition{}, yPosition{};
-    // float drawXPosition{}, drawYPosition{};
+    float previousRoomXPosition{}, previousRoomYPosition{};
+
     int worldXCell{}, worldYCell{};
     int roomXCell{}, roomYCell{};
 
@@ -59,6 +60,15 @@ public:
         SetXPosition(x);
         SetYPosition(y);
     }
+    float GetPreviousRoomXPosition() const {return previousRoomXPosition;}
+    float GetPreviousRoomYPosition() const {return previousRoomYPosition;}
+    void SetPreviousRoomXPosition(float x) {previousRoomXPosition = x;}
+    void SetPreviousRoomYPosition(float y){previousRoomYPosition = y;}
+    void SetPreviousRoomXYPosition(float x, float y)
+    {
+        SetPreviousRoomXPosition(x);
+        SetPreviousRoomYPosition(y);
+    }
 
     float GetAtDestination() const { return atDestination; }
     void SetAtDestination(bool b) { atDestination = b; }
@@ -98,6 +108,8 @@ public:
     int GetWorldYCell() const { return worldYCell; }
     void SetWorldXCell(int x, bool warp_to_dest)
     {
+        previousRoomXPosition = xPosition;
+
         worldXCell = x;
         roomXCell = worldXCell % Area::ROOM_COLS;
         SetXDestination(worldXCell * Tile::WIDTH);
@@ -107,12 +119,18 @@ public:
     }
     void SetWorldYCell(int y, bool warp_to_dest)
     {
+        previousRoomYPosition = yPosition;
+
         worldYCell = y;
         roomYCell = worldYCell % Area::ROOM_ROWS;
         SetYDestination(worldYCell * Tile::HEIGHT);
 
         if (warp_to_dest)
             WarpToYDestination();
+
+        std::cout << "debug: ycurrent: " << yPosition << std::endl;
+        std::cout << "debug: yprevious: " << previousRoomYPosition << std::endl;
+
     }
     void SetWorldXYCell(int x, int y, bool warp_to_dest)
     {
@@ -125,7 +143,7 @@ public:
     void SetRoomXCell(int x, bool warp_to_dest)
     {
         roomXCell = x;
-        worldXCell = Area::worldGridCurrentCol * Area::ROOM_COLS + roomXCell;
+        SetWorldXCell(Area::worldGridCurrentCol * Area::ROOM_COLS + roomXCell, warp_to_dest);
         SetXDestination(worldXCell * Tile::WIDTH);
         if (warp_to_dest)
             WarpToXDestination();
@@ -133,7 +151,7 @@ public:
     void SetRoomYCell(int y, bool warp_to_dest)
     {
         roomYCell = y;
-        worldYCell = Area::worldGridCurrentRow * Area::ROOM_ROWS + roomYCell;
+        SetWorldYCell(Area::worldGridCurrentRow * Area::ROOM_ROWS + roomYCell, warp_to_dest);
         SetYDestination(worldYCell * Tile::HEIGHT);
         if (warp_to_dest)
             WarpToYDestination();

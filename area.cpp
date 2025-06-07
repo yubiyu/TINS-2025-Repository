@@ -283,15 +283,37 @@ void Area::ConstructRoom()
 
 void Area::UpdateRoomXYPositions()
 {
-    // What happens if both previous and current positions are the same?
-    previousRoomXPosition = currentRoomXPosition;
-    previousRoomYPosition = currentRoomYPosition;
+    float snapshotX = currentRoomXPosition;
+    float snapshotY = currentRoomYPosition;
 
     currentRoomXPosition = worldGridCurrentCol * ROOM_COLS * Tile::WIDTH;
     currentRoomYPosition = worldGridCurrentRow * ROOM_ROWS * Tile::HEIGHT;
 
+    switch(roomTransitionEffect)
+    {
+        case ROOM_TRANSITION_ASCEND:
+        previousRoomXPosition = snapshotX;
+        previousRoomYPosition = currentRoomYPosition + ROOM_ROWS *Tile::HEIGHT * LAYER_SEPARATION_RATIO;
+        break;
+
+        case ROOM_TRANSITION_DESCEND:
+        previousRoomXPosition = snapshotX;
+        previousRoomYPosition = currentRoomYPosition - ROOM_ROWS * Tile::HEIGHT * LAYER_SEPARATION_RATIO;
+        break;
+
+        default:
+        previousRoomXPosition = snapshotX;
+        previousRoomYPosition = snapshotY;
+        break;
+    }
+
+    Camera::SetDestination(previousRoomXPosition, previousRoomYPosition);
+    Camera::WarpToXYDestination();
+
     Camera::SetDestination(currentRoomXPosition, currentRoomYPosition);
 }
+
+
 
 void Area::Logic()
 {
@@ -372,8 +394,6 @@ void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
 
     worldRoomID = worldGrid[worldGridCurrentRow * WORLD_GRID_COLS + worldGridCurrentCol];
 
-    UpdateRoomXYPositions();
-
     std::copy(std::begin(currentRoomCells), std::end(currentRoomCells), std::begin(previousRoomCells));
     std::copy(std::begin(currentRoomFeatures), std::end(currentRoomFeatures), std::begin(previousRoomFeatures));
     LoadRoomBlueprints(worldGridCurrentCol, worldGridCurrentRow);
@@ -386,19 +406,17 @@ void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
     switch (roomTransitionEffect)
     {
     case ROOM_TRANSITION_TELEPORT_INSTANT:
-
         break;
 
     case ROOM_TRANSITION_TRANSLATION: // Movement to an adjacent room.
-
         break;
 
     case ROOM_TRANSITION_ASCEND:
-        // roomTransitionDelay = ROOM_TRANSITION_ASCEND_BASE_DELAY;
+        roomTransitionDelay = ROOM_TRANSITION_ASCEND_DELAY;
         break;
 
     case ROOM_TRANSITION_DESCEND:
-        // roomTransitionDelay = ROOM_TRANSITION_DESCEND_BASE_DELAY;
+        roomTransitionDelay = ROOM_TRANSITION_DESCEND_DELAY;
         break;
 
     default:
@@ -407,7 +425,8 @@ void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
         return;
         break;
     }
-        
+
+    UpdateRoomXYPositions();
 }
 
 bool Area::RoomBoundaryCheck(int x, int y)
@@ -491,20 +510,19 @@ void Area::AscendLayer()
     bool destinationFound = false;
     while (!destinationFound)
     {
-        if (searchAttempts > WORLD_GRID_LAYERS)
+        searchAttempts++;
+        if (searchAttempts > WORLD_GRID_LAYERS+2)
         {
             // Fallback.
             std::cout << "Area:: AscendLayer() searchAttempts fallback: Redirecting to VOID_ROOM_ID" << std::endl;
             std::cout << "This isn't supposed to happen, just saying." << std::endl;
-            ChangeRoom(0, 0, ROOM_TRANSITION_ASCEND);
+            ChangeRoom(0, 0, ROOM_TRANSITION_TELEPORT_INSTANT);
             return;
         }
 
         worldGridSearchRow -= WORLD_GRID_LAYER_ROWS;
         if (worldGridSearchRow < 0)
             worldGridSearchRow += WORLD_GRID_ROWS; // Prevent out of bounds search, effectively loops search back to bottom layer.
-
-        searchAttempts++;
 
         if (worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] != VOID_ROOM_ID)
         {
@@ -527,28 +545,30 @@ void Area::DescendLayer()
     bool destinationFound = false;
     while (!destinationFound)
     {
-        if (searchAttempts > WORLD_GRID_LAYERS)
+        searchAttempts++;
+        if (searchAttempts > WORLD_GRID_LAYERS+2)
         {
             // Fallback.
             std::cout << "Area:: DescendLayer() searchAttempts fallback: Redirecting to VOID_ROOM_ID" << std::endl;
             std::cout << "This isn't supposed to happen, just saying." << std::endl;
-            ChangeRoom(0, 0, ROOM_TRANSITION_DESCEND); // Prevent out of bounds search, effectively loops search back to top layer.
+            ChangeRoom(0, 0, ROOM_TRANSITION_TELEPORT_INSTANT); // Prevent out of bounds search, effectively loops search back to top layer.
             return;
         }
 
         worldGridSearchRow += WORLD_GRID_LAYER_ROWS;
-        if (worldGridSearchRow > WORLD_GRID_LAYER_ROWS * WORLD_GRID_LAYERS)
-            worldGridSearchRow %= WORLD_GRID_ROWS;
+        if (worldGridSearchRow >= WORLD_GRID_ROWS)
+            worldGridSearchRow -= WORLD_GRID_ROWS;
 
-        searchAttempts++;
+        int searchIndex = worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol;
 
-        if (worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] != VOID_ROOM_ID)
+        if (worldGrid[searchIndex] != VOID_ROOM_ID)
         {
-
-            ChangeRoom(worldGridCurrentCol, worldGridSearchRow, ROOM_TRANSITION_DESCEND);
             destinationFound = true;
-            std::cout << "Area: Debug DescendLayer() searchAttempts = " << searchAttempts << std::endl;
+            ChangeRoom(worldGridCurrentCol, worldGridSearchRow, ROOM_TRANSITION_DESCEND);
         }
+        std::cout << "Area: Debug DescendLayer() searchAttempts = " << searchAttempts << std::endl;
         std::cout << "Area: Debug DescendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] << std::endl;
+        //std::cout << "Area: Debug DescendLayer() searchIndex = " << searchIndex << std::endl;
+        std::cout << std::endl;
     }
 }

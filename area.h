@@ -31,7 +31,7 @@ struct Area
     static std::string worldRoomID;
     static constexpr const char *VOID_ROOM_ID = "xxxx";
 
-    static const int WORLD_GRID_LAYERS = 9;
+    static const int WORLD_GRID_LAYERS = 7;
     static const int WORLD_GRID_LAYER_ROWS = 3; // The number of worldGrid rows in a layer.
     
     static const int WORLD_GRID_COLS = 3;
@@ -40,6 +40,8 @@ struct Area
     static std::string worldGrid[WORLD_GRID_COLS * WORLD_GRID_ROWS];
 
     static int worldGridCurrentCol, worldGridCurrentRow;
+
+    static constexpr float LAYER_SEPARATION_RATIO = 1.5;
     /// END WORLD GRID DATA ///
     /// BEGIN ROOM DATA ///
     static const int ROOM_COLS = 10; // tiles across
@@ -68,8 +70,8 @@ struct Area
     };
 
     static int roomTransitionDelay; // Pause before camera movement.
-    static const int ROOM_TRANSITION_ASCEND_BASE_DELAY = ActorIndex::WALK_DURATION * 3;
-    static const int ROOM_TRANSITION_DESCEND_BASE_DELAY = ActorIndex::WALK_DURATION * 3;
+    static const int ROOM_TRANSITION_ASCEND_DELAY = ActorIndex::WALK_DURATION * 3;
+    static const int ROOM_TRANSITION_DESCEND_DELAY = ActorIndex::WALK_DURATION * 3;
 
     static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH * ROOM_COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
     static const int ROOM_TRANSITION_Y_SPEED = Tile::HEIGHT * ROOM_ROWS / ActorIndex::WALK_DURATION;
