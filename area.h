@@ -30,13 +30,13 @@ struct Area
     /// BEGIN WORLD GRID DATA ///
     static constexpr const char *VOID_ROOM_ID = "xxxx";
 
-    static const int WORLD_LAYERS = 9;
-    static const int WORLD_LAYER_ROWS = 3; // The number of worldGrid rows in a layer.
+    static const int WORLD_GRID_LAYERS = 9;
+    static const int WORLD_GRID_LAYER_ROWS = 3; // The number of worldGrid rows in a layer.
     
-    static const int WORLD_COLS = 3;
-    static const int WORLD_ROWS = WORLD_LAYERS*WORLD_LAYER_ROWS;
+    static const int WORLD_GRID_COLS = 3;
+    static const int WORLD_GRID_ROWS = WORLD_GRID_LAYERS*WORLD_GRID_LAYER_ROWS;
 
-    static std::string worldGrid[WORLD_COLS * WORLD_ROWS];
+    static std::string worldGrid[WORLD_GRID_COLS * WORLD_GRID_ROWS];
 
     static int worldGridCurrentCol, worldGridCurrentRow;
     /// END WORLD GRID DATA ///
@@ -102,6 +102,6 @@ struct Area
 
     static void ActivateFeature(int x, int y);
 
-    static void AscendLayer();
-    static void DescendLayer();
+    static void AscendLayer(); // Note that ascending a layer actually makes the world grid row go down.
+    static void DescendLayer(); // Note that descending a layer actually makes the world grid row go up.
 };

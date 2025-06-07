@@ -56,6 +56,13 @@ void Worldview::Input()
                 }
                 // Dialog::Activate("Test","Test");
             }
+
+            if(Keyboard::keyHoldTicks [Keyboard::KEY_V] == 1)
+            {
+                std::cout << "Camera position: " << Camera::xPosition << ", " << Camera::yPosition << std::endl;
+                std::cout << "Camera destination: " << Camera::xDestination << ", " << Camera:: yDestination << std::endl;
+                std::cout << "Area in transition?: " << Area::inRoomTransition << std::endl;
+            }
         }
     }
 

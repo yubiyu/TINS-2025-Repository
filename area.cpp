@@ -1,6 +1,6 @@
 #include "area.h"
 
-std::string Area::worldGrid[WORLD_COLS * WORLD_ROWS];
+std::string Area::worldGrid[WORLD_GRID_COLS * WORLD_GRID_ROWS];
 int Area::worldGridCurrentCol{}, Area::worldGridCurrentRow{};
 
 std::array<int, Area::ROOM_AREA> Area::roomCellBlueprint{};
@@ -25,19 +25,15 @@ std::map<std::string, std::vector<bool>> Area::featuresActive;
 
 void Area::Initialize()
 {
+    std::cout << "Area:: Initialize() " << std::endl;
+
     std::fill(std::begin(currentRoomCells), std::end(currentRoomCells), CellIndex::CELL_VOID);
     std::fill(std::begin(currentRoomFeatures), std::end(currentRoomFeatures), FeatureIndex::FEATURE_NONE);
-
     std::fill(std::begin(previousRoomCells), std::end(previousRoomCells), CellIndex::CELL_VOID);
     std::fill(std::begin(previousRoomFeatures), std::end(previousRoomFeatures), FeatureIndex::FEATURE_NONE);
 
     LoadWorldGrid("World Grid A");
-    LoadRoomBlueprints(worldGridCurrentCol, worldGridCurrentRow);
-    ConstructRoom();
-
-    UpdateRoomXYPositions();
-    inRoomTransition = true;
-    roomTransitionEffect = ROOM_TRANSITION_TELEPORT_INSTANT;
+    ChangeRoom(worldGridCurrentCol, worldGridCurrentRow, ROOM_TRANSITION_TELEPORT_INSTANT);
 }
 
 void Area::Uninitialize()
@@ -51,42 +47,45 @@ void Area::LoadWorldGrid(const char *worldgrid)
     std::fill(std::begin(worldGrid), std::end(worldGrid), VOID_ROOM_ID);
 
     size_t x = 0;
-    for (size_t y = 0; y < WORLD_ROWS; y++)
+    for (size_t y = 0; y < WORLD_GRID_ROWS; y++)
     {
+        // if(y%WORLD_GRID_LAYER_ROWS == 0)
+        // std::cout << std::endl;
+
         const char *key = std::to_string(y).c_str();
         std::string rowData = Configuration::GetString(Configuration::areasCfg, worldgrid, key);
-        //std::cout << rowData;
+        // std::cout << rowData;
 
         std::istringstream iss(rowData);
         while (std::getline(iss, rowData, ','))
         {
-            if (x >= WORLD_COLS) // Invalid
+            if (x >= WORLD_GRID_COLS) // Invalid
             {
-                //std::cout << std::endl
-                          //<< "Error: rowData exceeds WORLD_COLS. Discarding overflow...";
+                // std::cout << std::endl << "Error: rowData exceeds WORLD_GRID_COLS. Discarding overflow...";
                 break;
             }
 
-            worldGrid[y * WORLD_COLS + x] = rowData;
+            worldGrid[y * WORLD_GRID_COLS + x] = rowData;
             x++;
         }
         x = 0;
-        //std::cout << std::endl;
+
+        // std::cout << std::endl;
     }
 
     worldGridCurrentCol = Configuration::GetInt(Configuration::areasCfg, worldgrid, "worldSpawnX");
     worldGridCurrentRow = Configuration::GetInt(Configuration::areasCfg, worldgrid, "worldSpawnY");
     std::cout << "World spawning coords = " << worldGridCurrentCol << ", " << worldGridCurrentRow << std::endl;
-    std::cout << "Current room ID = " << worldGrid[worldGridCurrentRow * WORLD_COLS + worldGridCurrentCol] << std::endl;
+    std::cout << "Current room ID = " << worldGrid[worldGridCurrentRow * WORLD_GRID_COLS + worldGridCurrentCol] << std::endl;
 }
 
 void Area::LoadRoomBlueprints(int world_x, int world_y)
 {
-    const char *room = worldGrid[world_y * WORLD_COLS + world_x].c_str();
+    const char *room = worldGrid[world_y * WORLD_GRID_COLS + world_x].c_str();
 
     std::cout << "Area: Loading room blueprint " << room << " from config/areas.cfg: " << std::endl;
     /// BEGIN CELLS PART ///
-    //std::cout << "Cells BP:" << std::endl;
+    // std::cout << "Cells BP:" << std::endl;
     std::fill(std::begin(roomCellBlueprint), std::end(roomCellBlueprint), CellIndex::BLUEPRINT_CELL_VOID_GENERIC);
 
     size_t col = 0;
@@ -95,31 +94,30 @@ void Area::LoadRoomBlueprints(int world_x, int world_y)
         std::string keyStr = std::to_string(row) + "C";
         const char *key = keyStr.c_str();
         std::string rowData = Configuration::GetString(Configuration::areasCfg, room, key);
-        //std::cout << rowData << " --> ";
+        // std::cout << rowData << " --> ";
 
         std::istringstream iss(rowData);
         while (std::getline(iss, rowData, ','))
         {
             if (col >= ROOM_COLS) // Invalid:
             {
-                //std::cout << std::endl
-                          //<< "ERROR: rowData exceeds ROOM_COLS. Discarding overflow...";
+                // std::cout << std::endl << "ERROR: rowData exceeds ROOM_COLS. Discarding overflow...";
                 break;
             }
 
             int data = std::stoi(rowData, nullptr, 16); // String to hexedecimal conversion.
-            //std::cout << std::setw(3) << data << " ";
+            // std::cout << std::setw(3) << data << " ";
 
             ParseToRoomCellBlueprint(col, row, data);
             col++;
         }
         col = 0;
-        //std::cout << std::endl;
+        // std::cout << std::endl;
     }
     /// END CELLS PART ///
     /// BEGIN FEATURES PART ///
     // Note: literally the same thing as CELLS PART but with Feature arrays instead of Cells.
-    //std::cout << "Features BP: " << std::endl;
+    // std::cout << "Features BP: " << std::endl;
     std::fill(std::begin(roomFeatureBlueprint), std::end(roomFeatureBlueprint), FeatureIndex::BLUEPRINT_FEATURE_NONE);
 
     col = 0; // reusing size_t col declared in CELLS PART.
@@ -128,42 +126,41 @@ void Area::LoadRoomBlueprints(int world_x, int world_y)
         std::string keyStr = std::to_string(row) + "F";
         const char *key = keyStr.c_str();
         std::string rowData = Configuration::GetString(Configuration::areasCfg, room, key);
-        //std::cout << rowData << " --> ";
+        // std::cout << rowData << " --> ";
 
         std::istringstream iss(rowData);
         while (std::getline(iss, rowData, ','))
         {
             if (col >= ROOM_COLS) // Invalid:
             {
-                //std::cout << std::endl
-                          //<< "ERROR: rowData exceeds ROOM_COLS. Discarding overflow...";
+                // std::cout << std::endl << "ERROR: rowData exceeds ROOM_COLS. Discarding overflow...";
                 break;
             }
 
             int data = std::stoi(rowData, nullptr, 16); // String to hexedecimal conversion.
-            //std::cout << std::setw(3) << data << " ";
+            // std::cout << std::setw(3) << data << " ";
 
             ParseToRoomFeatureBlueprint(col, row, data);
             col++;
         }
         col = 0;
-        //std::cout << std::endl;
+        // std::cout << std::endl;
     }
     /// END FEATURES PART ///
 
     std::fill(std::begin(adjacentRooms), std::end(adjacentRooms), VOID_ROOM_ID);
 
     if (world_y - 1 >= 0)
-        adjacentRooms[Direction::NORTH] = worldGrid[(world_y - 1) * WORLD_COLS + world_x];
+        adjacentRooms[Direction::NORTH] = worldGrid[(world_y - 1) * WORLD_GRID_COLS + world_x];
 
-    if (world_y + 1 < WORLD_ROWS)
-        adjacentRooms[Direction::SOUTH] = worldGrid[(world_y + 1) * WORLD_COLS + world_x];
+    if (world_y + 1 < WORLD_GRID_ROWS)
+        adjacentRooms[Direction::SOUTH] = worldGrid[(world_y + 1) * WORLD_GRID_COLS + world_x];
 
     if (world_x - 1 >= 0)
-        adjacentRooms[Direction::WEST] = worldGrid[world_y * WORLD_COLS + (world_x - 1)];
+        adjacentRooms[Direction::WEST] = worldGrid[world_y * WORLD_GRID_COLS + (world_x - 1)];
 
-    if (world_x + 1 < WORLD_COLS)
-        adjacentRooms[Direction::EAST] = worldGrid[world_y * WORLD_COLS + (world_x + 1)];
+    if (world_x + 1 < WORLD_GRID_COLS)
+        adjacentRooms[Direction::EAST] = worldGrid[world_y * WORLD_GRID_COLS + (world_x + 1)];
 
     roomSpawnCol = Configuration::GetInt(Configuration::areasCfg, room, "spawnX");
     roomSpawnRow = Configuration::GetInt(Configuration::areasCfg, room, "spawnY");
@@ -287,6 +284,7 @@ void Area::UpdateRoomXYPositions()
     // What happens if both previous and current positions are the same?
     previousRoomXPosition = currentRoomXPosition;
     previousRoomYPosition = currentRoomYPosition;
+
     currentRoomXPosition = worldGridCurrentCol * ROOM_COLS * Tile::WIDTH;
     currentRoomYPosition = worldGridCurrentRow * ROOM_ROWS * Tile::HEIGHT;
 
@@ -297,22 +295,30 @@ void Area::Logic()
 {
     if (inRoomTransition)
     {
+        std::cout << "Debug: Room transition effect = " << roomTransitionEffect << std::endl;
+
         if (roomTransitionEffect == ROOM_TRANSITION_TELEPORT_INSTANT)
         {
             Camera::WarpToXYDestination();
-            inRoomTransition = false;
+            std::cout << "Area Logic: Camera Warp: position: " << Camera::xPosition << ", " << Camera::yPosition << std::endl;
+            std::cout << "Area Logic: Camera Warp: destination: " << Camera::xDestination << ", " << Camera::yDestination << std::endl;
         }
         else // Not instant
         {
-            if (roomTransitionDelay > 0)
-                roomTransitionDelay--;
+            // if (roomTransitionDelay > 0)
+            // roomTransitionDelay--;
 
-            if (roomTransitionDelay <= 0)
-            {
-                Camera::ApproachDestinationLinear(ROOM_TRANSITION_X_SPEED, ROOM_TRANSITION_Y_SPEED);
-                if (Camera::atDestination)
-                    inRoomTransition = false;
-            }
+            // if (roomTransitionDelay <= 0)
+            //{
+            Camera::ApproachDestinationLinear(ROOM_TRANSITION_X_SPEED, ROOM_TRANSITION_Y_SPEED);
+            std::cout << "Camera: Approach destination linear " << std::endl;
+            //}
+        }
+
+        if (Camera::atDestination)
+        {
+            std::cout << "Area Debug Logic(): Camera at destination." << std::endl;
+            inRoomTransition = false;
         }
     }
 }
@@ -358,17 +364,29 @@ void Area::Drawing()
 
 void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
 {
-    if (dest_x < 0 || dest_x >= WORLD_COLS || dest_y < 0 || dest_y >= WORLD_ROWS)
+    if (dest_x < 0 || dest_x >= WORLD_GRID_COLS || dest_y < 0 || dest_y >= WORLD_GRID_ROWS)
     {
         std::cout << "Area: Error: Room change out of bounds on worldGrid! RoomChange(x,y) redirecting to 0,0." << std::endl;
         ChangeRoom(0, 0, ROOM_TRANSITION_TELEPORT_INSTANT);
         return;
     }
 
+    worldGridCurrentCol = dest_x;
+    worldGridCurrentRow = dest_y;
+
+    UpdateRoomXYPositions();
+
+    std::copy(std::begin(currentRoomCells), std::end(currentRoomCells), std::begin(previousRoomCells));
+    std::copy(std::begin(currentRoomFeatures), std::end(currentRoomFeatures), std::begin(previousRoomFeatures));
+    LoadRoomBlueprints(worldGridCurrentCol, worldGridCurrentRow);
+    ConstructRoom();
+
     inRoomTransition = true;
+    std::cout << "Debug: bool inRoomTransition = " << inRoomTransition << std::endl;
     roomTransitionEffect = transition_effect;
     roomTransitionDelay = 0; // Default / fallback
 
+    /*
     switch (roomTransitionEffect)
     {
     case ROOM_TRANSITION_TELEPORT_INSTANT:
@@ -388,21 +406,12 @@ void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
         break;
 
     default:
+        ChangeRoom(worldGridCurrentCol, worldGridCurrentRow, ROOM_TRANSITION_TELEPORT_INSTANT); // Recursive, fallback
         std::cout << "Area: ChangeRoom(): Invalid transition effect. Fallback to ROOM_TRANSITION_TELEPORT_INSTANT." << std::endl;
-        ChangeRoom(dest_x, dest_y, ROOM_TRANSITION_TELEPORT_INSTANT); // Recursive, fallback
         return;
         break;
     }
-
-    worldGridCurrentCol = dest_x;
-    worldGridCurrentRow = dest_y;
-
-    UpdateRoomXYPositions();
-
-    std::copy(std::begin(currentRoomCells), std::end(currentRoomCells), std::begin(previousRoomCells));
-    std::copy(std::begin(currentRoomFeatures), std::end(currentRoomFeatures), std::begin(previousRoomFeatures));
-    LoadRoomBlueprints(worldGridCurrentCol, worldGridCurrentRow);
-    ConstructRoom();
+        */
 }
 
 bool Area::RoomBoundaryCheck(int x, int y)
@@ -486,7 +495,7 @@ void Area::AscendLayer()
     bool destinationFound = false;
     while (!destinationFound)
     {
-        if (searchAttempts > WORLD_LAYERS)
+        if (searchAttempts > WORLD_GRID_LAYERS)
         {
             // Fallback.
             std::cout << "Area:: AscendLayer() searchAttempts fallback: Redirecting to VOID_ROOM_ID" << std::endl;
@@ -495,13 +504,13 @@ void Area::AscendLayer()
             return;
         }
 
-        worldGridSearchRow += WORLD_LAYER_ROWS;
-        if (worldGridSearchRow > WORLD_LAYERS * WORLD_LAYER_ROWS)
-            worldGridSearchRow %= WORLD_ROWS; // Prevent out of bounds search, effectively loops search back to 0th layer.
+        worldGridSearchRow -= WORLD_GRID_LAYER_ROWS;
+        if (worldGridSearchRow < 0)
+            worldGridSearchRow += WORLD_GRID_ROWS; // Prevent out of bounds search, effectively loops search back to bottom layer.
 
         searchAttempts++;
 
-        if (worldGrid[worldGridSearchRow * WORLD_ROWS + worldGridCurrentRow] != VOID_ROOM_ID)
+        if (worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentRow] != VOID_ROOM_ID)
         {
             ChangeRoom(worldGridCurrentCol, worldGridSearchRow, ROOM_TRANSITION_ASCEND);
             destinationFound = true;
@@ -511,7 +520,7 @@ void Area::AscendLayer()
         {
             std::cout << "uh, void" << std::endl;
         }
-        std::cout << "Area: Debug AscendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_COLS + worldGridCurrentRow] << std::endl;
+        std::cout << "Area: Debug AscendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentRow] << std::endl;
     }
 }
 
@@ -522,28 +531,28 @@ void Area::DescendLayer()
     bool destinationFound = false;
     while (!destinationFound)
     {
-        if (searchAttempts > WORLD_LAYERS)
+        if (searchAttempts > WORLD_GRID_LAYERS)
         {
             // Fallback.
             std::cout << "Area:: DescendLayer() searchAttempts fallback: Redirecting to VOID_ROOM_ID" << std::endl;
             std::cout << "This isn't supposed to happen, just saying." << std::endl;
-            ChangeRoom(0, 0, ROOM_TRANSITION_DESCEND);
+            ChangeRoom(0, 0, ROOM_TRANSITION_DESCEND); // Prevent out of bounds search, effectively loops search back to top layer.
             return;
         }
 
-        worldGridSearchRow -= WORLD_LAYER_ROWS;
-        if (worldGridSearchRow < 0)
-            worldGridSearchRow += WORLD_ROWS;
+        worldGridSearchRow += WORLD_GRID_LAYER_ROWS;
+        if (worldGridSearchRow > WORLD_GRID_LAYER_ROWS * WORLD_GRID_LAYERS)
+            worldGridSearchRow %= WORLD_GRID_ROWS;
 
         searchAttempts++;
 
-        if (worldGrid[worldGridSearchRow * WORLD_ROWS + worldGridCurrentRow] != VOID_ROOM_ID)
+        if (worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentRow] != VOID_ROOM_ID)
         {
-            
+
             ChangeRoom(worldGridCurrentCol, worldGridSearchRow, ROOM_TRANSITION_DESCEND);
             destinationFound = true;
             std::cout << "Area: Debug DescendLayer() searchAttempts = " << searchAttempts << std::endl;
         }
-        std::cout << "Area: Debug DescendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_COLS + worldGridCurrentRow] << std::endl;
+        std::cout << "Area: Debug DescendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentRow] << std::endl;
     }
 }

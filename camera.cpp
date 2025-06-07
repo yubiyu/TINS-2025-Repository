@@ -1,27 +1,27 @@
 #include "camera.h"
 
-ALLEGRO_BITMAP *Camera::cameraBuffer;
+ALLEGRO_BITMAP *Camera::cameraBuffer {};
 
-ALLEGRO_TRANSFORM Camera::identityTransform; // identity transform
-ALLEGRO_TRANSFORM Camera::zoomTransform;
+ALLEGRO_TRANSFORM Camera::identityTransform {}; // identity transform
+ALLEGRO_TRANSFORM Camera::zoomTransform {};
 
-float Camera::zoomScale;
-float Camera::zoomTranslateX;
-float Camera::zoomTranslateY;
+float Camera::zoomScale {};
+float Camera::zoomTranslateX {};
+float Camera::zoomTranslateY {};
 
 // bool Camera::worldviewCameraMousePanningDisabled;
 // float Camera::mouseTransformedX;
 // float Camera::mouseTransformedY;
 
-bool Camera::atDestination;
-bool Camera::approachingDestination;
+bool Camera::atDestination {};
+bool Camera::approachingDestination {};
 
-int Camera::worldXCell;
-int Camera::worldYCell;
-float Camera::xPosition;
-float Camera::yPosition;
-float Camera::xDestination;
-float Camera::yDestination;
+int Camera::worldXCell {};
+int Camera::worldYCell {};
+float Camera::xPosition {};
+float Camera::yPosition {};
+float Camera::xDestination {};
+float Camera::yDestination {};
 
 void Camera::Initialize()
 {
@@ -62,6 +62,8 @@ void Camera::SetDestination(float x, float y)
     approachingDestination = true;
     xDestination = x;
     yDestination = y;
+
+    //std::cout << "destination reset" << std::endl;
 }
 void Camera::SetDestinationCell(int x, int y)
 {
