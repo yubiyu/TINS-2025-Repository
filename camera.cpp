@@ -72,6 +72,7 @@ void Camera::SetDestinationCell(int x, int y)
 
 void Camera::Logic()
 {
+    /*
     if (atDestination)
     {
         if (xPosition < MIN_X_POSITION)
@@ -84,6 +85,7 @@ void Camera::Logic()
         else if (yPosition > MAX_Y_POSITION)
             yPosition = MAX_Y_POSITION;
     }
+            */
 }
 
 void Camera::Input()

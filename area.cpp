@@ -259,9 +259,9 @@ void Area::ConstructRoom()
                 currentRoomCells[y * ROOM_COLS + x] = CellIndex::CELL_PLATFORM_OTHER_ROOM_TELEPORT;
                 // Todo: pair teleport destination
             }
-            //std::cout << std::setw(2) << currentRoomCells[y * ROOM_COLS + x];
+            // std::cout << std::setw(2) << currentRoomCells[y * ROOM_COLS + x];
         }
-        //std::cout << std::endl;
+        // std::cout << std::endl;
     }
     /// END CELLS PART
     /// BEGIN FEATURES PART
@@ -295,29 +295,23 @@ void Area::Logic()
 {
     if (inRoomTransition)
     {
-        std::cout << "Debug: Room transition effect = " << roomTransitionEffect << std::endl;
-
         if (roomTransitionEffect == ROOM_TRANSITION_TELEPORT_INSTANT)
         {
             Camera::WarpToXYDestination();
-            std::cout << "Area Logic: Camera Warp: position: " << Camera::xPosition << ", " << Camera::yPosition << std::endl;
-            std::cout << "Area Logic: Camera Warp: destination: " << Camera::xDestination << ", " << Camera::yDestination << std::endl;
         }
         else // Not instant
         {
-            // if (roomTransitionDelay > 0)
-            // roomTransitionDelay--;
+            if (roomTransitionDelay > 0)
+                roomTransitionDelay--;
 
-            // if (roomTransitionDelay <= 0)
-            //{
-            Camera::ApproachDestinationLinear(ROOM_TRANSITION_X_SPEED, ROOM_TRANSITION_Y_SPEED);
-            std::cout << "Camera: Approach destination linear " << std::endl;
-            //}
+            if (roomTransitionDelay <= 0)
+            {
+                Camera::ApproachDestinationLinear(ROOM_TRANSITION_X_SPEED, ROOM_TRANSITION_Y_SPEED);
+            }
         }
 
         if (Camera::atDestination)
         {
-            std::cout << "Area Debug Logic(): Camera at destination." << std::endl;
             inRoomTransition = false;
         }
     }
@@ -382,11 +376,9 @@ void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
     ConstructRoom();
 
     inRoomTransition = true;
-    std::cout << "Debug: bool inRoomTransition = " << inRoomTransition << std::endl;
     roomTransitionEffect = transition_effect;
     roomTransitionDelay = 0; // Default / fallback
 
-    /*
     switch (roomTransitionEffect)
     {
     case ROOM_TRANSITION_TELEPORT_INSTANT:
@@ -411,7 +403,7 @@ void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
         return;
         break;
     }
-        */
+        
 }
 
 bool Area::RoomBoundaryCheck(int x, int y)

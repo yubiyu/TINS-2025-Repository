@@ -32,10 +32,10 @@ struct Camera
     static bool atDestination;
     static bool approachingDestination;
     static int worldXCell, worldYCell;
-    static constexpr float MIN_X_POSITION = 0;
-    static constexpr float MAX_X_POSITION = 50 * Tile::WIDTH;
-    static constexpr float MIN_Y_POSITION = 0;
-    static constexpr float MAX_Y_POSITION = 50 * Tile::HEIGHT;
+    //static constexpr float MIN_X_POSITION = 0;
+    //static constexpr float MAX_X_POSITION = 50 * Tile::WIDTH;
+    //static constexpr float MIN_Y_POSITION = 0;
+    //static constexpr float MAX_Y_POSITION = 50 * Tile::HEIGHT;
     static float xPosition, yPosition;
     static float xDestination, yDestination;
     // static constexpr float X_SENSITIVITY = 16;

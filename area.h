@@ -41,8 +41,8 @@ struct Area
     static int worldGridCurrentCol, worldGridCurrentRow;
     /// END WORLD GRID DATA ///
     /// BEGIN ROOM DATA ///
-    static const int ROOM_COLS = 10; // Y
-    static const int ROOM_ROWS = 8;  // X
+    static const int ROOM_COLS = 10; // tiles across
+    static const int ROOM_ROWS = 8;  // tiles high
     static constexpr int ROOM_AREA = ROOM_COLS * ROOM_ROWS;
 
     static std::array<int, ROOM_AREA> roomCellBlueprint;
@@ -50,7 +50,7 @@ struct Area
     static std::array<int, ROOM_AREA> currentRoomCells;
     static std::array<int, ROOM_AREA> currentRoomFeatures;
     static std::array<int, ROOM_AREA> previousRoomCells; // Used for the scrolling room transition effect.
-    static std::array<int, ROOM_AREA> previousRoomFeatures;
+    static std::array<int, ROOM_AREA> previousRoomFeatures; // Used for the scrolling room transition effect.
 
     static int roomSpawnCol, roomSpawnRow;
 
