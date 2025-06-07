@@ -1,5 +1,7 @@
 #include "area.h"
 
+std::string Area::worldRoomID{};
+
 std::string Area::worldGrid[WORLD_GRID_COLS * WORLD_GRID_ROWS];
 int Area::worldGridCurrentCol{}, Area::worldGridCurrentRow{};
 
@@ -368,6 +370,8 @@ void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
     worldGridCurrentCol = dest_x;
     worldGridCurrentRow = dest_y;
 
+    worldRoomID = worldGrid[worldGridCurrentRow * WORLD_GRID_COLS + worldGridCurrentCol];
+
     UpdateRoomXYPositions();
 
     std::copy(std::begin(currentRoomCells), std::end(currentRoomCells), std::begin(previousRoomCells));
@@ -502,7 +506,7 @@ void Area::AscendLayer()
 
         searchAttempts++;
 
-        if (worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentRow] != VOID_ROOM_ID)
+        if (worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] != VOID_ROOM_ID)
         {
             ChangeRoom(worldGridCurrentCol, worldGridSearchRow, ROOM_TRANSITION_ASCEND);
             destinationFound = true;
@@ -512,7 +516,7 @@ void Area::AscendLayer()
         {
             std::cout << "uh, void" << std::endl;
         }
-        std::cout << "Area: Debug AscendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentRow] << std::endl;
+        std::cout << "Area: Debug AscendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] << std::endl;
     }
 }
 
@@ -538,13 +542,13 @@ void Area::DescendLayer()
 
         searchAttempts++;
 
-        if (worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentRow] != VOID_ROOM_ID)
+        if (worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] != VOID_ROOM_ID)
         {
 
             ChangeRoom(worldGridCurrentCol, worldGridSearchRow, ROOM_TRANSITION_DESCEND);
             destinationFound = true;
             std::cout << "Area: Debug DescendLayer() searchAttempts = " << searchAttempts << std::endl;
         }
-        std::cout << "Area: Debug DescendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentRow] << std::endl;
+        std::cout << "Area: Debug DescendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] << std::endl;
     }
 }

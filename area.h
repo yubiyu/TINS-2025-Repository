@@ -28,6 +28,7 @@
 struct Area
 {
     /// BEGIN WORLD GRID DATA ///
+    static std::string worldRoomID;
     static constexpr const char *VOID_ROOM_ID = "xxxx";
 
     static const int WORLD_GRID_LAYERS = 9;

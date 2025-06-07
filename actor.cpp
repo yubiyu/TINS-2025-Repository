@@ -27,9 +27,7 @@ void Actor::Logic()
             if(Area::VoidCellCheck(roomXCell, roomYCell))
             {
                 std::cout << "Actor: Logic(): I'm falliiiiiiing!" << std::endl;
-                Area::DescendLayer();
-                SetWorldYCell(Area::worldGridCurrentRow*Area::ROOM_ROWS + GetRoomYCell(), true);
-                WarpToXYDestination();
+                DescendLayer();
 
             }
             else if(Area::TeleporterCellCheck(roomXCell,roomYCell))
@@ -37,10 +35,7 @@ void Actor::Logic()
                 ///Todo: The case where an actor lands on a teleporter after teleporting.
                 ///Todo: The case where an actor lands on a teleporter after teleporting, but its next move is blocked by an obstacle, triggering the teleporter without changing cell. 
                 std::cout << "Actor: Logic(): I'm on a teleporter!" << std::endl;
-                
-                Area::AscendLayer();
-                SetWorldYCell(Area::worldGridCurrentRow*Area::ROOM_ROWS + GetRoomYCell(), true);
-                WarpToXYDestination();
+                AscendLayer();
             }
         }
     }
@@ -138,6 +133,20 @@ void Actor::Stand()
 {
     if (atDestination)
         SetAction(ActorIndex::ACTION_STAND);
+}
+
+void Actor::AscendLayer()
+{
+    Area::AscendLayer();
+    SetWorldYCell(Area::worldGridCurrentRow*Area::ROOM_ROWS + GetRoomYCell(), true);
+    WarpToXYDestination();
+}
+
+void Actor::DescendLayer()
+{
+    Area::DescendLayer();
+    SetWorldYCell(Area::worldGridCurrentRow*Area::ROOM_ROWS + GetRoomYCell(), true);
+    WarpToXYDestination();
 }
 
 void Actor::ApproachDestinationLinear(float change)

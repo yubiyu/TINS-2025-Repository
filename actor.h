@@ -44,6 +44,8 @@ public:
     void Face(int direction);
     void Walk(int direction);
     void Stand();
+    void AscendLayer();
+    void DescendLayer();
 
     bool GetIsActive() const { return isActive; }
     void SetIsActive(bool active) { isActive = active; }

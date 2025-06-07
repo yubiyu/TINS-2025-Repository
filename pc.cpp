@@ -96,4 +96,18 @@ void PC::Input()
         if (!Keyboard::keyInput[Keyboard::KEY_UP] && !Keyboard::keyInput[Keyboard::KEY_DOWN] && !Keyboard::keyInput[Keyboard::KEY_LEFT] && !Keyboard::keyInput[Keyboard::KEY_RIGHT])
             Stand();
     }
+
+    /// Debug features
+    if(GetAtDestination())
+    {
+        if(Keyboard::keyHoldTicks[Keyboard::KEY_C] == 1)
+        {
+            AscendLayer();
+        }
+        if(Keyboard::keyHoldTicks[Keyboard::KEY_V] == 1)
+        {
+            DescendLayer();
+        }
+
+    }
 }
