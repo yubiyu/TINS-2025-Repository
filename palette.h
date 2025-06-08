@@ -16,6 +16,8 @@
 #define COLKEY_DIALOG_TEXT                                  Palette::COL_GB[Palette::palettePreset][1]
 #define COLKEY_DIALOG_TEXT_HIGHLIGHTED                      Palette::COL_GB[Palette::palettePreset][1]
 
+#define COLKEY_STATUS_FRAME_TEXT                            Palette::COL_GB[Palette::palettePreset][0]
+
 #define COLKEY_DEBUG_TEXT                                   Palette::COL_GB[Palette::palettePreset][1]
 #define COLKEY_DEBUG_TEXT_HIGHLIGHTED                       Palette::COL_GB[Palette::palettePreset][3]
 

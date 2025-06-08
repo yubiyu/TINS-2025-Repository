@@ -27,6 +27,8 @@ std::unordered_map<std::string, std::array<bool, Area::MAX_CHESTS_PER_ROOM>> Are
 bool Area::currentRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
 bool Area::previousRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
 
+int Area::chestsLootedCount{};
+
 void Area::Initialize()
 {
     std::cout << "Area:: Initialize() " << std::endl;
@@ -532,9 +534,19 @@ void Area::ActivateFeature(int x, int y)
     {
         if(feature >= FeatureIndex::MARKER_FEATURE_CHEST_BEGIN && feature <= FeatureIndex::MARKER_FEATURE_CHEST_END)
         {
-            Dialog::Activate("Features", "chestActivating");
-            worldChestsLooted[worldGrid[worldGridCurrentRow*WORLD_GRID_COLS + worldGridCurrentCol]][feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
-            currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+            if(! currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN])
+            {
+                int foodLoot = std::rand()%FoodIndex::NUM_FOOD_TYPES;
+
+                Dialog::Activate("Features", "chestGetItem", " " + FoodIndex::foodNames.at(foodLoot) + "!");
+                worldChestsLooted[worldGrid[worldGridCurrentRow*WORLD_GRID_COLS + worldGridCurrentCol]][feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+                currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+                chestsLootedCount++;
+            }
+            else
+            {
+                Dialog::Activate("Features", "chestEmpty");
+            }
         }
     }
 }

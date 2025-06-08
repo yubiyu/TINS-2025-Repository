@@ -76,6 +76,7 @@ struct Dialog
 
     static void Activate(std::string text_content);
     static void Activate(const char *section, const char *key);
+    static void Activate(const char *section, const char *key, std::string appendText);
     static void Deactivate();
     static void Advance();
 };

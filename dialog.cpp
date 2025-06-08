@@ -141,6 +141,12 @@ void Dialog::Activate(std::string text_content)
     frameScrollingTick = 0;
 }
 
+void Dialog::Activate(const char *section, const char *key, std::string appendText)
+{
+    std::string text = Configuration::GetString(Configuration::dialogsCfg, section, key) + appendText;
+    Activate(text);
+}
+
 void Dialog::Activate(const char *section, const char *key)
 {
     Activate(Configuration::GetString(Configuration::dialogsCfg, section, key));

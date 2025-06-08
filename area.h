@@ -10,6 +10,8 @@
 #include "featureindex.h"
 #include "actorindex.h"
 
+#include "foodindex.h"
+
 #include "direction.h"
 
 #include "dialog.h"
@@ -86,6 +88,8 @@ struct Area
     static std::unordered_map<std::string, std::array<bool,Area::MAX_CHESTS_PER_ROOM>>worldChestsLooted;
     static bool currentRoomChestsLooted[MAX_CHESTS_PER_ROOM];
     static bool previousRoomChestsLooted[MAX_CHESTS_PER_ROOM];
+
+    static int chestsLootedCount;
     /// END OBJECTIVES ///
 
     static void Initialize();

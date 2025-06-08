@@ -9,6 +9,7 @@
 #define FONTDEF_MENU_OPTION                 Text::publicPixel8
 
 #define FONTDEF_DIALOG                      Text::publicPixel8
+#define FONTDEF_STATUS_FRAME                Text::publicPixel8
 
 struct Text
 {
