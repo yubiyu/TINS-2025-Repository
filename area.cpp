@@ -23,7 +23,9 @@ int Area::roomTransitionDelay{};
 float Area::currentRoomXPosition{}, Area::currentRoomYPosition{};
 float Area::previousRoomXPosition{}, Area::previousRoomYPosition{};
 
-std::map<std::string, std::vector<bool>> Area::featuresActive;
+std::unordered_map<std::string, std::array<bool, Area::MAX_CHESTS_PER_ROOM>> Area::worldChestsLooted{};
+bool Area::currentRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
+bool Area::previousRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
 
 void Area::Initialize()
 {
@@ -289,19 +291,19 @@ void Area::UpdateRoomXYPositions()
     currentRoomXPosition = worldGridCurrentCol * ROOM_COLS * Tile::WIDTH;
     currentRoomYPosition = worldGridCurrentRow * ROOM_ROWS * Tile::HEIGHT;
 
-    switch(roomTransitionEffect)
+    switch (roomTransitionEffect)
     {
-        case ROOM_TRANSITION_ASCEND:
+    case ROOM_TRANSITION_ASCEND:
         previousRoomXPosition = snapshotX;
-        previousRoomYPosition = currentRoomYPosition + ROOM_ROWS *Tile::HEIGHT * LAYER_SEPARATION_RATIO;
+        previousRoomYPosition = currentRoomYPosition + ROOM_ROWS * Tile::HEIGHT * LAYER_SEPARATION_RATIO;
         break;
 
-        case ROOM_TRANSITION_DESCEND:
+    case ROOM_TRANSITION_DESCEND:
         previousRoomXPosition = snapshotX;
         previousRoomYPosition = currentRoomYPosition - ROOM_ROWS * Tile::HEIGHT * LAYER_SEPARATION_RATIO;
         break;
 
-        default:
+    default:
         previousRoomXPosition = snapshotX;
         previousRoomYPosition = snapshotY;
         break;
@@ -312,8 +314,6 @@ void Area::UpdateRoomXYPositions()
 
     Camera::SetDestination(currentRoomXPosition, currentRoomYPosition);
 }
-
-
 
 void Area::Logic()
 {
@@ -351,11 +351,26 @@ void Area::Drawing()
                            x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
                            y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
                            0);
+
             if (currentRoomFeatures[y * ROOM_COLS + x] > FeatureIndex::FEATURE_NONE)
-                al_draw_bitmap(Image::areaFeaturesSub[currentRoomFeatures[y * ROOM_COLS + x]],
-                               x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
-                               y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
-                               0);
+            {
+                int chestNumber = currentRoomFeatures[y * ROOM_COLS + x];
+                bool looted = currentRoomChestsLooted[chestNumber - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN];
+                if (looted)
+                {
+                    al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_CHEST_OPEN_INDEX],
+                                   x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
+                                   y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
+                                   0);
+                }
+                else if (!looted)
+                {
+                    al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_CHEST_CLOSED_INDEX],
+                                   x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
+                                   y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
+                                   0);
+                }
+            }
         }
     }
 
@@ -371,10 +386,24 @@ void Area::Drawing()
                                0);
 
                 if (previousRoomFeatures[y * ROOM_COLS + x] > FeatureIndex::FEATURE_NONE)
-                    al_draw_bitmap(Image::areaFeaturesSub[previousRoomFeatures[y * ROOM_COLS + x]],
-                                   x * Tile::WIDTH + previousRoomXPosition - Camera::xPosition,
-                                   y * Tile::HEIGHT + previousRoomYPosition - Camera::yPosition,
-                                   0);
+                {
+                    int chestNumber = previousRoomFeatures[y * ROOM_COLS + x];
+                    bool looted = previousRoomChestsLooted[chestNumber - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN];
+                    if (looted)
+                    {
+                        al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_CHEST_OPEN_INDEX],
+                                       x * Tile::WIDTH + previousRoomXPosition - Camera::xPosition,
+                                       y * Tile::HEIGHT + previousRoomYPosition - Camera::yPosition,
+                                       0);
+                    }
+                    else if (!looted)
+                    {
+                        al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_CHEST_CLOSED_INDEX],
+                                       x * Tile::WIDTH + previousRoomXPosition - Camera::xPosition,
+                                       y * Tile::HEIGHT + previousRoomYPosition - Camera::yPosition,
+                                       0);
+                    }
+                }
             }
         }
     }
@@ -396,6 +425,15 @@ void Area::ChangeRoom(int dest_x, int dest_y, int transition_effect)
 
     std::copy(std::begin(currentRoomCells), std::end(currentRoomCells), std::begin(previousRoomCells));
     std::copy(std::begin(currentRoomFeatures), std::end(currentRoomFeatures), std::begin(previousRoomFeatures));
+
+    previousRoomChestsLooted[0] = currentRoomChestsLooted[0];
+    previousRoomChestsLooted[1] = currentRoomChestsLooted[1];
+    previousRoomChestsLooted[2] = currentRoomChestsLooted[2];
+
+    currentRoomChestsLooted[0] = worldChestsLooted[worldGrid[worldGridCurrentRow * WORLD_GRID_COLS + worldGridCurrentCol]][0];
+    currentRoomChestsLooted[1] = worldChestsLooted[worldGrid[worldGridCurrentRow * WORLD_GRID_COLS + worldGridCurrentCol]][1];
+    currentRoomChestsLooted[2] = worldChestsLooted[worldGrid[worldGridCurrentRow * WORLD_GRID_COLS + worldGridCurrentCol]][2];
+
     LoadRoomBlueprints(worldGridCurrentCol, worldGridCurrentRow);
     ConstructRoom();
 
@@ -486,20 +524,13 @@ void Area::ActivateFeature(int x, int y)
     }
 
     int feature = currentRoomFeatures[y * ROOM_COLS + x];
-    switch (feature)
+
+    if (feature == FeatureIndex::FEATURE_NONE)
     {
-    case FeatureIndex::FEATURE_NONE:
-        // Function activates nothing.
-        // Dialog::Activate("Tests", "TestShort"); // Test
-        break;
-
-    case FeatureIndex::FEATURE_CHEST_CLOSED:
+    }
+    else
+    {
         Dialog::Activate("Features", "chestLocked");
-        break;
-
-    case FeatureIndex::FEATURE_CHEST_OPEN:
-        Dialog::Activate("Features", "chestEmpty");
-        break;
     }
 }
 
@@ -511,7 +542,7 @@ void Area::AscendLayer()
     while (!destinationFound)
     {
         searchAttempts++;
-        if (searchAttempts > WORLD_GRID_LAYERS+2)
+        if (searchAttempts > WORLD_GRID_LAYERS + 2)
         {
             // Fallback.
             std::cout << "Area:: AscendLayer() searchAttempts fallback: Redirecting to VOID_ROOM_ID" << std::endl;
@@ -546,7 +577,7 @@ void Area::DescendLayer()
     while (!destinationFound)
     {
         searchAttempts++;
-        if (searchAttempts > WORLD_GRID_LAYERS+2)
+        if (searchAttempts > WORLD_GRID_LAYERS + 2)
         {
             // Fallback.
             std::cout << "Area:: DescendLayer() searchAttempts fallback: Redirecting to VOID_ROOM_ID" << std::endl;
@@ -568,7 +599,7 @@ void Area::DescendLayer()
         }
         std::cout << "Area: Debug DescendLayer() searchAttempts = " << searchAttempts << std::endl;
         std::cout << "Area: Debug DescendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] << std::endl;
-        //std::cout << "Area: Debug DescendLayer() searchIndex = " << searchIndex << std::endl;
+        // std::cout << "Area: Debug DescendLayer() searchIndex = " << searchIndex << std::endl;
         std::cout << std::endl;
     }
 }

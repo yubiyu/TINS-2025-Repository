@@ -63,7 +63,7 @@ void Image::LoadResources()
         areaCellsSub.push_back(al_create_sub_bitmap(areaCellsPng, Tile::WIDTH * i, Tile::HEIGHT * 0, Tile::WIDTH, Tile::HEIGHT));
 
     areaFeaturesPng = al_load_bitmap("areaFeatures.png");
-    for (size_t i = 0; i < FeatureIndex::NUM_FEATURE_TYPES; i++)
+    for (size_t i = 0; i < FeatureIndex::NUM_SPRITES; i++)
         areaFeaturesSub.push_back(al_create_sub_bitmap(areaFeaturesPng, Tile::WIDTH * i, Tile::HEIGHT * 0, Tile::WIDTH, Tile::HEIGHT));
 
     actorPng = al_load_bitmap("actorAtlas.png");

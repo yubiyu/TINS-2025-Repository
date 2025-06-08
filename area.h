@@ -23,7 +23,7 @@
 #include <algorithm>
 
 #include <array>
-#include <map>
+#include <unordered_map>
 
 struct Area
 {
@@ -79,9 +79,14 @@ struct Area
     static float currentRoomXPosition, currentRoomYPosition;
     static float previousRoomXPosition, previousRoomYPosition;
     /// END ROOM DATA ///
-    /// BEGIN PERSISTENT STATE AND SERIALIZATION
-    static std::map<std::string, std::vector<bool>> featuresActive; // Add to/update this map as rooms are visited.
-    /// END PERSISTENT STATE AND SERIALIZATION
+    /// BEGIN OBJECTIVES ///
+    static const int WORLD_NUM_CHESTS = 53;
+    static const int MAX_CHESTS_PER_ROOM = 3;
+
+    static std::unordered_map<std::string, std::array<bool,Area::MAX_CHESTS_PER_ROOM>>worldChestsLooted;
+    static bool currentRoomChestsLooted[MAX_CHESTS_PER_ROOM];
+    static bool previousRoomChestsLooted[MAX_CHESTS_PER_ROOM];
+    /// END OBJECTIVES ///
 
     static void Initialize();
     static void Uninitialize();
