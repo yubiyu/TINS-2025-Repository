@@ -19,22 +19,6 @@ PC::~PC()
 void PC::Logic()
 {
     Actor::Logic();
-
-    if (Area::inRoomTransition && Area::roomTransitionEffect == Area::ROOM_TRANSITION_ASCEND)
-    {
-        ascensionSpinFrameDelay++;
-        if (ascensionSpinFrameDelay >= ASCENSION_SPIN_MAX_FRAME_DELAY)
-        {
-            ascensionSpinFrameDelay = 0;
-            ascensionSpinFrame++;
-            if (ascensionSpinFrame >= Direction::NUM_DIRECTIONS)
-                ascensionSpinFrame = 0;
-        }
-
-        facingWithAscensionSpin = GetFacing() + ascensionSpinFrame;
-        if (facingWithAscensionSpin >= Direction::NUM_DIRECTIONS)
-            facingWithAscensionSpin %= Direction::NUM_DIRECTIONS;
-    }
 }
 
 void PC::Drawing()
@@ -45,48 +29,20 @@ void PC::Drawing()
     {
     case ActorIndex::ACTION_WALK:
 
-        if (Area::inRoomTransition && Area::roomTransitionDelay > 0 && Area::roomTransitionEffect == Area::ROOM_TRANSITION_ASCEND)
-        {
-                // Use facingWithAscensionSpin.
-                drawIndex = (GetSpriteID() * ActorIndex::WALK_SUB_BITMAPS_COLS) + facingWithAscensionSpin * ActorIndex::NUM_WALK_FRAMES + GetCurrentFrame();
-                al_draw_bitmap(Image::actorWalkSub[drawIndex],
-                               GetXPosition() - Camera::xPosition,
-                               GetPreviousRoomYPosition() - Camera::yPosition,
-                               0);
-        }
-        else
-        {
-            drawIndex = (GetSpriteID() * ActorIndex::WALK_SUB_BITMAPS_COLS) + GetFacing() * ActorIndex::NUM_WALK_FRAMES + GetCurrentFrame();
-            al_draw_bitmap(Image::actorWalkSub[drawIndex],
-                           GetXPosition() - Camera::xPosition,
-                           GetYPosition() - Camera::yPosition,
-                           0);
-        }
+        drawIndex = (GetSpriteID() * ActorIndex::WALK_SUB_BITMAPS_COLS) + GetFacing() * ActorIndex::NUM_WALK_FRAMES + GetCurrentFrame();
+        al_draw_bitmap(Image::actorWalkSub[drawIndex],
+                       GetXPosition() + GetDrawingXOffset() - Camera::xPosition,
+                       GetYPosition() + GetDrawingYOffset() - Camera::yPosition,
+                       0);
         break;
 
     case ActorIndex::ACTION_STAND:
-
-        if (Area::inRoomTransition && Area::roomTransitionDelay > 0 && Area::roomTransitionEffect == Area::ROOM_TRANSITION_ASCEND)
-        {
-                // Use facingWithAscensionSpin.
-                drawIndex = GetSpriteID() * ActorIndex::STAND_SUB_BITMAPS_COLS +
-                            facingWithAscensionSpin * ActorIndex::NUM_STAND_FRAMES;
-
-                al_draw_bitmap(Image::actorStandSub[drawIndex],
-                               GetXPosition() - Camera::xPosition,
-                               GetPreviousRoomYPosition() - Camera::yPosition,
-                               0);
-
-        }
-        else
-        {
-            drawIndex = GetSpriteID() * ActorIndex::STAND_SUB_BITMAPS_COLS +
-                        GetFacing() * ActorIndex::NUM_STAND_FRAMES;
-            al_draw_bitmap(Image::actorStandSub[drawIndex],
-                           GetXPosition() - Camera::xPosition,
-                           GetYPosition() - Camera::yPosition,
-                           0);
-        }
+        drawIndex = GetSpriteID() * ActorIndex::STAND_SUB_BITMAPS_COLS +
+                    GetFacing() * ActorIndex::NUM_STAND_FRAMES;
+        al_draw_bitmap(Image::actorStandSub[drawIndex],
+                       GetXPosition() + GetDrawingXOffset() - Camera::xPosition,
+                       GetYPosition() + GetDrawingYOffset() - Camera::yPosition,
+                       0);
         break;
     }
 }
@@ -147,11 +103,11 @@ void PC::Input()
     {
         if (Keyboard::keyHoldTicks[Keyboard::KEY_C] == 1)
         {
-            AscendLayer();
+            InitiateAscendLayer();
         }
         if (Keyboard::keyHoldTicks[Keyboard::KEY_V] == 1)
         {
-            DescendLayer();
+            InitiateDescendLayer();
         }
     }
 }

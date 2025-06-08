@@ -76,14 +76,19 @@ void Worldview::Drawing()
 
     al_use_transform(&Camera::identityTransform);
 
+    if(PC::pc->GetInPreDescension()) // Draw [in front/behind] area
+        PC::pc->Drawing();
+
     Area::Drawing();
-    PC::pc->Drawing();
+
+    if(! PC::pc->GetInPreDescension())
+        PC::pc->Drawing();
 
     al_set_target_bitmap(Display::scaleBuffer);
     al_clear_to_color(COLKEY_BACKGROUND);
     al_draw_bitmap(Camera::cameraBuffer, 0, 0, 0);
 
-    //Util::string_al_draw_text(Text::publicPixel8, COLKEY_DEBUG_TEXT_HIGHLIGHTED, 0, 0, ALLEGRO_ALIGN_LEFT, "(" + std::to_string((int)Camera::xPosition) + "," + std::to_string((int)Camera::yPosition) + " @ " + Area::worldRoomID);
+    Util::string_al_draw_text(Text::publicPixel8, COLKEY_DEBUG_TEXT_HIGHLIGHTED, 0, 0, ALLEGRO_ALIGN_LEFT, "Cam" + std::to_string((int)Camera::xPosition) + "," + std::to_string((int)Camera::yPosition) + "@" + Area::worldRoomID);
 
     StatusFrame::Drawing();
     Dialog::Drawing();

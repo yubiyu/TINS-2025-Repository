@@ -70,8 +70,8 @@ struct Area
     };
 
     static int roomTransitionDelay; // Pause before camera movement.
-    static const int ROOM_TRANSITION_ASCEND_DELAY = ActorIndex::WALK_DURATION * 3;
-    static const int ROOM_TRANSITION_DESCEND_DELAY = ActorIndex::WALK_DURATION * 3;
+    static const int ROOM_TRANSITION_ASCEND_DELAY = ActorIndex::WALK_DURATION * 2;
+    static const int ROOM_TRANSITION_DESCEND_DELAY = ActorIndex::WALK_DURATION * 2;
 
     static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH * ROOM_COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
     static const int ROOM_TRANSITION_Y_SPEED = Tile::HEIGHT * ROOM_ROWS / ActorIndex::WALK_DURATION;

@@ -15,7 +15,9 @@ class Actor
     bool isActive{};
 
     float xPosition{}, yPosition{};
-    float previousRoomXPosition{}, previousRoomYPosition{};
+    float drawingXOffset{}, drawingYOffset{};
+    float preAscensionDrawingYOffset{};
+    float preDescensionDrawingYOffset{};
 
     int worldXCell{}, worldYCell{};
     int roomXCell{}, roomYCell{};
@@ -35,6 +37,17 @@ class Actor
     int currentFrame{}, numFrames{};
     int currentFrameDelay{}, maxFrameDelay{};
 
+    int ascensionSpinDelay {};
+    const int ASCENSION_SPIN_MAX_DELAY = Timer::FPS * 0.1;
+
+    bool inPreAscension {};  // Ascension translation
+    int preAscensionDelay {}, maxPreAscensionDelay {};
+    const float PRE_ASCENSION_EFFECT_Y_SPEED = ActorIndex::WALK_SPEED_BASE * (-2);
+
+    bool inPreDescension {}; // Falling animation/translation
+    int preDescensionDelay {}, maxPreDescensionDelay {};
+    const float PRE_DESCENSION_EFFECT_Y_SPEED = ActorIndex::WALK_SPEED_BASE * 2;
+
 public:
     Actor();
     ~Actor();
@@ -45,8 +58,8 @@ public:
     void Face(int direction);
     void Walk(int direction);
     void Stand();
-    void AscendLayer();
-    void DescendLayer();
+    void InitiateAscendLayer();
+    void InitiateDescendLayer();
 
     bool GetIsActive() const { return isActive; }
     void SetIsActive(bool active) { isActive = active; }
@@ -60,6 +73,17 @@ public:
         SetXPosition(x);
         SetYPosition(y);
     }
+
+    float GetDrawingXOffset() const {return drawingXOffset;}
+    float GetDrawingYOffset() const {return drawingYOffset;}
+    void SetDrawingXOffset(float x) { drawingXOffset = x;}
+    void SetDrawingYOffset(float y) { drawingYOffset = y;}
+    void SetDrawingXYOffset(float x, float y)
+    {
+        SetDrawingXOffset(x);
+        SetDrawingYOffset(y);
+    }
+    /*
     float GetPreviousRoomXPosition() const {return previousRoomXPosition;}
     float GetPreviousRoomYPosition() const {return previousRoomYPosition;}
     void SetPreviousRoomXPosition(float x) {previousRoomXPosition = x;}
@@ -69,6 +93,7 @@ public:
         SetPreviousRoomXPosition(x);
         SetPreviousRoomYPosition(y);
     }
+        */
 
     float GetAtDestination() const { return atDestination; }
     void SetAtDestination(bool b) { atDestination = b; }
@@ -108,7 +133,7 @@ public:
     int GetWorldYCell() const { return worldYCell; }
     void SetWorldXCell(int x, bool warp_to_dest)
     {
-        previousRoomXPosition = xPosition;
+        //previousRoomXPosition = xPosition;
 
         worldXCell = x;
         roomXCell = worldXCell % Area::ROOM_COLS;
@@ -119,7 +144,7 @@ public:
     }
     void SetWorldYCell(int y, bool warp_to_dest)
     {
-        previousRoomYPosition = yPosition;
+        //previousRoomYPosition = yPosition;
 
         worldYCell = y;
         roomYCell = worldYCell % Area::ROOM_ROWS;
@@ -128,8 +153,8 @@ public:
         if (warp_to_dest)
             WarpToYDestination();
 
-        std::cout << "debug: ycurrent: " << yPosition << std::endl;
-        std::cout << "debug: yprevious: " << previousRoomYPosition << std::endl;
+        //std::cout << "debug: ycurrent: " << yPosition << std::endl;
+        //std::cout << "debug: yprevious: " << previousRoomYPosition << std::endl;
 
     }
     void SetWorldXYCell(int x, int y, bool warp_to_dest)
@@ -163,6 +188,12 @@ public:
     }
 
     int GetFacing() const { return facing; }
+    void RotateFacing()
+    {
+        facing ++;
+        if(facing >= Direction::NUM_DIRECTIONS)
+            facing = 0;
+    }
 
     float GetMoveSpeed() const { return moveSpeed; }
     void SetMoveSpeed(float speed) { moveSpeed = speed; }
@@ -183,4 +214,6 @@ public:
     void SetCurrentFrameDelay(int current_frame_delay) { currentFrameDelay = current_frame_delay; }
     int GetMaxFrameDelay() const { return maxFrameDelay; }
     void SetMaxFrameDelay(int max_frame_delay) { maxFrameDelay = max_frame_delay; }
+
+    bool GetInPreDescension() const { return inPreDescension;}
 };
