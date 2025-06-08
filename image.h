@@ -8,6 +8,8 @@
 #include "cellindex.h"
 #include "featureindex.h"
 #include "actorindex.h"
+#include "foodindex.h"
+#include "statusframeindex.h"
 
 #include <vector>
 #include <iostream>
@@ -37,7 +39,12 @@ struct Image
     static std::vector<ALLEGRO_BITMAP *> actorWalkSub;
     static std::vector<ALLEGRO_BITMAP *> actorStandSub;
 
+    static ALLEGRO_BITMAP *foodPng;
+    static std::vector<ALLEGRO_BITMAP *> foodSub;
+
     static ALLEGRO_BITMAP *statusFramePng;
+    static ALLEGRO_BITMAP *statusFrameMouthPng;
+    static std::vector<ALLEGRO_BITMAP *> statusFrameMouthSub;
 
     static ALLEGRO_BITMAP *dialogFramePng;
     static ALLEGRO_BITMAP *dialogCaretPng;

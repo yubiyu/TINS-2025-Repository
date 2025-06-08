@@ -4,6 +4,8 @@ PC *PC::pc = nullptr;
 
 PC::PC()
 {
+    SetIsPC(true);
+
     SetHasAnimations(true);
     SetSpriteID(ActorIndex::SPRITE_OWL);
 
@@ -98,16 +100,18 @@ void PC::Input()
             Stand();
     }
 
-    /// Debug features
+    if(Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
+        FoodEater::InitiateEating();
+
     if (GetAtDestination())
     {
-        if (Keyboard::keyHoldTicks[Keyboard::KEY_C] == 1)
+        if(Settings::cheatsEnabled)
         {
-            InitiateAscendLayer();
-        }
-        if (Keyboard::keyHoldTicks[Keyboard::KEY_V] == 1)
-        {
-            InitiateDescendLayer();
+            if(Keyboard::keyHoldTicks[Keyboard::KEY_C] == 1)
+                InitiateAscendLayer();
+            
+            if(Keyboard::keyHoldTicks[Keyboard::KEY_V] == 1)
+                InitiateDescendLayer();
         }
     }
 }

@@ -536,12 +536,22 @@ void Area::ActivateFeature(int x, int y)
         {
             if(! currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN])
             {
-                int foodLoot = std::rand()%FoodIndex::NUM_FOOD_TYPES;
+                int foodLoot = std::rand()% FoodIndex::NUM_FOOD_TYPES;
 
-                Dialog::Activate("Features", "chestGetItem", " " + FoodIndex::foodNames.at(foodLoot) + "!");
-                worldChestsLooted[worldGrid[worldGridCurrentRow*WORLD_GRID_COLS + worldGridCurrentCol]][feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
-                currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
-                chestsLootedCount++;
+                if(FoodEater::foodToEat.size() >= FoodEater::MAX_FOOD_RESERVES)
+                {
+                    Dialog::Activate("Features", "chestButInventoryFull");
+                }
+                else
+                {
+                    Dialog::Activate("Features", "chestGetItem", " " + FoodIndex::foodText.at(foodLoot));
+                    worldChestsLooted[worldGrid[worldGridCurrentRow*WORLD_GRID_COLS + worldGridCurrentCol]][feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+                    currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+                    chestsLootedCount++;
+
+                FoodEater::AddFood(foodLoot);
+
+                }
             }
             else
             {

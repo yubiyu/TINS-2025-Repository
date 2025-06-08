@@ -86,6 +86,9 @@ struct Settings
     static float sfxBarsTotalWidth;
     static constexpr float VOLUME_BAR_HEIGHT = Tile::HALF_HEIGHT;
 
+    /// Cheat settings
+    static bool cheatsEnabled;
+
     /// Settings functions
     static void Initialize();
 
@@ -107,6 +110,8 @@ struct Settings
 
     static void SetBgmBarsOption(int bars);
     static void SetSfxBarsOption(int bars);
+
+    static void SetCheatsEnabledOption(int enabled);
 
     static void SaveToConfig();
     static void LoadFromConfig();

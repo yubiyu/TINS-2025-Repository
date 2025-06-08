@@ -1,22 +1,24 @@
 #include "settings.h"
 
 int Settings::optionTextY[NUM_OPTIONS];
-std::unordered_map<int, std::string> Settings::optionValues;
-int Settings::targetedOption;
+std::unordered_map<int, std::string> Settings::optionValues{};
+int Settings::targetedOption{};
 
-bool Settings::fullscreenOption;
-int Settings::windowScaleOption;
-std::string Settings::windowWidthText;
-std::string Settings::windowHeightText;
-int Settings::vsyncOption;
-int Settings::fpsOption;
-int Settings::paletteOption;
+bool Settings::fullscreenOption{};
+int Settings::windowScaleOption{};
+std::string Settings::windowWidthText{};
+std::string Settings::windowHeightText{};
+int Settings::vsyncOption{};
+int Settings::fpsOption{};
+int Settings::paletteOption{};
 
-int Settings::bgmBars;
-int Settings::sfxBars;
+int Settings::bgmBars{};
+int Settings::sfxBars{};
 
-float Settings::bgmBarsTotalWidth;
-float Settings::sfxBarsTotalWidth;
+float Settings::bgmBarsTotalWidth{};
+float Settings::sfxBarsTotalWidth{};
+
+bool Settings::cheatsEnabled{};
 
 void Settings::Initialize()
 {
@@ -295,6 +297,11 @@ void Settings::SetSfxBarsOption(int bars)
     Audio::SetSfxGain(bars * 0.1);
 }
 
+void Settings::SetCheatsEnabledOption(int enabled)
+{
+    cheatsEnabled = enabled;
+}
+
 void Settings::SaveToConfig()
 {
     Configuration::SetKey(Configuration::settingsCfg, "display", "fullscreen window", fullscreenOption);
@@ -322,4 +329,6 @@ void Settings::LoadFromConfig()
 
     SetBgmBarsOption(Configuration::GetInt(Configuration::settingsCfg, "audio", "bgm bars"));
     SetSfxBarsOption(Configuration::GetInt(Configuration::settingsCfg, "audio", "sfx bars"));
+
+    SetCheatsEnabledOption(Configuration::GetInt(Configuration::settingsCfg, "cheats", "cheats enabled"));
 }

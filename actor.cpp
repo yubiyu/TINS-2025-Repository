@@ -117,6 +117,8 @@ void Actor::Walk(int direction)
 
         SetAction(ActorIndex::ACTION_WALK);
 
+        bool collidedWithObstacle = false;
+
         switch (facing)
         {
         case Direction::UP:
@@ -124,6 +126,8 @@ void Actor::Walk(int direction)
             {
                 if (!Area::WalkObstacleCheck(roomXCell, roomYCell - 1))
                     SetRoomYCell(roomYCell - 1, false);
+                else
+                    collidedWithObstacle = true;
             }
             else if (Area::adjacentRooms[Direction::UP] != Area::VOID_ROOM_ID)
             {
@@ -138,6 +142,8 @@ void Actor::Walk(int direction)
             {
                 if (!Area::WalkObstacleCheck(roomXCell, roomYCell + 1))
                     SetRoomYCell(roomYCell + 1, false);
+                else
+                    collidedWithObstacle = true;
             }
             else if (Area::adjacentRooms[Direction::DOWN] != Area::VOID_ROOM_ID)
             {
@@ -151,6 +157,8 @@ void Actor::Walk(int direction)
             {
                 if (!Area::WalkObstacleCheck(roomXCell - 1, roomYCell))
                     SetRoomXCell(roomXCell - 1, false);
+                else
+                    collidedWithObstacle = true;
             }
             else if (Area::adjacentRooms[Direction::LEFT] != Area::VOID_ROOM_ID)
             {
@@ -164,6 +172,8 @@ void Actor::Walk(int direction)
             {
                 if (!Area::WalkObstacleCheck(roomXCell + 1, roomYCell))
                     SetRoomXCell(roomXCell + 1, false);
+                else
+                    collidedWithObstacle = true;
             }
             else if (Area::adjacentRooms[Direction::RIGHT] != Area::VOID_ROOM_ID)
             {
@@ -172,6 +182,9 @@ void Actor::Walk(int direction)
             }
             break;
         }
+
+        if(isPC && !collidedWithObstacle)
+            FoodEater::ProgressNutrition();
     }
 }
 

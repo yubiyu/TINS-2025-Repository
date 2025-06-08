@@ -21,7 +21,12 @@ ALLEGRO_BITMAP *Image::actorPng;
 std::vector<ALLEGRO_BITMAP *> Image::actorWalkSub;
 std::vector<ALLEGRO_BITMAP *> Image::actorStandSub;
 
+ALLEGRO_BITMAP *Image::foodPng;
+std::vector<ALLEGRO_BITMAP *> Image::foodSub;
+
 ALLEGRO_BITMAP *Image::statusFramePng;
+ALLEGRO_BITMAP *Image::statusFrameMouthPng;
+std::vector<ALLEGRO_BITMAP *> Image::statusFrameMouthSub;
 
 ALLEGRO_BITMAP *Image::dialogFramePng;
 ALLEGRO_BITMAP *Image::dialogCaretPng;
@@ -79,7 +84,15 @@ void Image::LoadResources()
         }
     }
 
+    foodPng = al_load_bitmap("food.png");
+
+    for( size_t i = 0; i < FoodIndex::NUM_FOOD_TYPES; i++)
+        foodSub.push_back(al_create_sub_bitmap(foodPng, Tile::WIDTH*i, Tile::HEIGHT*0, Tile::WIDTH, Tile::HEIGHT));
+
     statusFramePng = al_load_bitmap("statusFrame.png");
+    statusFrameMouthPng = al_load_bitmap("statusFrameMouth.png");
+    for(size_t i = 0; i < StatusFrameIndex::NUM_MOUTH_FRAMES; i++)
+        statusFrameMouthSub.push_back(al_create_sub_bitmap(statusFrameMouthPng, Tile::WIDTH*i, Tile::HEIGHT*0, Tile::WIDTH, Tile::HEIGHT));
 
     dialogFramePng = al_load_bitmap("dialogFrame.png");
     dialogCaretPng = al_load_bitmap("dialogCaret.png");
@@ -119,7 +132,16 @@ void Image::UnloadResources()
     actorWalkSub.clear();
     al_destroy_bitmap(actorPng);
 
+    for(size_t i = 0; i < foodSub.size(); i++)
+        al_destroy_bitmap(foodSub[i]);
+    foodSub.clear();
+    al_destroy_bitmap(foodPng);
+
     al_destroy_bitmap(statusFramePng);
+    for(size_t i = 0; i < statusFrameMouthSub.size(); i++)
+        al_destroy_bitmap(statusFrameMouthSub[i]);
+    statusFrameMouthSub.clear();
+    al_destroy_bitmap(statusFrameMouthPng);
 
     al_destroy_bitmap(dialogFramePng);
     al_destroy_bitmap(dialogCaretSub[0]);

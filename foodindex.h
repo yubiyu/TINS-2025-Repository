@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <map>
 #include <string>
 
@@ -8,20 +7,24 @@ struct FoodIndex
 {
     enum foodTypes
     {
-        TYPE_JERKY = 0,
-        TYPE_PORKCHOP = 1,
-        TYPE_RIB = 2,
-        TYPE_HAM = 3
+        TYPE_CHERRIES = 0,
+        TYPE_PEAR = 1,
+        TYPE_BANANA = 2,
+        TYPE_ORANGE = 3,
+        TYPE_PEACH = 4,
+        TYPE_BERRIES = 5
     };
 
-    static const int NUM_FOOD_TYPES = TYPE_HAM + 1;
+    static const int NUM_FOOD_TYPES = TYPE_BERRIES + 1;
 
-    static inline const std::map<int, std::string> foodNames =
+    static inline const std::map<int, std::string> foodText =
     {
-        {TYPE_JERKY,    "Jerky"},
-        {TYPE_PORKCHOP, "Porkchop"},
-        {TYPE_RIB,      "Rib"},
-        {TYPE_HAM,      "Ham"}
+        {TYPE_CHERRIES, "some sweet CHERRIES!"},
+        {TYPE_PEAR,     "a crispy PEAR!"},
+        {TYPE_BANANA,   "some ripe BANANAS!"},
+        {TYPE_ORANGE,   "an shiny ORANGE!"},
+        {TYPE_PEACH,    "a tasty PEACH!"},
+        {TYPE_BERRIES,  "some juicy BERRIES!"}
     };
 
 };

@@ -16,6 +16,8 @@
 
 #include "dialog.h"
 
+#include "foodeater.h"
+
 #include <string>
 #include <sstream>
 

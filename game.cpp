@@ -105,6 +105,8 @@ bool Game::Initialize(char **argv)
 
     PC::pc = new PC();
 
+    FoodEater::Initialize();
+
     Dialog::Initialize();
     StatusFrame::Initialize();
 

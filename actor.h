@@ -1,5 +1,7 @@
 #pragma once
 
+#include "settings.h"
+
 #include "camera.h"
 
 #include "tile.h"
@@ -13,6 +15,7 @@
 class Actor
 {
     bool isActive{};
+    bool isPC{};
 
     float xPosition{}, yPosition{};
     float drawingXOffset{}, drawingYOffset{};
@@ -20,6 +23,9 @@ class Actor
     float preDescensionDrawingYOffset{};
 
     int worldXCell{}, worldYCell{};
+    int previousWorldXCell{}, previousWorldYCell{};
+    bool hasChangedWorldCell{};
+
     int roomXCell{}, roomYCell{};
 
     bool atDestination{};
@@ -37,15 +43,15 @@ class Actor
     int currentFrame{}, numFrames{};
     int currentFrameDelay{}, maxFrameDelay{};
 
-    int ascensionSpinDelay {};
+    int ascensionSpinDelay{};
     const int ASCENSION_SPIN_MAX_DELAY = Timer::FPS * 0.1;
 
-    bool inPreAscension {};  // Ascension translation
-    int preAscensionDelay {}, maxPreAscensionDelay {};
+    bool inPreAscension{}; // Ascension translation
+    int preAscensionDelay{}, maxPreAscensionDelay{};
     const float PRE_ASCENSION_EFFECT_Y_SPEED = ActorIndex::WALK_SPEED_BASE * (-2);
 
-    bool inPreDescension {}; // Falling animation/translation
-    int preDescensionDelay {}, maxPreDescensionDelay {};
+    bool inPreDescension{}; // Falling animation/translation
+    int preDescensionDelay{}, maxPreDescensionDelay{};
     const float PRE_DESCENSION_EFFECT_Y_SPEED = ActorIndex::WALK_SPEED_BASE * 2;
 
 public:
@@ -64,6 +70,8 @@ public:
     bool GetIsActive() const { return isActive; }
     void SetIsActive(bool active) { isActive = active; }
 
+    void SetIsPC(bool is_pc) { isPC = is_pc; }
+
     float GetXPosition() const { return xPosition; }
     float GetYPosition() const { return yPosition; }
     void SetXPosition(float x) { xPosition = x; }
@@ -74,10 +82,10 @@ public:
         SetYPosition(y);
     }
 
-    float GetDrawingXOffset() const {return drawingXOffset;}
-    float GetDrawingYOffset() const {return drawingYOffset;}
-    void SetDrawingXOffset(float x) { drawingXOffset = x;}
-    void SetDrawingYOffset(float y) { drawingYOffset = y;}
+    float GetDrawingXOffset() const { return drawingXOffset; }
+    float GetDrawingYOffset() const { return drawingYOffset; }
+    void SetDrawingXOffset(float x) { drawingXOffset = x; }
+    void SetDrawingYOffset(float y) { drawingYOffset = y; }
     void SetDrawingXYOffset(float x, float y)
     {
         SetDrawingXOffset(x);
@@ -133,29 +141,29 @@ public:
     int GetWorldYCell() const { return worldYCell; }
     void SetWorldXCell(int x, bool warp_to_dest)
     {
-        //previousRoomXPosition = xPosition;
+        if (x != worldXCell)
+        {
+            previousWorldXCell = worldXCell;
+            worldXCell = x;
+            roomXCell = worldXCell % Area::ROOM_COLS;
+            SetXDestination(worldXCell * Tile::WIDTH);
 
-        worldXCell = x;
-        roomXCell = worldXCell % Area::ROOM_COLS;
-        SetXDestination(worldXCell * Tile::WIDTH);
-
-        if (warp_to_dest)
-            WarpToXDestination();
+            if (warp_to_dest)
+                WarpToXDestination();
+        }
     }
     void SetWorldYCell(int y, bool warp_to_dest)
     {
-        //previousRoomYPosition = yPosition;
+        if (y != worldYCell)
+        {
+            previousWorldYCell = worldYCell;
+            worldYCell = y;
+            roomYCell = worldYCell % Area::ROOM_ROWS;
+            SetYDestination(worldYCell * Tile::HEIGHT);
 
-        worldYCell = y;
-        roomYCell = worldYCell % Area::ROOM_ROWS;
-        SetYDestination(worldYCell * Tile::HEIGHT);
-
-        if (warp_to_dest)
-            WarpToYDestination();
-
-        //std::cout << "debug: ycurrent: " << yPosition << std::endl;
-        //std::cout << "debug: yprevious: " << previousRoomYPosition << std::endl;
-
+            if (warp_to_dest)
+                WarpToYDestination();
+        }
     }
     void SetWorldXYCell(int x, int y, bool warp_to_dest)
     {
@@ -167,19 +175,25 @@ public:
     int GetRoomYCell() const { return roomYCell; }
     void SetRoomXCell(int x, bool warp_to_dest)
     {
-        roomXCell = x;
-        SetWorldXCell(Area::worldGridCurrentCol * Area::ROOM_COLS + roomXCell, warp_to_dest);
-        SetXDestination(worldXCell * Tile::WIDTH);
-        if (warp_to_dest)
-            WarpToXDestination();
+        if(x != roomXCell)
+        {
+            roomXCell = x;
+            SetWorldXCell(Area::worldGridCurrentCol * Area::ROOM_COLS + roomXCell, warp_to_dest);
+            SetXDestination(worldXCell * Tile::WIDTH);
+            if (warp_to_dest)
+                WarpToXDestination();
+        }
     }
     void SetRoomYCell(int y, bool warp_to_dest)
     {
-        roomYCell = y;
-        SetWorldYCell(Area::worldGridCurrentRow * Area::ROOM_ROWS + roomYCell, warp_to_dest);
-        SetYDestination(worldYCell * Tile::HEIGHT);
-        if (warp_to_dest)
-            WarpToYDestination();
+        if(y != roomYCell)
+        {
+            roomYCell = y;
+            SetWorldYCell(Area::worldGridCurrentRow * Area::ROOM_ROWS + roomYCell, warp_to_dest);
+            SetYDestination(worldYCell * Tile::HEIGHT);
+            if (warp_to_dest)
+                WarpToYDestination();
+        }
     }
     void SetRoomXYCell(int x, int y, bool warp_to_dest)
     {
@@ -190,8 +204,8 @@ public:
     int GetFacing() const { return facing; }
     void RotateFacing()
     {
-        facing ++;
-        if(facing >= Direction::NUM_DIRECTIONS)
+        facing++;
+        if (facing >= Direction::NUM_DIRECTIONS)
             facing = 0;
     }
 
@@ -215,5 +229,5 @@ public:
     int GetMaxFrameDelay() const { return maxFrameDelay; }
     void SetMaxFrameDelay(int max_frame_delay) { maxFrameDelay = max_frame_delay; }
 
-    bool GetInPreDescension() const { return inPreDescension;}
+    bool GetInPreDescension() const { return inPreDescension; }
 };

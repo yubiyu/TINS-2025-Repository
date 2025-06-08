@@ -12,6 +12,9 @@ void Worldview::Logic()
 {
     Area::Logic();
     PC::pc->Logic();
+
+    FoodEater::Logic();
+
     StatusFrame::Logic();
 
     Camera::Logic();
@@ -88,7 +91,8 @@ void Worldview::Drawing()
     al_clear_to_color(COLKEY_BACKGROUND);
     al_draw_bitmap(Camera::cameraBuffer, 0, 0, 0);
 
-    Util::string_al_draw_text(Text::publicPixel8, COLKEY_DEBUG_TEXT_HIGHLIGHTED, 0, 0, ALLEGRO_ALIGN_LEFT, "Cam" + std::to_string((int)Camera::xPosition) + "," + std::to_string((int)Camera::yPosition) + "@" + Area::worldRoomID);
+    if(Settings::cheatsEnabled)
+        Util::string_al_draw_text(Text::publicPixel8, COLKEY_DEBUG_TEXT_HIGHLIGHTED, 0, 0, ALLEGRO_ALIGN_LEFT, "Cam" + std::to_string((int)Camera::xPosition) + "," + std::to_string((int)Camera::yPosition) + "@" + Area::worldRoomID);
 
     StatusFrame::Drawing();
     Dialog::Drawing();

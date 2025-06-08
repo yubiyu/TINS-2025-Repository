@@ -27,6 +27,8 @@
 #include "actor.h"
 #include "pc.h"
 
+#include "foodeater.h"
+
 #include <iostream>
 
 struct Game
