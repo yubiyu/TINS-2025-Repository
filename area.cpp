@@ -530,7 +530,12 @@ void Area::ActivateFeature(int x, int y)
     }
     else
     {
-        Dialog::Activate("Features", "chestLocked");
+        if(feature >= FeatureIndex::MARKER_FEATURE_CHEST_BEGIN && feature <= FeatureIndex::MARKER_FEATURE_CHEST_END)
+        {
+            Dialog::Activate("Features", "chestActivating");
+            worldChestsLooted[worldGrid[worldGridCurrentRow*WORLD_GRID_COLS + worldGridCurrentCol]][feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+            currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+        }
     }
 }
 
