@@ -12,6 +12,8 @@ PC::PC()
     SetWorldXYCell(Area::worldGridCurrentCol * Area::ROOM_COLS + Area::roomSpawnCol,
                    Area::worldGridCurrentRow * Area::ROOM_ROWS + Area::roomSpawnRow,
                    true);
+
+    stepsWalkedCount = 0;
 }
 
 PC::~PC()
@@ -126,6 +128,12 @@ void PC::Input()
 
             if (Keyboard::keyHoldTicks[Keyboard::KEY_V] == 1)
                 InitiateDescendLayer();
+
+            if(Keyboard::keyHoldTicks[Keyboard::KEY_O] == 1)
+                Area::winConditionAchieved = true;
+
+            if(Keyboard::keyHoldTicks[Keyboard::KEY_P] == 1)
+                Area::loseConditionAchieved = true;
         }
     }
 }

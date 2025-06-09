@@ -89,6 +89,7 @@ struct Area
 
     static bool winConditionInitiated;
     static bool winConditionAchieved;
+    static bool loseConditionAchieved;
 
     static const int WORLD_NUM_CHESTS = 53;
     static const int MAX_CHESTS_PER_ROOM = 3;
@@ -108,6 +109,9 @@ struct Area
     static const int SUN_ROOM_TARGET_COL_MAX = 5;
     static const int SUN_ROOM_TARGET_ROW_MIN = 3;
     static const int SUN_ROOM_TARGET_ROW_MAX = 4;
+
+    static int layersAscendedTally;
+    static int layersDescendedTally;
     /// END OBJECTIVES ///
     /// BEGIN COOL CHEST ACTIVATING EFFECT ///
 

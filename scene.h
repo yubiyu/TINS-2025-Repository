@@ -9,6 +9,7 @@ struct Scene
         SCENE_TITLE,
 
         SCENE_WORLDVIEW,
+        SCENE_GAME_RESULT,
 
         SCENE_LOADGAME,
         SCENE_ARCHIVE,
@@ -21,6 +22,8 @@ struct Scene
         INPUT_CONTEXT_TITLE,
 
         INPUT_CONTEXT_WORLDVIEW,
+
+        INPUT_CONTEXT_GAME_RESULT,
 
         INPUT_CONTEXT_LOADGAME,
         INPUT_CONTEXT_ARCHIVE,

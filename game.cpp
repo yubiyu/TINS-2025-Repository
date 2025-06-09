@@ -110,11 +110,15 @@ bool Game::Initialize(char **argv)
     Dialog::Initialize();
     StatusFrame::Initialize();
 
+    GameResult::Initialize();
+
     return true;
 }
 
 void Game::Uninitialize()
 {
+    GameResult::Uninitialize();
+
     StatusFrame::Uninitialize();
     Dialog::Uninitialize();
 
@@ -157,6 +161,10 @@ void Game::InputSwitchboard()
         Worldview::Input();
         break;
 
+    case Scene::INPUT_CONTEXT_GAME_RESULT:
+        GameResult::Input();
+        break;
+
     case Scene::INPUT_CONTEXT_LOADGAME:
         LoadGame::Input();
         break;
@@ -187,6 +195,10 @@ void Game::LogicSwitchboard()
         Worldview::Logic();
         break;
 
+    case Scene::SCENE_GAME_RESULT:
+        GameResult::Logic();
+        break;
+
     case Scene::SCENE_LOADGAME:
         LoadGame::Logic();
         break;
@@ -214,6 +226,10 @@ void Game::DrawingSwitchboard()
 
     case Scene::SCENE_WORLDVIEW:
         Worldview::Drawing();
+        break;
+
+    case Scene::SCENE_GAME_RESULT:
+        GameResult::Drawing();
         break;
 
     case Scene::SCENE_LOADGAME:

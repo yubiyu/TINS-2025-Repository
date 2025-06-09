@@ -4,6 +4,7 @@
 #include <allegro5/allegro_color.h>
 
 #define COLKEY_BACKGROUND                                   Palette::COL_GB[Palette::palettePreset][0]
+#define COLKEY_GAME_RESULT_BACKGROUND                       Palette::COL_GB[Palette::palettePreset][3]
 
 #define COLKEY_DEBUG_GRID_UNDERLAY                          Palette::COL_GB[Palette::palettePreset][1]
 

@@ -17,6 +17,7 @@
 #include "scene.h"
 #include "title.h"
 #include "worldview.h"
+#include "gameresult.h"
 #include "loadgame.h"
 #include "settings.h"
 #include "archive.h"

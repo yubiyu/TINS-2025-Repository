@@ -16,6 +16,7 @@
 #include "palette.h"
 
 #include "scene.h"
+#include "gameresult.h"
 
 #include "camera.h"
 #include "area.h"

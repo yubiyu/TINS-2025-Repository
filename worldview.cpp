@@ -20,6 +20,12 @@ void Worldview::Logic()
     Camera::Logic();
 
     Dialog::Logic();
+
+    if(Area::winConditionAchieved || Area::loseConditionAchieved)
+    {
+        Scene::ChangeScene(Scene::SCENE_GAME_RESULT);
+        GameResult::ActivateEnding();
+    }
 }
 
 void Worldview::Input()

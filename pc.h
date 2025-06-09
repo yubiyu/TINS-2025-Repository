@@ -9,6 +9,8 @@
 
 class PC : public Actor
 {
+    int stepsWalkedCount;
+
 public:
     static PC *pc;
 
@@ -18,4 +20,6 @@ public:
     void Logic();
     void Drawing();
     void Input();
+
+    int GetStepsWalkedCount(){return stepsWalkedCount;}
 };

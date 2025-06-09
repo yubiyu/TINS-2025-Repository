@@ -25,12 +25,16 @@ float Area::previousRoomXPosition{}, Area::previousRoomYPosition{};
 
 bool Area::winConditionInitiated {};
 bool Area::winConditionAchieved {};
+bool Area::loseConditionAchieved {};
 
 std::unordered_map<std::string, std::array<bool, Area::MAX_CHESTS_PER_ROOM>> Area::worldChestsLooted{};
 bool Area::currentRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
 bool Area::previousRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
 
 int Area::chestsLootedCount{};
+
+int Area::layersAscendedTally{};
+int Area::layersDescendedTally{};
 
 bool Area::inChestActivation{};
 
@@ -53,12 +57,16 @@ void Area::Initialize()
 
     winConditionInitiated = false;
     winConditionAchieved = false;
+    loseConditionAchieved = false;
 
     worldChestsLooted.clear();
     std::fill(std::begin(currentRoomChestsLooted), std::end(currentRoomChestsLooted), false);
     std::fill(std::begin(previousRoomChestsLooted), std::end(previousRoomChestsLooted), false);
 
     chestsLootedCount = 0;
+    
+    layersAscendedTally = 0;
+    layersDescendedTally = 0;
     
     inChestActivation = false;
     activatedChestIndex = 0; // Hopefully doesn't matter.
