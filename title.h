@@ -19,7 +19,7 @@
 struct Title
 {
     /// Title text
-    static constexpr char const *TITLE_TEXT = "TINS 2025";
+    static constexpr char const *TITLE_TEXT = "Gobbyssal";
     static const int TITLE_TEXT_X = Tile::HALF_WIDTH;
     static const int TITLE_TEXT_Y = Tile::HEIGHT * 1;
 

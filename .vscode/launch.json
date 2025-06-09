@@ -5,7 +5,7 @@
         "name": "Debug Ericennes",
         "type": "cppdbg",
         "request": "launch",
-        "program": "${workspaceFolder}/Tins2025.exe",
+        "program": "${workspaceFolder}/Gobyssal.exe",
         "args": [],
         "stopAtEntry": false,
         "cwd": "${workspaceFolder}",
