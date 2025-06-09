@@ -166,7 +166,7 @@ void GameResult::ActivateEnding()
     if(Area::winConditionAchieved)
         endingText = "Well done! You escaped the maze.";
     else
-        endingText = "Lost and hungry, you seek sustenance in dreams...";
+        endingText = "Lost and hungry, you seek sustenance in your dreams...";
 
     std::string stepsWalkedText = "Walked " + std::to_string(PC::pc->GetStepsWalkedCount()) + " cells.";
     std::string layersAscendedText = "Ascended " + std::to_string(Area::layersAscendedTally) + "F.";

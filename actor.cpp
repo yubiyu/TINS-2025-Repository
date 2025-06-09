@@ -210,6 +210,9 @@ void Actor::Walk(int direction)
         if (isPC && !collidedWithObstacle)
         {
             FoodEater::ProgressNutrition(1);
+            if(FoodEater::nutrition <= 0)
+                Area::loseConditionAchieved = true;
+
             stepsWalkedCount ++;
             //std::cout << "Steps walked: " << GetStepsWalkedCount() << std::endl;
         }
@@ -224,6 +227,7 @@ void Actor::Stand()
 
 void Actor::InitiateAscendLayer()
 {
+
     inPreAscension = true;
     preAscensionDelay = 0;
     maxPreAscensionDelay = Area::ROOM_TRANSITION_ASCEND_DELAY;
@@ -241,6 +245,8 @@ void Actor::InitiateAscendLayer()
         /// HAX HAX HAX HAX
         SetYPosition(Area::previousRoomYPosition + GetRoomYCell() * Tile::HEIGHT);
         FoodEater::ProgressNutrition(2);
+        if(FoodEater::nutrition <= 0)
+            Area::loseConditionAchieved = true;
         /// HAX HAX HAX HAX
     }
 }
@@ -252,6 +258,8 @@ void Actor::InitiateDescendLayer()
     /// HAX HAX HAX HAX
     SetYPosition(Area::previousRoomYPosition + GetRoomYCell() * Tile::HEIGHT);
     FoodEater::ProgressNutrition(2);
+    if(FoodEater::nutrition <= 0)
+        Area::loseConditionAchieved = true;
     /// HAX HAX HAX HAX
 
     inPreDescension = true;
