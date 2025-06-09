@@ -9,7 +9,6 @@
 
 class PC : public Actor
 {
-
 public:
     static PC *pc;
 

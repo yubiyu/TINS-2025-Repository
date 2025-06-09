@@ -46,6 +46,8 @@ struct Image
     static ALLEGRO_BITMAP *statusFrameMouthPng;
     static std::vector<ALLEGRO_BITMAP *> statusFrameMouthSub;
 
+    static ALLEGRO_BITMAP *wingIconPng;
+
     static ALLEGRO_BITMAP *dialogFramePng;
     static ALLEGRO_BITMAP *dialogCaretPng;
     static ALLEGRO_BITMAP *dialogCaretSub[2];

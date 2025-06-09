@@ -28,6 +28,8 @@ ALLEGRO_BITMAP *Image::statusFramePng;
 ALLEGRO_BITMAP *Image::statusFrameMouthPng;
 std::vector<ALLEGRO_BITMAP *> Image::statusFrameMouthSub;
 
+ALLEGRO_BITMAP *Image::wingIconPng;
+
 ALLEGRO_BITMAP *Image::dialogFramePng;
 ALLEGRO_BITMAP *Image::dialogCaretPng;
 ALLEGRO_BITMAP *Image::dialogCaretSub[2];
@@ -94,6 +96,8 @@ void Image::LoadResources()
     for(size_t i = 0; i < StatusFrameIndex::NUM_MOUTH_FRAMES; i++)
         statusFrameMouthSub.push_back(al_create_sub_bitmap(statusFrameMouthPng, Tile::WIDTH*i, Tile::HEIGHT*0, Tile::WIDTH, Tile::HEIGHT));
 
+    wingIconPng = al_load_bitmap("wingIcon.png");
+
     dialogFramePng = al_load_bitmap("dialogFrame.png");
     dialogCaretPng = al_load_bitmap("dialogCaret.png");
     dialogCaretSub[0] = al_create_sub_bitmap(dialogCaretPng, 0, 0, Tile::HALF_WIDTH, Tile::HALF_HEIGHT);
@@ -142,6 +146,8 @@ void Image::UnloadResources()
         al_destroy_bitmap(statusFrameMouthSub[i]);
     statusFrameMouthSub.clear();
     al_destroy_bitmap(statusFrameMouthPng);
+
+    al_destroy_bitmap(wingIconPng);
 
     al_destroy_bitmap(dialogFramePng);
     al_destroy_bitmap(dialogCaretSub[0]);

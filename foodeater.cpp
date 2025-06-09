@@ -1,8 +1,12 @@
 #include "foodeater.h"
 
+bool FoodEater::hasWings{};
+
 int FoodEater::nutrition{};
 bool FoodEater::isEating{};
 bool FoodEater::isHungry{};
+
+size_t FoodEater::maxFoodReserves{};
 
 std::vector<int> FoodEater::foodToEat{};
 
@@ -14,8 +18,17 @@ float FoodEater::munchDrawingYOffset{};
 
 void FoodEater::Initialize()
 {
-    foodToEat.clear();
     nutrition = INITIAL_NUTRITION;
+    isEating = false;
+    isHungry = false;
+
+    maxFoodReserves = DEFAULT_MAX_FOOD_RESERVES;
+
+    foodToEat.clear();
+
+    munchProgress = 0;
+    mouthIconFrame = 0;
+    munchDrawingYOffset = 0;
 }
 
 void FoodEater::Uninitialize()
@@ -42,13 +55,12 @@ void FoodEater::Logic()
 
                 // Audio: Play bite sound?
             }
-            munchProgress++;
+            if(!Dialog::isActive)
+                munchProgress++;
         }
 
-        if (foodToEat.size() > MAX_FOOD_RESERVES)
-        {
-            munchProgress = MUNCH_DURATION + 1; // Insta-eat!
-        }
+        if (foodToEat.size() > maxFoodReserves)
+            munchProgress = MUNCH_DURATION + 1; // Debug: Insta-eat!
 
         if (munchProgress > MUNCH_DURATION)
         {
@@ -90,4 +102,10 @@ void FoodEater::ProgressNutrition(int iterations)
         else
             isHungry = false;
     }
+}
+
+void FoodEater::AcquireWings()
+{
+    hasWings = true;
+    maxFoodReserves = 1;
 }

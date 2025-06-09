@@ -23,6 +23,9 @@ int Area::roomTransitionDelay{};
 float Area::currentRoomXPosition{}, Area::currentRoomYPosition{};
 float Area::previousRoomXPosition{}, Area::previousRoomYPosition{};
 
+bool Area::winConditionInitiated {};
+bool Area::winConditionAchieved {};
+
 std::unordered_map<std::string, std::array<bool, Area::MAX_CHESTS_PER_ROOM>> Area::worldChestsLooted{};
 bool Area::currentRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
 bool Area::previousRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
@@ -47,6 +50,21 @@ void Area::Initialize()
 
     LoadWorldGrid("World Grid A");
     ChangeRoom(worldGridCurrentCol, worldGridCurrentRow, ROOM_TRANSITION_TELEPORT_INSTANT);
+
+    winConditionInitiated = false;
+    winConditionAchieved = false;
+
+    worldChestsLooted.clear();
+    std::fill(std::begin(currentRoomChestsLooted), std::end(currentRoomChestsLooted), false);
+    std::fill(std::begin(previousRoomChestsLooted), std::end(previousRoomChestsLooted), false);
+
+    chestsLootedCount = 0;
+    
+    inChestActivation = false;
+    activatedChestIndex = 0; // Hopefully doesn't matter.
+
+    chestActivationFrame = 0;
+    chestActivationFrameDelay = 0;
 }
 
 void Area::Uninitialize()
@@ -356,17 +374,24 @@ void Area::Logic()
         {
             chestActivationFrameDelay = 0;
             chestActivationFrame++;
-            std::cout << "Area: Test chestActivationFrame: " << chestActivationFrame << std::endl;
             if (chestActivationFrame > FeatureIndex::NUM_SPRITE_CHEST_ACTIVATING_FRAMES)
             {
                 inChestActivation = false;
-                int foodLoot = std::rand() % FoodIndex::NUM_FOOD_TYPES;
-                Dialog::Activate("Features", "chestGetItem", " " + FoodIndex::foodText.at(foodLoot));
+
+                if(worldGridCurrentCol == WORLD_GRID_WINGS_LOCATION_COL && worldGridCurrentRow == WORLD_GRID_WINGS_LOCATION_ROW)
+                {
+                    Dialog::Activate("Features", "chestGetWings");
+                    FoodEater::AcquireWings();
+                }
+                else
+                {
+                    int foodLoot = std::rand() % FoodIndex::NUM_FOOD_TYPES;
+                    Dialog::Activate("Features", "chestGetItem", " " + FoodIndex::foodText.at(foodLoot));
+                    FoodEater::AddFood(foodLoot);
+                }
                 worldChestsLooted[worldGrid[worldGridCurrentRow * WORLD_GRID_COLS + worldGridCurrentCol]][activatedChestIndex] = true;
                 currentRoomChestsLooted[activatedChestIndex] = true;
                 chestsLootedCount++;
-
-                FoodEater::AddFood(foodLoot);
             }
         }
     }
@@ -574,7 +599,7 @@ void Area::ActivateFeature(int x, int y)
         {
             if (!currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN])
             {
-                if (FoodEater::foodToEat.size() >= FoodEater::MAX_FOOD_RESERVES)
+                if (FoodEater::foodToEat.size() >= FoodEater::maxFoodReserves)
                 {
                     Dialog::Activate("Features", "chestButInventoryFull");
                 }

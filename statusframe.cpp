@@ -37,13 +37,16 @@ void StatusFrame::Drawing()
           0);
         }
         else
-            al_draw_bitmap(Image::foodSub[(*it)], 
+          al_draw_bitmap(Image::foodSub[(*it)], 
           FRAME_X_POSITION + FOOD_ICONS_X_POSITION + Tile::WIDTH*foodPosition,
           FRAME_Y_POSITION,
           0);
 
         foodPosition++;
     }
+
+    if(FoodEater::hasWings)
+        al_draw_bitmap(Image::wingIconPng, FRAME_X_POSITION + ICON_WINGS_X_POSITION, FRAME_Y_POSITION, 0);
 
     if(FoodEater::isHungry)
     {

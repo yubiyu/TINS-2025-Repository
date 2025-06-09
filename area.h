@@ -46,6 +46,7 @@ struct Area
     static int worldGridCurrentCol, worldGridCurrentRow;
 
     static constexpr float LAYER_SEPARATION_RATIO = 1.5;
+
     /// END WORLD GRID DATA ///
     /// BEGIN ROOM DATA ///
     static const int ROOM_COLS = 10; // tiles across
@@ -75,6 +76,7 @@ struct Area
 
     static int roomTransitionDelay; // Pause before camera movement.
     static const int ROOM_TRANSITION_ASCEND_DELAY = ActorIndex::WALK_DURATION * 2;
+    static const int ROOM_TRANSITION_ASCEND_DELAY_WITH_WIN_CONDITION = ROOM_TRANSITION_ASCEND_DELAY * 4;
     static const int ROOM_TRANSITION_DESCEND_DELAY = ActorIndex::WALK_DURATION * 2;
 
     static const int ROOM_TRANSITION_X_SPEED = Tile::WIDTH * ROOM_COLS / ActorIndex::WALK_DURATION; // This value should be proportional to the time it takes the Actor to move one tile.
@@ -84,6 +86,10 @@ struct Area
     static float previousRoomXPosition, previousRoomYPosition;
     /// END ROOM DATA ///
     /// BEGIN OBJECTIVES ///
+
+    static bool winConditionInitiated;
+    static bool winConditionAchieved;
+
     static const int WORLD_NUM_CHESTS = 53;
     static const int MAX_CHESTS_PER_ROOM = 3;
 
@@ -92,6 +98,16 @@ struct Area
     static bool previousRoomChestsLooted[MAX_CHESTS_PER_ROOM];
 
     static int chestsLootedCount;
+
+    static const int WORLD_GRID_WINGS_LOCATION_COL = 0; // s003
+    static const int WORLD_GRID_WINGS_LOCATION_ROW = 19;
+
+    static const int WORLD_GRID_SUN_LOCATION_COL = 0; // 0005
+    static const int WORLD_GRID_SUN_LOCATION_ROW = 0;
+    static const int SUN_ROOM_TARGET_COL_MIN = 4;
+    static const int SUN_ROOM_TARGET_COL_MAX = 5;
+    static const int SUN_ROOM_TARGET_ROW_MIN = 3;
+    static const int SUN_ROOM_TARGET_ROW_MAX = 4;
     /// END OBJECTIVES ///
     /// BEGIN COOL CHEST ACTIVATING EFFECT ///
 

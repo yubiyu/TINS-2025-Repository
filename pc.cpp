@@ -100,17 +100,31 @@ void PC::Input()
             Stand();
     }
 
-    if(Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
+    if (Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
+    {
         FoodEater::InitiateEating();
+
+        if (FoodEater::hasWings && FoodEater::foodToEat.empty())
+        {
+            // Winning condition: Ascend from the center of sun room with wings.
+            if (FoodEater::hasWings                                                                                                                 // 1. has wings
+                && Area::worldGridCurrentCol == Area::WORLD_GRID_SUN_LOCATION_COL && Area::worldGridCurrentRow == Area::WORLD_GRID_SUN_LOCATION_ROW // 2. At sun room
+                && GetRoomXCell() >= Area::SUN_ROOM_TARGET_COL_MIN && GetRoomXCell() <= Area::SUN_ROOM_TARGET_COL_MAX                               // 3. In the correct x range
+                && GetRoomYCell() >= Area::SUN_ROOM_TARGET_ROW_MIN && GetRoomYCell() <= Area::SUN_ROOM_TARGET_ROW_MAX)                              // 4. In the correct y range
+                Area::winConditionInitiated = true;
+
+            InitiateAscendLayer();
+        }
+    }
 
     if (GetAtDestination())
     {
-        if(Settings::cheatsEnabled)
+        if (Settings::cheatsEnabled)
         {
-            if(Keyboard::keyHoldTicks[Keyboard::KEY_C] == 1)
+            if (Keyboard::keyHoldTicks[Keyboard::KEY_C] == 1)
                 InitiateAscendLayer();
-            
-            if(Keyboard::keyHoldTicks[Keyboard::KEY_V] == 1)
+
+            if (Keyboard::keyHoldTicks[Keyboard::KEY_V] == 1)
                 InitiateDescendLayer();
         }
     }

@@ -74,7 +74,13 @@ void Actor::Logic()
         if (preAscensionDelay >= maxPreAscensionDelay)
         {
             inPreAscension = false;
-            SetWorldYCell(Area::worldGridCurrentRow * Area::ROOM_ROWS + GetRoomYCell(), true);
+
+            if (Area::winConditionInitiated)
+            {
+                Area::winConditionAchieved = true;
+            }
+            else
+                SetWorldYCell(Area::worldGridCurrentRow * Area::ROOM_ROWS + GetRoomYCell(), true);
         }
     }
 
@@ -212,17 +218,25 @@ void Actor::Stand()
 
 void Actor::InitiateAscendLayer()
 {
-    if (isPC)
-        Area::AscendLayer();
-    /// HAX HAX HAX HAX
-    SetYPosition(Area::previousRoomYPosition + GetRoomYCell() * Tile::HEIGHT);
-    FoodEater::ProgressNutrition(2);
-    /// HAX HAX HAX HAX
-
     inPreAscension = true;
     preAscensionDelay = 0;
     maxPreAscensionDelay = Area::ROOM_TRANSITION_ASCEND_DELAY;
     preAscensionDrawingYOffset = 0;
+
+    if (Area::winConditionInitiated && isPC)
+    {
+        maxPreAscensionDelay = Area::ROOM_TRANSITION_ASCEND_DELAY_WITH_WIN_CONDITION;
+    }
+    else
+    {
+        if (isPC)
+            Area::AscendLayer();
+
+        /// HAX HAX HAX HAX
+        SetYPosition(Area::previousRoomYPosition + GetRoomYCell() * Tile::HEIGHT);
+        FoodEater::ProgressNutrition(2);
+        /// HAX HAX HAX HAX
+    }
 }
 
 void Actor::InitiateDescendLayer()

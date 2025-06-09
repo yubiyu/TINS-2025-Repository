@@ -6,10 +6,14 @@
 
 #include "statusframeindex.h"
 
+#include "dialog.h"
+
 #include <vector>
 
 struct FoodEater
 {
+    static bool hasWings; // HAX: put this somewhere else later!
+
     static int nutrition;
     static const int INITIAL_NUTRITION = 50;
     static const int NUTRITION_MAX = 99;
@@ -19,7 +23,8 @@ struct FoodEater
     static bool isEating;
     static bool isHungry; // Auto eats
 
-    static const int MAX_FOOD_RESERVES = 2;
+    static size_t maxFoodReserves;
+    static const int DEFAULT_MAX_FOOD_RESERVES = 2;
 
     static std::vector<int>foodToEat;
 
@@ -40,5 +45,7 @@ struct FoodEater
     static void InitiateEating();
 
     static void ProgressNutrition(int iterations);
+
+    static void AcquireWings();
 
 };
