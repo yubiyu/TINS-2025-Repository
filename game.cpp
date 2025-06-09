@@ -146,6 +146,27 @@ void Game::Uninitialize()
     al_uninstall_system();
 }
 
+void Game::ResetWorld()
+{
+    GameResult::Uninitialize();
+    StatusFrame::Uninitialize();
+    Dialog::Uninitialize();
+    delete PC::pc;
+    Area::Uninitialize();
+    Worldview::Uninitialize();
+    Camera::Uninitialize();
+
+    Camera::Initialize();
+    Worldview::Initialize();
+    Area::Initialize();
+    PC::pc = new PC();
+    FoodEater::Initialize();
+    Dialog::Initialize();
+    StatusFrame::Initialize();
+    GameResult::Initialize();
+
+}
+
 void Game::InputSwitchboard()
 {
     Keyboard::InputKeyHold();
@@ -183,6 +204,12 @@ void Game::InputSwitchboard()
 
 void Game::LogicSwitchboard()
 {
+    if(Reset::needsReset)
+    {
+        ResetWorld();
+        Reset::needsReset = false;
+    }
+
     switch (Scene::scene)
     {
     case Scene::SCENE_TITLE:

@@ -27,6 +27,8 @@
 
 struct Worldview
 {
+    static bool needsResetWorld;
+
     static void Initialize();
     static void Uninitialize();
 

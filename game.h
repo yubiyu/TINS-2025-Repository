@@ -30,6 +30,8 @@
 
 #include "foodeater.h"
 
+#include "reset.h"
+
 #include <iostream>
 
 struct Game
@@ -41,6 +43,7 @@ struct Game
 
     static bool Initialize(char **argv);
     static void Uninitialize();
+    static void ResetWorld();
 
     static void InputSwitchboard();
     static void LogicSwitchboard();

@@ -20,6 +20,4 @@ public:
     void Logic();
     void Drawing();
     void Input();
-
-    int GetStepsWalkedCount(){return stepsWalkedCount;}
 };

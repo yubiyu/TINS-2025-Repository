@@ -103,12 +103,14 @@ void GameResult::Input()
 {
     if (isActive)
     {
-        if (Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
-            Advance();
-        else if (Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
+        //if (Keyboard::keyHoldTicks[Keyboard::KEY_Z] == 1)
+          //  Advance();
+        
+            if (Keyboard::keyHoldTicks[Keyboard::KEY_X] == 1)
         {
             Deactivate();
             Scene::ChangeScene(Scene::SCENE_TITLE);
+            Reset::needsReset = true;
         }
     }
 }
@@ -164,17 +166,17 @@ void GameResult::ActivateEnding()
     if(Area::winConditionAchieved)
         endingText = "Well done! You escaped the maze.";
     else
-        endingText = "Lost and hungry, you find sustanance in dreams of escape";
+        endingText = "Lost and hungry, you seek sustenance in dreams...";
 
-    std::string stepsWalkedText = "Walked " + std::to_string(PC::pc->GetStepsWalkedCount()) + " cells";
-    std::string layersAscendedText = "Rose " + std::to_string(Area::layersAscendedTally) + " layers.";
-    std::string layersDescendedText = "Fell " + std::to_string(Area::layersDescendedTally) + " layers.";
+    std::string stepsWalkedText = "Walked " + std::to_string(PC::pc->GetStepsWalkedCount()) + " cells.";
+    std::string layersAscendedText = "Ascended " + std::to_string(Area::layersAscendedTally) + "F.";
+    std::string layersDescendedText = "Descended " + std::to_string(Area::layersDescendedTally) + "F.";
     std::string chestsLootedText = "Looted " + std::to_string(Area::chestsLootedCount) + " chests.";
 
     const std::string theEndText = "(Press X to exit).";
     
 
-    std::string combinedText = endingText + "\n\n" + "You...\n" + stepsWalkedText + "\n" + layersAscendedText + "\n" + layersDescendedText + "\n" + chestsLootedText + "\n\n" + theEndText;
+    std::string combinedText = endingText + "\n\n" + stepsWalkedText + "\n" + layersAscendedText + "\n" + layersDescendedText + "\n" + chestsLootedText + "\n\n" + theEndText;
     Activate(combinedText);
 
 }

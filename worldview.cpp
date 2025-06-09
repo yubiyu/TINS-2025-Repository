@@ -1,7 +1,10 @@
 #include "worldview.h"
 
+bool Worldview::needsResetWorld{};
+
 void Worldview::Initialize()
 {
+    needsResetWorld = false;
 }
 
 void Worldview::Uninitialize()

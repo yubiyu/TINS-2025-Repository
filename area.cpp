@@ -23,9 +23,9 @@ int Area::roomTransitionDelay{};
 float Area::currentRoomXPosition{}, Area::currentRoomYPosition{};
 float Area::previousRoomXPosition{}, Area::previousRoomYPosition{};
 
-bool Area::winConditionInitiated {};
-bool Area::winConditionAchieved {};
-bool Area::loseConditionAchieved {};
+bool Area::winConditionInitiated{};
+bool Area::winConditionAchieved{};
+bool Area::loseConditionAchieved{};
 
 std::unordered_map<std::string, std::array<bool, Area::MAX_CHESTS_PER_ROOM>> Area::worldChestsLooted{};
 bool Area::currentRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
@@ -64,10 +64,10 @@ void Area::Initialize()
     std::fill(std::begin(previousRoomChestsLooted), std::end(previousRoomChestsLooted), false);
 
     chestsLootedCount = 0;
-    
+
     layersAscendedTally = 0;
     layersDescendedTally = 0;
-    
+
     inChestActivation = false;
     activatedChestIndex = 0; // Hopefully doesn't matter.
 
@@ -311,6 +311,7 @@ void Area::ConstructRoom()
     {
         for (size_t x = 0; x < ROOM_COLS; x++)
         {
+
             currentRoomFeatures[y * ROOM_COLS + x] = roomFeatureBlueprint[y * ROOM_COLS + x]; /// Assuming for the time being that features and blueprints are 1:1.
         }
     }
@@ -386,7 +387,7 @@ void Area::Logic()
             {
                 inChestActivation = false;
 
-                if(worldGridCurrentCol == WORLD_GRID_WINGS_LOCATION_COL && worldGridCurrentRow == WORLD_GRID_WINGS_LOCATION_ROW)
+                if (worldGridCurrentCol == WORLD_GRID_WINGS_LOCATION_COL && worldGridCurrentRow == WORLD_GRID_WINGS_LOCATION_ROW)
                 {
                     Dialog::Activate("Features", "chestGetWings");
                     FoodEater::AcquireWings();
@@ -430,7 +431,7 @@ void Area::Drawing()
                 }
                 else if (!looted)
                 {
-                    if (inChestActivation && chestNumber == activatedChestIndex+1)
+                    if (inChestActivation && chestNumber == activatedChestIndex + 1)
                     {
                         al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_CHEST_CLOSED_INDEX + chestActivationFrame],
                                        x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
@@ -443,6 +444,13 @@ void Area::Drawing()
                                        y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
                                        0);
                 }
+            }
+            else if (currentRoomFeatures[y * ROOM_COLS + x] >= FeatureIndex::MARKER_FEATURE_INSCRIPTION_BEGIN && currentRoomFeatures[y * ROOM_COLS + x] <= FeatureIndex::MARKER_FEATURE_INSCRIPTION_END)
+            {
+                al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_INSCRIPTION_INDEX],
+                               x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
+                               y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
+                               0);
             }
         }
     }
@@ -458,7 +466,7 @@ void Area::Drawing()
                                y * Tile::HEIGHT + previousRoomYPosition - Camera::yPosition,
                                0);
 
-                if (previousRoomFeatures[y * ROOM_COLS + x] > FeatureIndex::FEATURE_NONE)
+                if(previousRoomFeatures[y * ROOM_COLS + x] >= FeatureIndex::MARKER_FEATURE_CHEST_BEGIN && previousRoomFeatures[y * ROOM_COLS + x] <= FeatureIndex::MARKER_FEATURE_CHEST_END)
                 {
                     int chestNumber = previousRoomFeatures[y * ROOM_COLS + x];
                     bool looted = previousRoomChestsLooted[chestNumber - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN];
@@ -477,6 +485,14 @@ void Area::Drawing()
                                        0);
                     }
                 }
+                else if (previousRoomFeatures[y * ROOM_COLS + x] >= FeatureIndex::MARKER_FEATURE_INSCRIPTION_BEGIN && previousRoomFeatures[y * ROOM_COLS + x] <= FeatureIndex::MARKER_FEATURE_INSCRIPTION_END)
+                {
+                    al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_INSCRIPTION_INDEX],
+                                       x * Tile::WIDTH + previousRoomXPosition - Camera::xPosition,
+                                       y * Tile::HEIGHT + previousRoomYPosition - Camera::yPosition,
+                                       0);
+                }
+                
             }
         }
     }
@@ -554,12 +570,10 @@ bool Area::WalkObstacleCheck(int x, int y)
         return true;
 
     int checkIndex = y * ROOM_COLS + x;
+    if (currentRoomFeatures[checkIndex] >= FeatureIndex::MARKER_FEATURE_CHEST_BEGIN && currentRoomFeatures[checkIndex] <= FeatureIndex::MARKER_FEATURE_CHEST_END)
+        return true;
 
-    // if (currentRoomCells[checkIndex] >= CellIndex::MARKER_CELL_PLATFORM_BEGIN && currentRoomCells[checkIndex] <= CellIndex::MARKER_CELL_PLATFORM_END)
-    if (currentRoomFeatures[checkIndex] == FeatureIndex::FEATURE_NONE)
-        return false;
-
-    return true;
+    return false;
 }
 
 bool Area::VoidCellCheck(int x, int y)
@@ -629,6 +643,13 @@ void Area::ActivateFeature(int x, int y)
                 Dialog::Activate("Features", "chestEmpty");
             }
         }
+
+        if(feature >= FeatureIndex::MARKER_FEATURE_INSCRIPTION_BEGIN && feature <= FeatureIndex::MARKER_FEATURE_INSCRIPTION_END)
+        {
+            int inscriptionNumber = feature - FeatureIndex::MARKER_FEATURE_INSCRIPTION_BEGIN + 1;
+            std::string inscriptionKey = "inscription" + std::to_string(inscriptionNumber);
+            Dialog::Activate("Features", inscriptionKey.c_str());
+        }
     }
 }
 
@@ -658,6 +679,8 @@ void Area::AscendLayer()
             ChangeRoom(worldGridCurrentCol, worldGridSearchRow, ROOM_TRANSITION_ASCEND);
             destinationFound = true;
             std::cout << "Area: Debug AscendLayer() searchAttempts = " << searchAttempts << std::endl;
+            layersAscendedTally += searchAttempts;
+            // std::cout << "Layers ascended: " << layersAscendedTally << std::endl;
         }
         else
         {
@@ -694,6 +717,8 @@ void Area::DescendLayer()
         {
             destinationFound = true;
             ChangeRoom(worldGridCurrentCol, worldGridSearchRow, ROOM_TRANSITION_DESCEND);
+            layersDescendedTally += searchAttempts;
+            std::cout << "Layers descended tally: " << layersDescendedTally << std::endl;
         }
         std::cout << "Area: Debug DescendLayer() searchAttempts = " << searchAttempts << std::endl;
         std::cout << "Area: Debug DescendLayer()" << " search result=" << worldGrid[worldGridSearchRow * WORLD_GRID_COLS + worldGridCurrentCol] << std::endl;

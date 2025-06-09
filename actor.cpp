@@ -10,6 +10,8 @@ Actor::Actor()
     moveSpeed = ActorIndex::WALK_SPEED_BASE;
 
     SetAction(ActorIndex::ACTION_STAND);
+
+    stepsWalkedCount = 0;
 }
 
 Actor::~Actor()
@@ -206,7 +208,11 @@ void Actor::Walk(int direction)
         }
 
         if (isPC && !collidedWithObstacle)
+        {
             FoodEater::ProgressNutrition(1);
+            stepsWalkedCount ++;
+            //std::cout << "Steps walked: " << GetStepsWalkedCount() << std::endl;
+        }
     }
 }
 

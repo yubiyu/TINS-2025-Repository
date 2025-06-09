@@ -57,6 +57,8 @@ class Actor
     int consecutiveDescents{};
     const int MAX_CONSECUTIVE_DESCENTS = 2;
 
+    int stepsWalkedCount{};
+
 public:
     Actor();
     ~Actor();
@@ -233,4 +235,6 @@ public:
     void SetMaxFrameDelay(int max_frame_delay) { maxFrameDelay = max_frame_delay; }
 
     bool GetInPreDescension() const { return inPreDescension; }
+
+    int GetStepsWalkedCount(){return stepsWalkedCount;}
 };

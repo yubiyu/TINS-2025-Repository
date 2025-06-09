@@ -12,8 +12,6 @@ PC::PC()
     SetWorldXYCell(Area::worldGridCurrentCol * Area::ROOM_COLS + Area::roomSpawnCol,
                    Area::worldGridCurrentRow * Area::ROOM_ROWS + Area::roomSpawnRow,
                    true);
-
-    stepsWalkedCount = 0;
 }
 
 PC::~PC()
