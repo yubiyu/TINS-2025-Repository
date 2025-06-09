@@ -21,12 +21,10 @@ void StatusFrame::Drawing()
 
     if(FoodEater::isEating)
     {
-
+        al_draw_bitmap(Image::statusFrameMouthSub[FoodEater::mouthIconFrame], FRAME_X_POSITION + ICON_MOUTH_X_POSITION, FRAME_Y_POSITION, 0);
     }
     else
-    {
-        //al_draw_bitmap(Image::)
-    }
+        al_draw_bitmap(Image::statusFrameMouthSub[0], FRAME_X_POSITION + ICON_MOUTH_X_POSITION, FRAME_Y_POSITION, 0);
 
     size_t foodPosition = 0;
     for(std::vector<int>::iterator it = FoodEater::foodToEat.begin(); it != FoodEater::foodToEat.end(); ++it)

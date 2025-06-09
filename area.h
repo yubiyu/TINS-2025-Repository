@@ -93,6 +93,17 @@ struct Area
 
     static int chestsLootedCount;
     /// END OBJECTIVES ///
+    /// BEGIN COOL CHEST ACTIVATING EFFECT ///
+
+    static bool inChestActivation;
+
+    static int activatedChestIndex;
+
+    static int chestActivationFrame;
+    static int chestActivationFrameDelay;
+
+    /// END COOL CHEST ACTIVATING EFFECT ///
+    
 
     static void Initialize();
     static void Uninitialize();
@@ -118,4 +129,6 @@ struct Area
 
     static void AscendLayer(); // Note that ascending a layer actually makes the world grid row go down.
     static void DescendLayer(); // Note that descending a layer actually makes the world grid row go up.
+
+    static void InitiateChestActivation(size_t chest_ID);
 };

@@ -29,6 +29,13 @@ bool Area::previousRoomChestsLooted[MAX_CHESTS_PER_ROOM]{};
 
 int Area::chestsLootedCount{};
 
+bool Area::inChestActivation{};
+
+int Area::activatedChestIndex{};
+
+int Area::chestActivationFrame{};
+int Area::chestActivationFrameDelay{};
+
 void Area::Initialize()
 {
     std::cout << "Area:: Initialize() " << std::endl;
@@ -341,6 +348,28 @@ void Area::Logic()
             inRoomTransition = false;
         }
     }
+
+    if (inChestActivation)
+    {
+        chestActivationFrameDelay++;
+        if (chestActivationFrameDelay > FeatureIndex::CHEST_ACTIVATION_FRAME_DELAY_MAX)
+        {
+            chestActivationFrameDelay = 0;
+            chestActivationFrame++;
+            std::cout << "Area: Test chestActivationFrame: " << chestActivationFrame << std::endl;
+            if (chestActivationFrame > FeatureIndex::NUM_SPRITE_CHEST_ACTIVATING_FRAMES)
+            {
+                inChestActivation = false;
+                int foodLoot = std::rand() % FoodIndex::NUM_FOOD_TYPES;
+                Dialog::Activate("Features", "chestGetItem", " " + FoodIndex::foodText.at(foodLoot));
+                worldChestsLooted[worldGrid[worldGridCurrentRow * WORLD_GRID_COLS + worldGridCurrentCol]][activatedChestIndex] = true;
+                currentRoomChestsLooted[activatedChestIndex] = true;
+                chestsLootedCount++;
+
+                FoodEater::AddFood(foodLoot);
+            }
+        }
+    }
 }
 
 void Area::Drawing()
@@ -354,9 +383,10 @@ void Area::Drawing()
                            y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
                            0);
 
-            if (currentRoomFeatures[y * ROOM_COLS + x] > FeatureIndex::FEATURE_NONE)
+            if (currentRoomFeatures[y * ROOM_COLS + x] >= FeatureIndex::MARKER_FEATURE_CHEST_BEGIN && currentRoomFeatures[y * ROOM_COLS + x] <= FeatureIndex::MARKER_FEATURE_CHEST_END)
             {
                 int chestNumber = currentRoomFeatures[y * ROOM_COLS + x];
+
                 bool looted = currentRoomChestsLooted[chestNumber - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN];
                 if (looted)
                 {
@@ -367,10 +397,18 @@ void Area::Drawing()
                 }
                 else if (!looted)
                 {
-                    al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_CHEST_CLOSED_INDEX],
-                                   x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
-                                   y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
-                                   0);
+                    if (inChestActivation && chestNumber == activatedChestIndex+1)
+                    {
+                        al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_CHEST_CLOSED_INDEX + chestActivationFrame],
+                                       x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
+                                       y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
+                                       0);
+                    }
+                    else
+                        al_draw_bitmap(Image::areaFeaturesSub[FeatureIndex::SPRITE_CHEST_CLOSED_INDEX],
+                                       x * Tile::WIDTH + currentRoomXPosition - Camera::xPosition,
+                                       y * Tile::HEIGHT + currentRoomYPosition - Camera::yPosition,
+                                       0);
                 }
             }
         }
@@ -532,25 +570,25 @@ void Area::ActivateFeature(int x, int y)
     }
     else
     {
-        if(feature >= FeatureIndex::MARKER_FEATURE_CHEST_BEGIN && feature <= FeatureIndex::MARKER_FEATURE_CHEST_END)
+        if (feature >= FeatureIndex::MARKER_FEATURE_CHEST_BEGIN && feature <= FeatureIndex::MARKER_FEATURE_CHEST_END)
         {
-            if(! currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN])
+            if (!currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN])
             {
-                int foodLoot = std::rand()% FoodIndex::NUM_FOOD_TYPES;
-
-                if(FoodEater::foodToEat.size() >= FoodEater::MAX_FOOD_RESERVES)
+                if (FoodEater::foodToEat.size() >= FoodEater::MAX_FOOD_RESERVES)
                 {
                     Dialog::Activate("Features", "chestButInventoryFull");
                 }
                 else
                 {
-                    Dialog::Activate("Features", "chestGetItem", " " + FoodIndex::foodText.at(foodLoot));
-                    worldChestsLooted[worldGrid[worldGridCurrentRow*WORLD_GRID_COLS + worldGridCurrentCol]][feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
-                    currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
-                    chestsLootedCount++;
+                    InitiateChestActivation(feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN);
+                    /*
+                                        Dialog::Activate("Features", "chestGetItem", " " + FoodIndex::foodText.at(foodLoot));
+                                        worldChestsLooted[worldGrid[worldGridCurrentRow*WORLD_GRID_COLS + worldGridCurrentCol]][feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+                                        currentRoomChestsLooted[feature - FeatureIndex::MARKER_FEATURE_CHEST_BEGIN] = true;
+                                        chestsLootedCount++;
 
-                FoodEater::AddFood(foodLoot);
-
+                                        FoodEater::AddFood(foodLoot);
+                                        */
                 }
             }
             else
@@ -629,4 +667,14 @@ void Area::DescendLayer()
         // std::cout << "Area: Debug DescendLayer() searchIndex = " << searchIndex << std::endl;
         std::cout << std::endl;
     }
+}
+
+void Area::InitiateChestActivation(size_t chest_ID)
+{
+    inChestActivation = true;
+
+    activatedChestIndex = chest_ID;
+
+    chestActivationFrame = 0;
+    chestActivationFrameDelay = 0;
 }

@@ -25,7 +25,7 @@ struct StatusFrame
     //static constexpr float ICON_PC_LEVEL_X = Tile::WIDTH * 3;
     //static constexpr float ICON_AREA_LEVEL_X = Tile::WIDTH * 5;
 
-    static constexpr float ICON_MOUTH = Tile::WIDTH * 1.5;
+    static constexpr float ICON_MOUTH_X_POSITION = Tile::WIDTH * 1.5;
 
     static const int TEXT_Y_POSITION = Tile::HEIGHT/4;
 

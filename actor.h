@@ -54,6 +54,9 @@ class Actor
     int preDescensionDelay{}, maxPreDescensionDelay{};
     const float PRE_DESCENSION_EFFECT_Y_SPEED = ActorIndex::WALK_SPEED_BASE * 2;
 
+    int consecutiveDescents{};
+    const int MAX_CONSECUTIVE_DESCENTS = 2;
+
 public:
     Actor();
     ~Actor();

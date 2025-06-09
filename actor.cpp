@@ -18,29 +18,48 @@ Actor::~Actor()
 
 void Actor::Logic()
 {
+
     if (!atDestination)
     {
         ApproachDestinationLinear(moveSpeed);
-        if(atDestination) // Reached destination
+        if (atDestination) // Reached destination
         {
-            //std::cout << "Actor: Logic() debug: I have Arrived!" << std::endl;
-            if(Area::VoidCellCheck(roomXCell, roomYCell))
+            if (Area::VoidCellCheck(roomXCell, roomYCell))
             {
-                std::cout << "Actor: Logic(): I'm falliiiiiiing!" << std::endl;
                 InitiateDescendLayer();
-
             }
-            else if(Area::TeleporterCellCheck(roomXCell,roomYCell))
+            else if (Area::TeleporterCellCheck(roomXCell, roomYCell))
             {
-                ///Todo: The case where an actor lands on a teleporter after teleporting.
-                ///Todo: The case where an actor lands on a teleporter after teleporting, but its next move is blocked by an obstacle, triggering the teleporter without changing cell. 
-                std::cout << "Actor: Logic(): I'm on a teleporter!" << std::endl;
+                /// Todo: The case where an actor lands on a teleporter after teleporting.
+                /// Todo: The case where an actor lands on a teleporter after teleporting, but its next move is blocked by an obstacle, triggering the teleporter without changing cell.
                 InitiateAscendLayer();
             }
         }
     }
+    else // atDestination
+    {
+        // Code for actor falling multiple layers back to back.
+        if (!Area::inRoomTransition)
+        {
+            if (Area::VoidCellCheck(roomXCell, roomYCell))
+            {
+                if (consecutiveDescents > MAX_CONSECUTIVE_DESCENTS)
+                {
+                    SetRoomXYCell(Area::roomSpawnCol, Area::roomSpawnRow, true);
+                    consecutiveDescents = 0;
+                }
+                else
+                {
+                    InitiateDescendLayer();
+                    consecutiveDescents++;
+                }
+            }
+            else
+                consecutiveDescents = 0;
+        }
+    }
 
-    if(inPreAscension)
+    if (inPreAscension)
     {
         preAscensionDrawingYOffset += PRE_ASCENSION_EFFECT_Y_SPEED;
 
@@ -51,38 +70,36 @@ void Actor::Logic()
             RotateFacing();
         }
 
-        preAscensionDelay ++;
-        if(preAscensionDelay >= maxPreAscensionDelay)
+        preAscensionDelay++;
+        if (preAscensionDelay >= maxPreAscensionDelay)
         {
             inPreAscension = false;
-            SetWorldYCell(Area::worldGridCurrentRow*Area::ROOM_ROWS + GetRoomYCell(), true);
-            //WarpToXYDestination();
+            SetWorldYCell(Area::worldGridCurrentRow * Area::ROOM_ROWS + GetRoomYCell(), true);
         }
     }
 
-    if(inPreDescension)
+    if (inPreDescension)
     {
         preDescensionDrawingYOffset += PRE_DESCENSION_EFFECT_Y_SPEED;
 
-        preDescensionDelay ++;
-        if(preDescensionDelay >= maxPreDescensionDelay)
+        preDescensionDelay++;
+        if (preDescensionDelay >= maxPreDescensionDelay)
         {
             inPreDescension = false;
-            SetWorldYCell(Area::worldGridCurrentRow*Area::ROOM_ROWS + GetRoomYCell(), true);
-            //WarpToXYDestination();
+            SetWorldYCell(Area::worldGridCurrentRow * Area::ROOM_ROWS + GetRoomYCell(), true);
+            // WarpToXYDestination();
         }
     }
 
-/// BEGIN DRAWING RELATED LOGIC
+    /// BEGIN DRAWING RELATED LOGIC
 
     drawingXOffset = 0;
 
     drawingYOffset = 0;
-    if(inPreAscension)
+    if (inPreAscension)
         drawingYOffset += preAscensionDrawingYOffset;
-    if(inPreDescension)
+    if (inPreDescension)
         drawingYOffset += preDescensionDrawingYOffset;
-
 
     if (hasAnimations)
     {
@@ -97,8 +114,7 @@ void Actor::Logic()
             }
         }
     }
-/// END DRAWING RELATED LOGIC
-
+    /// END DRAWING RELATED LOGIC
 }
 
 void Actor::Face(int direction)
@@ -183,8 +199,8 @@ void Actor::Walk(int direction)
             break;
         }
 
-        if(isPC && !collidedWithObstacle)
-            FoodEater::ProgressNutrition();
+        if (isPC && !collidedWithObstacle)
+            FoodEater::ProgressNutrition(1);
     }
 }
 
@@ -196,10 +212,12 @@ void Actor::Stand()
 
 void Actor::InitiateAscendLayer()
 {
-    Area::AscendLayer();
-        ///HAX HAX HAX HAX
-    SetYPosition(Area::previousRoomYPosition + GetRoomYCell()*Tile::HEIGHT);
-        ///HAX HAX HAX HAX
+    if (isPC)
+        Area::AscendLayer();
+    /// HAX HAX HAX HAX
+    SetYPosition(Area::previousRoomYPosition + GetRoomYCell() * Tile::HEIGHT);
+    FoodEater::ProgressNutrition(2);
+    /// HAX HAX HAX HAX
 
     inPreAscension = true;
     preAscensionDelay = 0;
@@ -209,10 +227,12 @@ void Actor::InitiateAscendLayer()
 
 void Actor::InitiateDescendLayer()
 {
-    Area::DescendLayer();
+    if (isPC)
+        Area::DescendLayer();
     /// HAX HAX HAX HAX
-    SetYPosition(Area::previousRoomYPosition + GetRoomYCell()*Tile::HEIGHT);
-    ///HAX HAX HAX HAX
+    SetYPosition(Area::previousRoomYPosition + GetRoomYCell() * Tile::HEIGHT);
+    FoodEater::ProgressNutrition(2);
+    /// HAX HAX HAX HAX
 
     inPreDescension = true;
     preDescensionDelay = 0;
